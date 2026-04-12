@@ -1,0 +1,146 @@
+[
+  {
+    "id": "twoWheeler",
+    "slug": "two-wheeler",
+    "title": "Two-Wheeler Insurance",
+    "description": "Comprehensive and third-party insurance for motorcycles, scooters, and mopeds. Protect your ride with affordable premiums and instant policy issuance.",
+    "icon": "FaMotorcycle",
+    "color": "#2563eb",
+    "bgColor": "#eff6ff",
+    "active": true,
+    "featured": true,
+    "order": 1,
+    "features": [
+      "Cashless claim at 5000+ garages",
+      "Personal accident cover up to ₹15 Lakh",
+      "Zero depreciation add-on available",
+      "24/7 roadside assistance"
+    ]
+  },
+  {
+    "id": "fourWheeler",
+    "slug": "four-wheeler",
+    "title": "Four-Wheeler Insurance",
+    "description": "Complete protection for your car with comprehensive coverage, engine protection, and zero depreciation options from top insurance companies.",
+    "icon": "FaCar",
+    "color": "#16a34a",
+    "bgColor": "#f0fdf4",
+    "active": true,
+    "featured": true,
+    "order": 2,
+    "features": [
+      "Cashless claim at 8000+ garages",
+      "Engine & gearbox protection",
+      "Return to invoice cover",
+      "No claim bonus up to 50%"
+    ]
+  },
+  {
+    "id": "commercial",
+    "slug": "commercial-vehicle",
+    "title": "Commercial Vehicle Insurance",
+    "description": "Tailored insurance solutions for trucks, tempos, tankers, and commercial fleets. Get the best rates for your business vehicles.",
+    "icon": "FaTruck",
+    "color": "#ea580c",
+    "bgColor": "#fff7ed",
+    "active": true,
+    "featured": true,
+    "order": 3,
+    "features": [
+      "Fleet discount available",
+      "Goods in transit cover",
+      "Driver & cleaner PA cover",
+      "Flexible premium payment"
+    ]
+  },
+  {
+    "id": "schoolBus",
+    "slug": "school-bus",
+    "title": "School Bus Insurance",
+    "description": "Specialized insurance for school buses with passenger liability coverage, ensuring safety of children during their daily commute.",
+    "icon": "FaBus",
+    "color": "#ca8a04",
+    "bgColor": "#fefce8",
+    "active": true,
+    "featured": true,
+    "order": 4,
+    "features": [
+      "Passenger liability cover",
+      "PA cover for students",
+      "Comprehensive OD coverage",
+      "Quick claim settlement"
+    ]
+  },
+  {
+    "id": "newPolicy",
+    "slug": "new-policy",
+    "title": "New Policy",
+    "description": "Starting fresh? Get a brand new insurance policy for your newly purchased vehicle with the best rates from multiple insurance companies.",
+    "icon": "FaFileAlt",
+    "color": "#7c3aed",
+    "bgColor": "#f5f3ff",
+    "active": true,
+    "featured": true,
+    "order": 5,
+    "features": [
+      "Compare 20+ insurance companies",
+      "Instant policy generation",
+      "IDV customization",
+      "Multiple add-on options"
+    ]
+  },
+  {
+    "id": "renewal",
+    "slug": "renewal",
+    "title": "Policy Renewal",
+    "description": "Hassle-free renewal of your existing insurance policy. Don't let your coverage lapse — renew in minutes with better rates.",
+    "icon": "FaSyncAlt",
+    "color": "#0891b2",
+    "bgColor": "#ecfeff",
+    "active": true,
+    "featured": true,
+    "order": 6,
+    "features": [
+      "No inspection required",
+      "Transfer NCB benefit",
+      "Switch insurer easily",
+      "Reminder before expiry"
+    ]
+  },
+  {
+    "id": "thirdParty",
+    "slug": "third-party",
+    "title": "Third-Party Insurance",
+    "description": "Mandatory third-party liability insurance as per Motor Vehicle Act. Affordable coverage that protects you against legal liabilities.",
+    "icon": "FaShieldAlt",
+    "color": "#dc2626",
+    "bgColor": "#fef2f2",
+    "active": true,
+    "featured": true,
+    "order": 7,
+    "features": [
+      "Legally mandatory coverage",
+      "Lowest premium rates",
+      "Instant policy issuance",
+      "Covers third-party damages"
+    ]
+  },
+  {
+    "id": "miscellaneous",
+    "slug": "miscellaneous-vehicle",
+    "title": "Miscellaneous Vehicle",
+    "description": "Insurance for construction & special-purpose vehicles — bulldozers, cranes, excavators, road rollers, forklifts, and more.",
+    "icon": "FaTractor",
+    "color": "#b45309",
+    "bgColor": "#fffbeb",
+    "active": true,
+    "featured": true,
+    "order": 8,
+    "features": [
+      "Covers all construction vehicles",
+      "Equipment breakdown cover",
+      "Third-party liability included",
+      "On-site accident coverage"
+    ]
+  }
+]

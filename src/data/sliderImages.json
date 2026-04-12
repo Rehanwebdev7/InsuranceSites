@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "title": "Two-Wheeler & Four-Wheeler Insurance",
+    "imageUrl": "/slider/slider1.png"
+  },
+  {
+    "id": 2,
+    "title": "Protect Your Ride with Bharat Insurance",
+    "imageUrl": "/slider/slider2.jpeg"
+  },
+  {
+    "id": 3,
+    "title": "Comprehensive Vehicle Protection",
+    "imageUrl": "/slider/slider3.png"
+  },
+  {
+    "id": 4,
+    "title": "Family Safety on Every Journey",
+    "imageUrl": "/slider/slider4.jpeg"
+  }
+]

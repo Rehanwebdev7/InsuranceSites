@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Admins ──
+    // Public read: needed for mobile-to-email lookup during login & forgot-password
+    // Write: super_admin can write any admin doc; admin can write only their own
+    match /admins/{adminId} {
+      allow read: if true;
+      allow write: if request.auth != null && (
+        request.auth.uid == adminId ||
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'super_admin'
+      );
+    }
+
+    // ── Customer Feedback (Testimonials) ──
+    // Public read: website shows testimonials
+    // Write: any authenticated admin
+    match /customerFeedback/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── Services ──
+    match /services/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── Settings ──
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── Slider Images ──
+    match /sliderImages/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── Leads ──
+    // Public create: website quote forms submit leads without auth
+    // Read/Update/Delete: authenticated admins only
+    match /leads/{docId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // ── FCM Tokens ──
+    match /fcmTokens/{docId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

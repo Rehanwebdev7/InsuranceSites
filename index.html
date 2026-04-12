@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:," />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Your Trusted Insurance Partner. Get quotes for Two-Wheeler, Four-Wheeler, Commercial Vehicle, School Bus, and more." />
+    <meta name="theme-color" content="#047857" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>XYZ Insurance - Trusted Vehicle Insurance Partner</title>
+    <style>
+      /* Hide Google Translate default bar */
+      .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+      body { top: 0 !important; }
+      .skiptranslate { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div id="google_translate_element" style="display:none"></div>
+    <div id="root"></div>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,hi,mr,ur',
+          autoDisplay: false
+        }, 'google_translate_element');
+      }
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </body>
+</html>
