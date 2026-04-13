@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -20,16 +20,19 @@ const iconMap = {
   FaSyncAlt, FaShieldAlt, FaTractor,
 };
 
-// Schema unchanged — same fields, same validation
-const schema = yup.object().shape({
+const buildSchema = (isVehicle) => yup.object().shape({
   fullName: yup.string().required('Name is required').min(2, 'Name must be at least 2 characters'),
   mobile: yup
     .string()
     .required('Mobile number is required')
     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number'),
   email: yup.string().email('Enter a valid email').nullable().transform((v) => (v === '' ? null : v)),
-  vehicleNumber: yup.string().required('Vehicle number is required'),
-  vehicleModel: yup.string().required('Model with company name is required'),
+  vehicleNumber: isVehicle
+    ? yup.string().required('Vehicle number is required')
+    : yup.string().nullable().transform(() => ''),
+  vehicleModel: isVehicle
+    ? yup.string().required('Model with company name is required')
+    : yup.string().nullable().transform(() => ''),
   hasActivePolicy: yup.boolean(),
   currentInsurer: yup.string().when('hasActivePolicy', {
     is: true,
@@ -52,8 +55,10 @@ const trustItems = [
 
 const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1 = vehicle, 2 = contact
+  const isVehicle = service?.isVehicleInsurance !== false;
+  const [step, setStep] = useState(isVehicle ? 1 : 2);
   const [justSubmitted, setJustSubmitted] = useState(false);
+  const schema = useMemo(() => buildSchema(isVehicle), [isVehicle]);
 
   const {
     register,
@@ -79,17 +84,19 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
   useEffect(() => {
     if (isOpen) {
       reset();
-      setStep(1);
+      setStep(isVehicle ? 1 : 2);
       setJustSubmitted(false);
     }
-  }, [isOpen, service, reset]);
+  }, [isOpen, service, reset, isVehicle]);
 
   const hasActivePolicy = watch('hasActivePolicy');
   const IconComponent = service?.icon ? iconMap[service.icon] || FaShieldAlt : FaShieldAlt;
   const serviceColor = service?.color || '#10B981';
 
   const handleNext = async () => {
-    const valid = await trigger(['vehicleNumber', 'vehicleModel', ...(hasActivePolicy ? ['currentInsurer', 'policyExpiry'] : [])]);
+    const vehicleFields = isVehicle ? ['vehicleNumber', 'vehicleModel'] : [];
+    const policyFields = hasActivePolicy ? ['currentInsurer', 'policyExpiry'] : [];
+    const valid = await trigger([...vehicleFields, ...policyFields]);
     if (valid) setStep(2);
   };
 
@@ -175,20 +182,22 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
                   </button>
                 </div>
 
-                {/* Progress */}
-                <div className="mt-5 flex items-center gap-3">
-                  <div className="flex-1 h-1 bg-ink-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full grad-cta"
-                      initial={{ width: '50%' }}
-                      animate={{ width: step === 1 ? '50%' : '100%' }}
-                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    />
+                {/* Progress — only for vehicle insurance (2 steps) */}
+                {isVehicle && (
+                  <div className="mt-5 flex items-center gap-3">
+                    <div className="flex-1 h-1 bg-ink-100 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full grad-cta"
+                        initial={{ width: '50%' }}
+                        animate={{ width: step === 1 ? '50%' : '100%' }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      />
+                    </div>
+                    <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink-400">
+                      Step {step} of 2
+                    </span>
                   </div>
-                  <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-ink-400">
-                    Step {step} of 2
-                  </span>
-                </div>
+                )}
               </div>
 
               {/* Form body */}
@@ -212,7 +221,7 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
                 <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col flex-1 overflow-hidden">
                   <div className="flex-1 overflow-y-auto px-6 py-5">
                     <AnimatePresence mode="wait">
-                      {step === 1 ? (
+                      {step === 1 && isVehicle ? (
                         <motion.div
                           key="step1"
                           initial={{ opacity: 0, x: 16 }}
@@ -347,7 +356,7 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
 
                   {/* Footer */}
                   <div className="flex items-center gap-3 px-6 py-4 border-t border-ink-100 bg-ink-50/40">
-                    {step === 2 && (
+                    {step === 2 && isVehicle && (
                       <Button
                         type="button"
                         variant="ghost"
@@ -357,7 +366,7 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
                         Back
                       </Button>
                     )}
-                    {step === 1 ? (
+                    {step === 1 && isVehicle ? (
                       <Button
                         type="button"
                         variant="primary"

@@ -72,6 +72,15 @@ const Home = () => {
     return subscribeToQuoteForm((service) => handleGetQuote(service));
   }, [handleGetQuote]);
 
+  // Auto-open quote form on landing — shows service picker (no preselected service)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSelectedService(null);
+      setIsQuoteOpen(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCloseForm = useCallback(() => {
     setSelectedService(null);
     setIsQuoteOpen(false);

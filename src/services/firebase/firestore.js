@@ -208,6 +208,7 @@ const fromFirestoreService = (docSnap) => {
     slug: derivedSlug,
     features: d.features || [],
     featured: d.featured !== undefined ? d.featured : true,
+    isVehicleInsurance: d.isVehicleInsurance !== false,
     createdAt: d.createdAt?.toDate?.()?.toISOString() || d.createdAt || '',
     updatedAt: d.updatedAt?.toDate?.()?.toISOString() || d.updatedAt || '',
   };
