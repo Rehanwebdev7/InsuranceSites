@@ -66,10 +66,10 @@ const LanguageSelector = ({ isMobile }) => {
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}
             translate="no"
-            className={`notranslate px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`notranslate px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
               selectedLang === lang.code
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-noir-800 text-[#E5C770] border-[rgba(201,169,97,0.40)]'
+                : 'bg-noir-800/60 text-ink-300 border-[rgba(201,169,97,0.20)] hover:bg-noir-800 hover:text-[#E5C770]'
             }`}
           >
             <span className="notranslate" translate="no">{lang.name}</span>

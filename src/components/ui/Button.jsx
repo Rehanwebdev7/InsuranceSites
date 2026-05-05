@@ -10,19 +10,19 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
  */
 const variantClasses = {
   primary:
-    'bg-teal-700 text-white hover:bg-teal-800 shadow-[0_8px_16px_-8px_rgba(16,185,129,0.35)] hover:shadow-[0_16px_32px_-12px_rgba(16,185,129,0.45)]',
+    'bg-gradient-to-br from-[#C9A961] to-[#D4AF37] text-noir-950 border border-[#B8923A] hover:from-[#D4AF37] hover:to-[#E5C770] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.45)] hover:shadow-[0_16px_32px_-12px_rgba(201,169,97,0.55)]',
   secondary:
-    'bg-white text-teal-700 border border-ink-100 hover:border-teal-500 hover:bg-teal-50',
+    'bg-white text-noir-950 border border-[#EBDCB1] hover:border-[#C9A961] hover:bg-[#FDFAF1]',
   ghost:
-    'bg-transparent text-ink-700 hover:bg-ink-50',
+    'bg-transparent text-noir-700 hover:bg-[#FDFAF1]',
   outline:
-    'bg-transparent text-teal-700 border-[1.5px] border-teal-700 hover:bg-teal-700 hover:text-white',
+    'bg-transparent text-noir-950 border-[1.5px] border-[#C9A961] hover:bg-[#C9A961] hover:text-noir-950',
   dark:
-    'bg-ink-900 text-white hover:bg-ink-800 shadow-lg',
+    'bg-noir-950 text-[#E5C770] border border-[#C9A961] hover:bg-noir-800 hover:text-white shadow-lg',
   white:
-    'bg-white text-ink-900 hover:bg-ink-50 shadow-lg',
+    'bg-white text-noir-950 border border-[#EBDCB1] hover:bg-[#FDFAF1] shadow-lg',
   link:
-    'bg-transparent text-teal-700 hover:text-teal-800 underline-offset-4 hover:underline p-0 shadow-none',
+    'bg-transparent text-noir-950 hover:text-[#8B6F2C] underline-offset-4 hover:underline p-0 shadow-none',
 };
 
 const sizeClasses = {
@@ -57,7 +57,7 @@ const Button = React.forwardRef(function Button(
       className={[
         'group relative inline-flex items-center justify-center font-semibold',
         'transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A961] focus-visible:ring-offset-2',
         'active:scale-[0.98]',
         'disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100',
         variantClasses[variant] || variantClasses.primary,

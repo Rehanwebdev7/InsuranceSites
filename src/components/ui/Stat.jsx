@@ -54,7 +54,7 @@ const Stat = ({
         <div
           className={[
             'w-11 h-11 rounded-xl mb-3 flex items-center justify-center',
-            isLight ? 'bg-white/10 text-teal-200' : 'bg-teal-50 text-teal-700',
+            isLight ? 'bg-[rgba(229,199,112,0.15)] text-[#E5C770] border border-[rgba(201,169,97,0.30)]' : 'bg-[#FDFAF1] text-[#8B6F2C] border border-[#EBDCB1]',
           ].join(' ')}
         >
           {icon}
@@ -62,9 +62,9 @@ const Stat = ({
       )}
       <div
         className={[
-          'font-display font-semibold leading-none',
+          'font-display font-semibold leading-none tracking-tight',
           'text-4xl md:text-5xl',
-          isLight ? 'text-white' : 'text-ink-900',
+          isLight ? 'text-[#E5C770]' : 'text-noir-950',
         ].join(' ')}
       >
         {prefix}
@@ -75,7 +75,7 @@ const Stat = ({
         <div
           className={[
             'mt-2 text-sm font-medium',
-            isLight ? 'text-teal-100/80' : 'text-ink-500',
+            isLight ? 'text-ink-300' : 'text-ink-500',
           ].join(' ')}
         >
           {label}
@@ -85,7 +85,7 @@ const Stat = ({
         <div
           className={[
             'mt-1 text-xs',
-            isLight ? 'text-teal-100/60' : 'text-ink-400',
+            isLight ? 'text-ink-400' : 'text-ink-400',
           ].join(' ')}
         >
           {description}

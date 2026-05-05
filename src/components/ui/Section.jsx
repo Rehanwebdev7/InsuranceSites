@@ -8,11 +8,13 @@ import Eyebrow from './Eyebrow';
  * Handles `eyebrow`, `title`, `subtitle`, `align` props for the section intro.
  */
 const toneMap = {
-  default: 'bg-white',
-  soft: 'bg-[var(--surface-2)]',
-  tint: 'bg-teal-50',
+  default: 'bg-noir-950 text-white',
+  soft: 'bg-noir-900 text-white',
+  tint: 'bg-noir-800 text-white',
   dark: 'grad-dark text-white',
   brand: 'grad-hero text-white',
+  light: 'bg-ivory-50 text-noir-950',
+  ivory: 'bg-[var(--ivory-100)] text-noir-950',
 };
 
 const sizeMap = {
@@ -35,7 +37,8 @@ const Section = ({
   children,
 }) => {
   const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
-  const isDarkTone = tone === 'dark' || tone === 'brand';
+  const isLightTone = tone === 'light' || tone === 'ivory';
+  const isDarkTone = !isLightTone;
 
   return (
     <section
@@ -61,12 +64,12 @@ const Section = ({
               headerClassName,
             ].join(' ')}
           >
-            {eyebrow && <Eyebrow tone={isDarkTone ? 'light' : 'brand'}>{eyebrow}</Eyebrow>}
+            {eyebrow && <Eyebrow tone={isLightTone ? 'brand' : 'light'}>{eyebrow}</Eyebrow>}
             {title && (
               <h2
                 className={[
-                  'text-display-md font-display font-semibold text-balance',
-                  isDarkTone ? 'text-white' : 'text-ink-900',
+                  'text-display-md font-display font-semibold text-balance tracking-tight',
+                  isDarkTone ? 'text-white' : 'text-noir-950',
                 ].join(' ')}
               >
                 {title}
@@ -76,7 +79,7 @@ const Section = ({
               <p
                 className={[
                   'text-base md:text-lg leading-relaxed text-pretty',
-                  isDarkTone ? 'text-teal-100/80' : 'text-ink-500',
+                  isDarkTone ? 'text-ink-300' : 'text-ink-600',
                 ].join(' ')}
               >
                 {subtitle}

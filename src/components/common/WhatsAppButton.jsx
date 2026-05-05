@@ -21,10 +21,10 @@ const WhatsAppButton = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.94 }}
             transition={{ duration: 0.2 }}
-            className="relative mr-1 px-3.5 py-2 rounded-xl bg-ink-900 text-white text-xs font-semibold shadow-[0_12px_24px_-8px_rgba(11,18,32,0.3)] whitespace-nowrap"
+            className="relative mr-1 px-3.5 py-2 rounded-xl bg-noir-950 text-[#E5C770] border border-[#C9A961] text-xs font-semibold shadow-[0_12px_24px_-8px_rgba(10,10,10,0.4)] whitespace-nowrap"
           >
             Chat with a real human.
-            <div className="absolute -bottom-1 right-6 w-2 h-2 bg-ink-900 rotate-45" />
+            <div className="absolute -bottom-1 right-6 w-2 h-2 bg-noir-950 border-r border-b border-[#C9A961] rotate-45" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -47,7 +47,7 @@ const WhatsAppButton = () => {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] flex items-center justify-center shadow-[0_12px_24px_-8px_rgba(37,211,102,0.55)] hover:shadow-[0_20px_40px_-12px_rgba(37,211,102,0.6)] transition-shadow duration-300"
+          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] border-2 border-[#C9A961] flex items-center justify-center shadow-[0_12px_24px_-8px_rgba(37,211,102,0.55)] hover:shadow-[0_20px_40px_-12px_rgba(37,211,102,0.6)] transition-shadow duration-300"
         >
           <FaWhatsapp className="text-white text-[1.35rem] sm:text-2xl" />
         </motion.div>

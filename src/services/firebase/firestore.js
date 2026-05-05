@@ -209,6 +209,8 @@ const fromFirestoreService = (docSnap) => {
     features: d.features || [],
     featured: d.featured !== undefined ? d.featured : true,
     isVehicleInsurance: d.isVehicleInsurance !== false,
+    illustrationKey: d.illustrationKey || '',
+    illustrationUrl: d.illustrationUrl || '',
     createdAt: d.createdAt?.toDate?.()?.toISOString() || d.createdAt || '',
     updatedAt: d.updatedAt?.toDate?.()?.toISOString() || d.updatedAt || '',
   };
@@ -244,6 +246,8 @@ export const addService = async (serviceData) => {
     features: serviceData.features || [],
     featured: serviceData.featured || false,
     isVehicleInsurance: serviceData.isVehicleInsurance !== false,
+    illustrationKey: serviceData.illustrationKey || '',
+    illustrationUrl: serviceData.illustrationUrl || '',
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -277,6 +281,8 @@ export const updateService = async (serviceId, updates) => {
   if (updates.features !== undefined) updateData.features = updates.features;
   if (updates.featured !== undefined) updateData.featured = updates.featured;
   if (updates.isVehicleInsurance !== undefined) updateData.isVehicleInsurance = updates.isVehicleInsurance;
+  if (updates.illustrationKey !== undefined) updateData.illustrationKey = updates.illustrationKey;
+  if (updates.illustrationUrl !== undefined) updateData.illustrationUrl = updates.illustrationUrl;
 
   await updateDoc(docRef, updateData);
   return { id: serviceId, ...updates };

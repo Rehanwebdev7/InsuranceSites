@@ -5,6 +5,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import WhatsAppButton from '../components/common/WhatsAppButton';
 import CallButton from '../components/common/CallButton';
+import PremiumAnimationLayer from '../components/common/PremiumAnimationLayer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CustomerDataProvider } from '../contexts/CustomerDataContext';
@@ -18,7 +19,8 @@ const CustomerLayout = () => {
 
   return (
     <CustomerDataProvider>
-      <div className="min-h-screen flex flex-col bg-[var(--surface-2)] text-ink-900">
+      <div className="min-h-screen flex flex-col bg-noir-950 text-white">
+        <PremiumAnimationLayer />
         <Header />
         {/* All pages sit below the fixed header (h-16 mobile / h-[72px] desktop) */}
         <main className="flex-1 pt-16 lg:pt-[72px]">
@@ -44,8 +46,8 @@ const CustomerLayout = () => {
           newestOnTop
           closeOnClick
           pauseOnHover
-          theme="light"
-          toastClassName="!rounded-xl !font-medium"
+          theme="dark"
+          toastClassName="!rounded-xl !font-medium !bg-noir-900 !text-white !border !border-[rgba(201,169,97,0.30)]"
         />
       </div>
     </CustomerDataProvider>

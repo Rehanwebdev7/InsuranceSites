@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiEdit2, FiTrash2, FiPlus, FiX, FiSave } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlus, FiX, FiSave, FiImage, FiUpload, FiGrid, FiZap, FiCheck, FiLoader } from 'react-icons/fi';
 import {
   FaMotorcycle, FaCar, FaCarSide, FaCarCrash, FaTruck, FaTruckMoving,
   FaBus, FaBusAlt, FaTractor, FaShieldAlt, FaFileAlt, FaFileContract,
@@ -17,6 +17,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import * as firestoreService from '../../services/firebase/firestore';
 import { db } from '../../services/firebase/firebase';
+import { uploadImage, getImageUrl } from '../../services/googleDrive';
+import { ILLUSTRATION_GALLERY, getIllustrationSrc } from '../../data/illustrationGallery';
 import defaultServices from '../../data/services.json';
 
 const iconMap = {
@@ -99,12 +101,21 @@ const emptyService = {
   title: '',
   description: '',
   icon: 'FaShieldAlt',
-  color: '#2563eb',
-  bgColor: '#eff6ff',
+  illustrationKey: '',
+  illustrationUrl: '',
+  color: '#C9A961',
+  bgColor: '#FDFAF1',
   active: true,
   isVehicleInsurance: true,
   order: 0,
 };
+
+/**
+ * Returns the image src to render for a service card preview, in the same priority
+ * order as ServiceCard.jsx: illustrationUrl → illustrationKey → null (icon fallback).
+ */
+const resolveIllustrationSrc = (form) =>
+  form.illustrationUrl || (form.illustrationKey ? getIllustrationSrc(form.illustrationKey) : null);
 
 const AdminServices = () => {
   const [servicesList, setServicesList] = useState([]);
@@ -115,8 +126,10 @@ const AdminServices = () => {
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [formData, setFormData] = useState(emptyService);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  // Illustration picker tab: 'gallery' | 'upload' | 'icon'
+  const [illTab, setIllTab] = useState('gallery');
+  const [uploadingIll, setUploadingIll] = useState(false);
 
-  // Load services from Firestore on mount
   useEffect(() => {
     loadServices();
   }, []);
@@ -129,11 +142,9 @@ const AdminServices = () => {
         if (services.length > 0) {
           setServicesList(services);
         } else {
-          // No services in Firestore — use local defaults
           setServicesList(defaultServices);
         }
       } else {
-        // No Firebase — use local defaults
         setServicesList(defaultServices);
       }
     } catch (error) {
@@ -145,6 +156,12 @@ const AdminServices = () => {
     }
   };
 
+  const decideInitialTab = (service) => {
+    if (service?.illustrationUrl) return 'upload';
+    if (service?.illustrationKey) return 'gallery';
+    return 'gallery';
+  };
+
   const openAddModal = () => {
     setEditMode(false);
     setEditingServiceId(null);
@@ -152,13 +169,15 @@ const AdminServices = () => {
       ...emptyService,
       order: servicesList.length + 1,
     });
+    setIllTab('gallery');
     setModalOpen(true);
   };
 
   const openEditModal = (service) => {
     setEditMode(true);
     setEditingServiceId(service.id);
-    setFormData({ ...service });
+    setFormData({ ...emptyService, ...service });
+    setIllTab(decideInitialTab(service));
     setModalOpen(true);
   };
 
@@ -167,16 +186,16 @@ const AdminServices = () => {
     setEditMode(false);
     setEditingServiceId(null);
     setFormData(emptyService);
+    setIllTab('gallery');
   };
 
-  const generateSlug = (title) => {
-    return title
+  const generateSlug = (title) =>
+    title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .trim();
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -192,20 +211,16 @@ const AdminServices = () => {
 
     try {
       if (editMode && serviceId) {
-        // Update existing service in Firestore
         const { id: _id, ...restFormData } = formData;
         const updateData = { ...restFormData, slug };
         if (db) {
           await firestoreService.updateService(serviceId, updateData);
         }
         setServicesList((prev) =>
-          prev.map((s) =>
-            s.id === serviceId ? { ...s, ...updateData, id: serviceId } : s
-          )
+          prev.map((s) => (s.id === serviceId ? { ...s, ...updateData, id: serviceId } : s))
         );
         toast.success('Service updated successfully');
       } else {
-        // Add new service to Firestore
         const { id: _id, ...restFormData } = formData;
         const newServiceData = { ...restFormData, slug };
         if (db) {
@@ -235,7 +250,6 @@ const AdminServices = () => {
     } catch (error) {
       console.error('Firestore delete error:', error);
     }
-    // Always update local state and close confirm
     setServicesList((prev) => prev.filter((s) => s.id !== id));
     setDeleteConfirm(null);
     toast.success('Service deleted');
@@ -244,6 +258,41 @@ const AdminServices = () => {
   const updateFormField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  // When admin picks a gallery item, store the key and clear any uploaded URL
+  const pickGallery = (key) => {
+    setFormData((prev) => ({ ...prev, illustrationKey: key, illustrationUrl: '' }));
+  };
+
+  // When admin uploads a file, push to Drive then store URL + clear gallery key
+  const handleUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please pick an image (PNG, SVG, or JPG).');
+      return;
+    }
+    setUploadingIll(true);
+    try {
+      const fileName = `service_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+      const fileId = await uploadImage(file, fileName);
+      const url = getImageUrl(fileId);
+      setFormData((prev) => ({ ...prev, illustrationUrl: url, illustrationKey: '' }));
+      toast.success('Illustration uploaded');
+    } catch (err) {
+      console.error('Upload failed', err);
+      toast.error('Upload failed: ' + (err.message || 'Please try again'));
+    } finally {
+      setUploadingIll(false);
+      e.target.value = '';
+    }
+  };
+
+  const clearIllustration = () => {
+    setFormData((prev) => ({ ...prev, illustrationKey: '', illustrationUrl: '' }));
+  };
+
+  const previewSrc = resolveIllustrationSrc(formData);
 
   if (isLoading) {
     return (
@@ -269,85 +318,95 @@ const AdminServices = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {servicesList.map((service, index) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-xl shadow-sm p-6 relative"
-          >
-            <div className="flex items-start justify-between mb-4">
-              {(() => {
-                const Icon = iconMap[service.icon] || FaShieldAlt;
-                return (
+        {servicesList.map((service, index) => {
+          const cardSrc =
+            service.illustrationUrl ||
+            (service.illustrationKey ? getIllustrationSrc(service.illustrationKey) : null);
+          const Icon = iconMap[service.icon] || FaShieldAlt;
+          return (
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-white rounded-xl shadow-sm p-6 relative"
+            >
+              <div className="flex items-start justify-between mb-4">
+                {cardSrc ? (
+                  <div className="w-14 h-14 rounded-lg overflow-hidden bg-[#FDFAF1] border border-[#EBDCB1] flex items-center justify-center">
+                    <img
+                      src={cardSrc}
+                      alt={service.title || 'Service'}
+                      className="w-full h-full object-contain p-1"
+                    />
+                  </div>
+                ) : (
                   <div
                     className="w-12 h-12 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: service.bgColor || '#eff6ff', color: service.color || '#2563eb' }}
+                    style={{ backgroundColor: service.bgColor || '#FDFAF1', color: service.color || '#8B6F2C' }}
                   >
                     <Icon className="text-2xl" />
                   </div>
-                );
-              })()}
-              <div className="flex gap-1">
-                <button
-                  onClick={() => openEditModal(service)}
-                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                  title="Edit"
-                >
-                  <FiEdit2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setDeleteConfirm(service.id)}
-                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  title="Delete"
-                >
-                  <FiTrash2 className="w-4 h-4" />
-                </button>
+                )}
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => openEditModal(service)}
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Edit"
+                  >
+                    <FiEdit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirm(service.id)}
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete"
+                  >
+                    <FiTrash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.title || service.serviceName}</h3>
-            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{service.description}</p>
-            <div className="flex items-center gap-2">
-              <span
-                className={`px-2 py-1 rounded-full text-xs ${
-                  service.active ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
-                }`}
-              >
-                {service.active ? 'Active' : 'Inactive'}
-              </span>
-            </div>
-
-            {/* Delete Confirmation */}
-            <AnimatePresence>
-              {deleteConfirm === service.id && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-6"
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.title || service.serviceName}</h3>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{service.description}</p>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs ${
+                    service.active ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
+                  }`}
                 >
-                  <p className="text-gray-800 font-medium mb-1">Delete this service?</p>
-                  <p className="text-gray-500 text-sm mb-4 text-center">{service.title || service.serviceName}</p>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setDeleteConfirm(null)}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleDelete(service.id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
+                  {service.active ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+
+              <AnimatePresence>
+                {deleteConfirm === service.id && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-6"
+                  >
+                    <p className="text-gray-800 font-medium mb-1">Delete this service?</p>
+                    <p className="text-gray-500 text-sm mb-4 text-center">{service.title || service.serviceName}</p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setDeleteConfirm(null)}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => handleDelete(service.id)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          );
+        })}
       </div>
 
       {servicesList.length === 0 && (
@@ -373,7 +432,7 @@ const AdminServices = () => {
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              className="bg-white rounded-xl shadow-2xl w-full max-w-lg my-8"
+              className="bg-white rounded-xl shadow-2xl w-full max-w-2xl my-8"
             >
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-xl font-bold text-gray-800">
@@ -387,7 +446,7 @@ const AdminServices = () => {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <form onSubmit={handleSubmit} className="p-6 space-y-5">
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
@@ -413,31 +472,199 @@ const AdminServices = () => {
                   />
                 </div>
 
-                {/* Icon */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
-                  <select
-                    value={formData.icon}
-                    onChange={(e) => updateFormField('icon', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  >
-                    {ICON_OPTIONS.map((opt, idx) =>
-                      opt.disabled ? (
-                        <option key={`group-${idx}`} disabled value="">
-                          {opt.label}
-                        </option>
+                {/* Illustration picker — tabbed */}
+                <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
+                  <div className="flex items-center gap-1 border-b border-gray-200 bg-white px-2 py-1.5">
+                    {[
+                      { id: 'gallery', label: 'Pick from gallery', icon: FiGrid },
+                      { id: 'upload', label: 'Upload custom', icon: FiUpload },
+                      { id: 'icon', label: 'Icon (legacy)', icon: FiZap },
+                    ].map((tab) => {
+                      const Icon = tab.icon;
+                      const isActive = illTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setIllTab(tab.id)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                            isActive
+                              ? 'bg-[#FDFAF1] text-[#5C4A1D] border border-[#EBDCB1]'
+                              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50 border border-transparent'
+                          }`}
+                        >
+                          <Icon className="w-3.5 h-3.5" /> {tab.label}
+                        </button>
+                      );
+                    })}
+                    <div className="ml-auto flex items-center gap-2 pr-1">
+                      {previewSrc ? (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span className="w-9 h-9 rounded-lg overflow-hidden bg-[#FDFAF1] border border-[#EBDCB1] flex items-center justify-center">
+                            <img src={previewSrc} alt="Preview" className="w-full h-full object-contain p-0.5" />
+                          </span>
+                          <button
+                            type="button"
+                            onClick={clearIllustration}
+                            className="text-red-500 hover:text-red-700 underline"
+                          >
+                            Clear
+                          </button>
+                        </div>
                       ) : (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      )
+                        <span className="text-[11px] text-gray-400 italic">No illustration · icon fallback</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Tab body */}
+                  <div className="p-4">
+                    {illTab === 'gallery' && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-3">
+                          Pick a bundled illustration. Free, ready to use, no upload needed.
+                        </p>
+                        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                          {ILLUSTRATION_GALLERY.map((g) => {
+                            const isPicked = formData.illustrationKey === g.key && !formData.illustrationUrl;
+                            return (
+                              <button
+                                key={g.key}
+                                type="button"
+                                onClick={() => pickGallery(g.key)}
+                                title={g.label}
+                                className={`group relative aspect-square rounded-lg overflow-hidden border-2 transition-all bg-white hover:scale-105 ${
+                                  isPicked
+                                    ? 'border-[#C9A961] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.5)]'
+                                    : 'border-gray-200 hover:border-[#EBDCB1]'
+                                }`}
+                              >
+                                <img
+                                  src={`/illustrations/${g.key}.svg`}
+                                  alt={g.label}
+                                  className="w-full h-full object-contain p-1.5"
+                                  loading="lazy"
+                                />
+                                {isPicked && (
+                                  <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-[#C9A961] text-white flex items-center justify-center shadow">
+                                    <FiCheck className="w-3 h-3" strokeWidth={3} />
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     )}
-                  </select>
+
+                    {illTab === 'upload' && (
+                      <div>
+                        <div className="mb-3 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                          <p className="text-xs font-semibold text-amber-900 mb-1.5">
+                            ✦ Where to find professional GIFs / illustrations:
+                          </p>
+                          <ul className="text-[0.7rem] text-amber-800 space-y-0.5">
+                            <li>
+                              <strong>storyset.com</strong> — flat illustrations, customize colors, export as GIF / Lottie / SVG / PNG (recommended)
+                            </li>
+                            <li>
+                              <strong>lottiefiles.com</strong> — animated Lottie files (convert to GIF via lottiefiles.com/converter)
+                            </li>
+                            <li>
+                              <strong>icons8.com</strong> — animated icons (transport, insurance, finance)
+                            </li>
+                            <li>
+                              <strong>giphy.com</strong> — quick GIF search by category
+                            </li>
+                          </ul>
+                          <p className="text-[0.7rem] text-amber-700 mt-2 italic">
+                            Tip: download with <strong>transparent background</strong>. The cream oval on the customer site provides the background — your GIF/PNG just needs to be the subject.
+                          </p>
+                        </div>
+                        <p className="text-xs text-gray-500 mb-3">
+                          Upload a custom PNG, SVG, GIF, or JPG. Stored in Google Drive via the existing pipeline.
+                        </p>
+                        {formData.illustrationUrl ? (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-white border border-gray-200">
+                            <img
+                              src={formData.illustrationUrl}
+                              alt="Custom illustration"
+                              className="w-16 h-16 object-contain rounded border border-gray-200 bg-[#FDFAF1] p-1"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-gray-500 mb-1">Custom illustration</p>
+                              <p className="text-xs text-gray-700 truncate">{formData.illustrationUrl}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={clearIllustration}
+                              className="text-xs text-red-600 hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <label
+                            className={`flex flex-col items-center justify-center gap-2 py-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                              uploadingIll
+                                ? 'border-[#C9A961] bg-[#FDFAF1] cursor-wait'
+                                : 'border-gray-300 hover:border-[#C9A961] hover:bg-[#FDFAF1]'
+                            }`}
+                          >
+                            {uploadingIll ? (
+                              <>
+                                <FiLoader className="w-6 h-6 text-[#8B6F2C] animate-spin" />
+                                <span className="text-sm font-medium text-gray-700">Uploading…</span>
+                              </>
+                            ) : (
+                              <>
+                                <FiImage className="w-6 h-6 text-gray-400" />
+                                <span className="text-sm font-medium text-gray-700">Click to upload</span>
+                                <span className="text-xs text-gray-500">PNG, GIF, SVG, JPG, or WebP · up to 2 MB</span>
+                              </>
+                            )}
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/jpg,image/gif,image/svg+xml,image/webp"
+                              onChange={handleUpload}
+                              disabled={uploadingIll}
+                              className="hidden"
+                            />
+                          </label>
+                        )}
+                      </div>
+                    )}
+
+                    {illTab === 'icon' && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-3">
+                          Legacy icon picker. Used as fallback when no illustration is set.
+                        </p>
+                        <select
+                          value={formData.icon}
+                          onChange={(e) => updateFormField('icon', e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C9A961] focus:border-transparent outline-none"
+                        >
+                          {ICON_OPTIONS.map((opt, idx) =>
+                            opt.disabled ? (
+                              <option key={`group-${idx}`} disabled value="">
+                                {opt.label}
+                              </option>
+                            ) : (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Color + Icon Preview */}
+                {/* Color */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Brand color (icon fallback only)</label>
                   <div className="flex items-center gap-3">
                     <input
                       type="color"
@@ -449,8 +676,7 @@ const AdminServices = () => {
                       className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer p-0.5"
                     />
                     <span className="text-sm text-gray-500 uppercase">{formData.color}</span>
-                    {/* Icon Preview */}
-                    {formData.icon && iconMap[formData.icon] && (() => {
+                    {!previewSrc && formData.icon && iconMap[formData.icon] && (() => {
                       const PreviewIcon = iconMap[formData.icon];
                       return (
                         <div
@@ -477,7 +703,7 @@ const AdminServices = () => {
                       onChange={(e) => updateFormField('isVehicleInsurance', e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-blue-600" />
+                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-[#C9A961]" />
                   </label>
                 </div>
 

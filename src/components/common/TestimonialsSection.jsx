@@ -33,7 +33,7 @@ const DEFAULT_FEEDBACK = [
 ];
 
 const Stars = ({ rating = 5 }) => (
-  <div className="flex items-center gap-0.5 text-amber-500">
+  <div className="flex items-center gap-0.5" style={{ color: '#D4AF37' }}>
     {Array.from({ length: 5 }).map((_, i) => (
       <FiStar
         key={i}
@@ -119,14 +119,14 @@ const TestimonialsSection = () => {
                 <div
                   className={`relative rounded-2xl bg-white border shadow-sm overflow-hidden transition-shadow duration-500 ${
                     isCenter
-                      ? 'border-teal-100 shadow-[0_24px_48px_-16px_rgba(16,185,129,0.22)]'
-                      : 'border-ink-100 shadow-[0_12px_24px_-16px_rgba(11,18,32,0.1)] pointer-events-none'
+                      ? 'border-[#EBDCB1] shadow-[0_24px_48px_-16px_rgba(201,169,97,0.32)]'
+                      : 'border-[#E8DEC4] shadow-[0_12px_24px_-16px_rgba(46,37,16,0.10)] pointer-events-none'
                   }`}
                 >
                   <FaQuoteLeft
                     aria-hidden
                     className={`absolute -top-2 -right-2 text-6xl pointer-events-none transition-colors ${
-                      isCenter ? 'text-teal-100' : 'text-ink-100'
+                      isCenter ? 'text-[#F5EBD3]' : 'text-[#FAF6EE]'
                     }`}
                   />
                   <div className="relative z-10 flex flex-col p-6 md:p-8">
@@ -134,8 +134,8 @@ const TestimonialsSection = () => {
                     <p className="mt-4 mb-5 text-[0.9375rem] md:text-base text-ink-700 leading-relaxed italic line-clamp-4">
                       &ldquo;{item.message}&rdquo;
                     </p>
-                    <div className="mt-auto flex items-center gap-3 pt-4 border-t border-ink-100">
-                      <div className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-800 text-white font-display font-semibold shadow-[0_8px_16px_-8px_rgba(16,185,129,0.4)] shrink-0">
+                    <div className="mt-auto flex items-center gap-3 pt-4 border-t border-[#EBDCB1]">
+                      <div className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#C9A961] to-[#8B6F2C] text-noir-950 font-display font-semibold shadow-[0_8px_16px_-8px_rgba(201,169,97,0.5)] border border-[#E5C770] shrink-0">
                         {item.avatar ? (
                           <img
                             src={item.avatar}
@@ -148,7 +148,7 @@ const TestimonialsSection = () => {
                         )}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-ink-900 truncate">
+                        <div className="text-sm font-semibold text-noir-950 truncate">
                           {item.name}
                         </div>
                         {item.role && (
@@ -172,8 +172,8 @@ const TestimonialsSection = () => {
                 onClick={() => setCurrent(i)}
                 className={`rounded-full transition-all duration-300 ${
                   i === current
-                    ? 'w-7 h-2.5 bg-teal-500'
-                    : 'w-2.5 h-2.5 bg-ink-200 hover:bg-ink-300'
+                    ? 'w-7 h-2.5 bg-[#C9A961]'
+                    : 'w-2.5 h-2.5 bg-[#E8DEC4] hover:bg-[#EBDCB1]'
                 }`}
                 aria-label={`Go to testimonial ${i + 1}`}
               />

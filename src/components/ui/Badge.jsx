@@ -1,14 +1,14 @@
 import React from 'react';
 
 const toneMap = {
-  brand:    'bg-teal-50 text-teal-700 border-teal-100',
-  success:  'bg-teal-50 text-teal-700 border-teal-100',
-  warning:  'bg-amber-50 text-amber-700 border-amber-100',
+  brand:    'bg-[#FDFAF1] text-[#8B6F2C] border-[#EBDCB1]',
+  success:  'bg-emerald-50 text-emerald-700 border-emerald-100',
+  warning:  'bg-[#F5EBD3] text-[#5C4A1D] border-[#E5C770]',
   danger:   'bg-red-50 text-red-700 border-red-100',
   info:     'bg-sky-50 text-sky-700 border-sky-100',
   neutral:  'bg-ink-50 text-ink-700 border-ink-100',
-  dark:     'bg-ink-900 text-white border-ink-800',
-  light:    'bg-white/10 text-white border-white/20 backdrop-blur',
+  dark:     'bg-noir-950 text-[#E5C770] border-[#C9A961]',
+  light:    'bg-white/10 text-white border-[#C9A961]/30 backdrop-blur',
 };
 
 const sizeMap = {

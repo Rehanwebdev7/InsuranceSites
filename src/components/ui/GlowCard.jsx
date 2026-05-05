@@ -10,22 +10,22 @@ const GlowCard = ({ children, className = '', as: Component = 'div', hover = tru
     <div
       className={[
         'relative rounded-3xl bg-white overflow-hidden',
-        'border border-ink-100',
-        'shadow-[0_2px_4px_rgba(11,18,32,0.04)]',
+        'border border-[#E8DEC4]',
+        'shadow-[0_2px_4px_rgba(46,37,16,0.04)]',
         'transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
         hover &&
-          'group-hover:border-teal-200 group-hover:shadow-[0_24px_48px_-12px_rgba(16,185,129,0.25),0_0_0_1px_rgba(16,185,129,0.1)]',
+          'group-hover:border-[#C9A961] group-hover:shadow-[0_24px_48px_-12px_rgba(201,169,97,0.30),0_0_0_1px_rgba(201,169,97,0.12)]',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
       {...rest}
     >
-      {/* Gradient glow blob, hidden until hover */}
+      {/* Warm gold halo, hidden until hover */}
       {hover && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-24 -right-24 w-64 h-64 rounded-full bg-gradient-to-br from-teal-200 via-teal-100 to-transparent opacity-0 group-hover:opacity-60 blur-3xl transition-opacity duration-700"
+          className="pointer-events-none absolute -top-24 -right-24 w-64 h-64 rounded-full bg-gradient-to-br from-[#F5EBD3] via-[#FDFAF1] to-transparent opacity-0 group-hover:opacity-80 blur-3xl transition-opacity duration-700"
         />
       )}
       <div className="relative z-10 h-full">{children}</div>

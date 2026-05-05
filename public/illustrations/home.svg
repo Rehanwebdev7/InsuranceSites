@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="homeBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="homeRoof" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#5C4A1D"/>
+    </linearGradient>
+    <linearGradient id="homeWall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#E5C770"/>
+    </linearGradient>
+    <linearGradient id="homeDoor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A2A2A"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </linearGradient>
+    <linearGradient id="homeWindow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E5C770"/>
+      <stop offset="100%" stop-color="#C9A961"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="120" cy="120" rx="108" ry="50" fill="url(#homeBlob)" opacity="0.95"/>
+  <ellipse cx="120" cy="148" rx="78" ry="4" fill="#0A0A0A" opacity="0.14"/>
+
+  <!-- Garden hint -->
+  <path d="M40 144 Q44 138 48 144 M52 144 Q56 138 60 144 M180 144 Q184 138 188 144 M192 144 Q196 138 200 144" stroke="#8B6F2C" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+  <!-- House body -->
+  <rect x="58" y="82" width="124" height="62" fill="url(#homeWall)"/>
+  <!-- Brick texture (subtle horizontal lines) -->
+  <line x1="58" y1="92" x2="182" y2="92" stroke="#D4AF37" stroke-width="0.6" opacity="0.4"/>
+  <line x1="58" y1="102" x2="182" y2="102" stroke="#D4AF37" stroke-width="0.6" opacity="0.4"/>
+  <line x1="58" y1="112" x2="182" y2="112" stroke="#D4AF37" stroke-width="0.6" opacity="0.4"/>
+  <line x1="58" y1="122" x2="182" y2="122" stroke="#D4AF37" stroke-width="0.6" opacity="0.4"/>
+  <line x1="58" y1="132" x2="182" y2="132" stroke="#D4AF37" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Roof -->
+  <path d="M50 84 L120 32 L190 84 Z" fill="url(#homeRoof)"/>
+  <!-- Roof shingles indication -->
+  <path d="M52 84 L120 36 L188 84" stroke="#5C4A1D" stroke-width="1"/>
+  <line x1="74" y1="68" x2="120" y2="40" stroke="#8B6F2C" stroke-width="0.8" opacity="0.5"/>
+  <line x1="166" y1="68" x2="120" y2="40" stroke="#8B6F2C" stroke-width="0.8" opacity="0.5"/>
+  <!-- Roof crest -->
+  <ellipse cx="120" cy="32" rx="3" ry="2" fill="#0A0A0A"/>
+
+  <!-- Chimney -->
+  <rect x="142" y="44" width="10" height="22" fill="#1A1A1A"/>
+  <rect x="140" y="40" width="14" height="6" fill="#0A0A0A"/>
+  <!-- Smoke (rising and fading) -->
+  <circle cx="148" cy="32" r="3" fill="#D4D4D4" opacity="0.45">
+    <animate attributeName="cy" values="32;14" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2;5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="154" cy="22" r="2" fill="#D4D4D4" opacity="0.35">
+    <animate attributeName="cy" values="32;8" dur="3s" begin="1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.4;0" dur="3s" begin="1s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1.5;4" dur="3s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Left window -->
+  <rect x="72" y="98" width="28" height="28" fill="url(#homeWindow)" stroke="#0A0A0A" stroke-width="1.5"/>
+  <line x1="86" y1="98" x2="86" y2="126" stroke="#0A0A0A" stroke-width="1.2"/>
+  <line x1="72" y1="112" x2="100" y2="112" stroke="#0A0A0A" stroke-width="1.2"/>
+  <!-- Window box -->
+  <rect x="68" y="124" width="36" height="6" rx="1" fill="#8B6F2C"/>
+
+  <!-- Right window -->
+  <rect x="140" y="98" width="28" height="28" fill="url(#homeWindow)" stroke="#0A0A0A" stroke-width="1.5"/>
+  <line x1="154" y1="98" x2="154" y2="126" stroke="#0A0A0A" stroke-width="1.2"/>
+  <line x1="140" y1="112" x2="168" y2="112" stroke="#0A0A0A" stroke-width="1.2"/>
+  <rect x="136" y="124" width="36" height="6" rx="1" fill="#8B6F2C"/>
+
+  <!-- Door -->
+  <path d="M110 144 L110 110 Q110 102 120 102 Q130 102 130 110 L130 144 Z" fill="url(#homeDoor)"/>
+  <!-- Door panels -->
+  <rect x="114" y="116" width="12" height="10" fill="none" stroke="#3A3A3A" stroke-width="0.8"/>
+  <rect x="114" y="130" width="12" height="10" fill="none" stroke="#3A3A3A" stroke-width="0.8"/>
+  <!-- Door knob -->
+  <circle cx="125" cy="125" r="1.4" fill="#D4AF37"/>
+
+  <!-- Lamp post -->
+  <line x1="44" y1="110" x2="44" y2="142" stroke="#0A0A0A" stroke-width="2"/>
+  <rect x="40" y="100" width="8" height="10" rx="1" fill="#0A0A0A"/>
+  <ellipse cx="44" cy="105" rx="3" ry="2" fill="#E5C770"/>
+
+  <!-- Sparkles -->
+  <circle cx="22" cy="40" r="2" fill="#D4AF37"/>
+  <circle cx="218" cy="44" r="1.8" fill="#C9A961"/>
+  <circle cx="20" cy="80" r="1.4" fill="#E5C770"/>
+  <path d="M210 70 L216 70 M213 67 L213 73" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+</svg>

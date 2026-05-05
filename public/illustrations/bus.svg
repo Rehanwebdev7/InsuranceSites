@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="busBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="busBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="60%" stop-color="#C9A961"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </linearGradient>
+    <linearGradient id="busWindow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#E5C770"/>
+    </linearGradient>
+    <radialGradient id="busRim" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#E5C770"/>
+      <stop offset="100%" stop-color="#5C4A1D"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="120" cy="115" rx="108" ry="55" fill="url(#busBlob)" opacity="0.95"/>
+  <ellipse cx="120" cy="150" rx="78" ry="5" fill="#0A0A0A" opacity="0.16"/>
+
+  <!-- Bus body -->
+  <path d="M22 60 Q22 52 30 52 L210 52 Q220 52 220 62 L220 134 L22 134 Z" fill="url(#busBody)"/>
+  <!-- Top accent stripe -->
+  <rect x="22" y="60" width="198" height="4" fill="#E5C770"/>
+  <!-- Front windshield (right side) -->
+  <path d="M186 66 Q200 66 210 78 L210 92 L186 92 Z" fill="url(#busWindow)"/>
+  <!-- Window strip -->
+  <rect x="36" y="68" width="146" height="22" rx="2" fill="url(#busWindow)"/>
+  <line x1="58" y1="68" x2="58" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <line x1="80" y1="68" x2="80" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <line x1="102" y1="68" x2="102" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <line x1="124" y1="68" x2="124" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <line x1="146" y1="68" x2="146" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <line x1="168" y1="68" x2="168" y2="90" stroke="#5C4A1D" stroke-width="1.4"/>
+  <!-- Window reflections -->
+  <path d="M40 72 L52 70 M62 72 L74 70 M84 72 L96 70 M106 72 L118 70 M128 72 L140 70 M150 72 L162 70 M172 72 L182 70" stroke="#FDFAF1" stroke-width="1" opacity="0.7"/>
+
+  <!-- Body band with route number -->
+  <rect x="22" y="100" width="198" height="14" fill="#0A0A0A"/>
+  <text x="38" y="111" font-family="sans-serif" font-size="10" fill="#E5C770" font-weight="700">ROUTE</text>
+  <rect x="98" y="103" width="22" height="9" rx="1.5" fill="#E5C770"/>
+  <text x="109" y="110" font-family="sans-serif" font-size="8" fill="#0A0A0A" font-weight="700" text-anchor="middle">42</text>
+  <text x="160" y="111" font-family="sans-serif" font-size="9" fill="#E5C770" font-weight="600">SCHOOL</text>
+
+  <!-- Door (passenger side) -->
+  <rect x="30" y="100" width="20" height="34" rx="1" fill="#1A1A1A"/>
+  <line x1="40" y1="100" x2="40" y2="134" stroke="#5C4A1D" stroke-width="1.2"/>
+  <rect x="32" y="116" width="6" height="3" rx="0.5" fill="#E5C770"/>
+  <!-- Steps -->
+  <rect x="30" y="128" width="20" height="2" fill="#0F0F0F"/>
+  <rect x="30" y="132" width="20" height="2" fill="#0F0F0F"/>
+
+  <!-- Front lights -->
+  <rect x="212" y="106" width="8" height="6" rx="1" fill="#FDFAF1"/>
+  <rect x="212" y="116" width="8" height="4" rx="1" fill="#D4AF37"/>
+
+  <!-- Wheels (rotating) -->
+  <g>
+    <circle cx="64" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="64" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="64" cy="138" r="6" fill="url(#busRim)"/>
+    <g transform="translate(64 138)" stroke="#0A0A0A" stroke-width="1.2">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/><line x1="-3.5" y1="-3.5" x2="3.5" y2="3.5"/><line x1="3.5" y1="-3.5" x2="-3.5" y2="3.5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4.5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="64" cy="138" r="2" fill="#0A0A0A"/>
+  </g>
+  <g>
+    <circle cx="178" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="178" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="178" cy="138" r="6" fill="url(#busRim)"/>
+    <g transform="translate(178 138)" stroke="#0A0A0A" stroke-width="1.2">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/><line x1="-3.5" y1="-3.5" x2="3.5" y2="3.5"/><line x1="3.5" y1="-3.5" x2="-3.5" y2="3.5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4.5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="178" cy="138" r="2" fill="#0A0A0A"/>
+  </g>
+
+  <!-- Sparkles -->
+  <circle cx="20" cy="42" r="2" fill="#D4AF37"/>
+  <circle cx="222" cy="44" r="1.8" fill="#C9A961"/>
+  <path d="M212 28 L218 28 M215 25 L215 31" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

@@ -1,23 +1,58 @@
 @import "tailwindcss";
 
 /* ===============================================
-   DESIGN TOKENS — Teal + Deep Blue Insurtech
+   DESIGN TOKENS — Heritage Gold + Ivory Editorial
+   Premium light theme with antique gold accents.
    =============================================== */
 :root {
-  /* ---- Brand (Teal) ---- */
-  --brand-50:  #F0FDFA;
-  --brand-100: #CCFBF1;
-  --brand-200: #99F6E4;
-  --brand-300: #5EEAD4;
-  --brand-400: #2DD4BF;
-  --brand-500: #14B8A6;
-  --brand-600: #0D9488;
-  --brand-700: #0F766E;
-  --brand-800: #115E59;
-  --brand-900: #134E4A;
-  --brand-950: #042F2E;
+  /* ---- Brand (remapped to GOLD scale) ---- */
+  /* These keep the same names as before so the SettingsContext
+     runtime override + existing Tailwind teal-* class remappings
+     all flip to gold automatically. */
+  --brand-50:  #FDFAF1;
+  --brand-100: #F5EBD3;
+  --brand-200: #EBDCB1;
+  --brand-300: #E5C770;
+  --brand-400: #D4AF37;
+  --brand-500: #C9A961;
+  --brand-600: #B8923A;
+  --brand-700: #8B6F2C;
+  --brand-800: #5C4A1D;
+  --brand-900: #2E2510;
+  --brand-950: #1A1508;
 
-  /* ---- Ink (Deep Blue / Slate neutrals) ---- */
+  /* ---- Gold (signature) ---- */
+  --gold-50:  #FDFAF1;
+  --gold-100: #F5EBD3;
+  --gold-200: #EBDCB1;
+  --gold-300: #E5C770;
+  --gold-400: #D4AF37;
+  --gold-500: #C9A961;
+  --gold-600: #B8923A;
+  --gold-700: #8B6F2C;
+  --gold-800: #5C4A1D;
+  --gold-900: #2E2510;
+
+  /* ---- Noir (rich black) ---- */
+  --noir-50:  #F5F5F5;
+  --noir-100: #E5E5E5;
+  --noir-200: #D4D4D4;
+  --noir-300: #A3A3A3;
+  --noir-400: #737373;
+  --noir-500: #525252;
+  --noir-600: #404040;
+  --noir-700: #2A2A2A;
+  --noir-800: #1A1A1A;
+  --noir-900: #0F0F0F;
+  --noir-950: #0A0A0A;
+
+  /* ---- Ivory (warm cream surface) ---- */
+  --ivory-50:  #FFFCF7;
+  --ivory-100: #FAF6EE;
+  --ivory-200: #F2EAD8;
+  --ivory-300: #E8DEC4;
+
+  /* ---- Ink (slate neutrals — kept for muted UI text/borders) ---- */
   --ink-50:  #F8FAFC;
   --ink-100: #F1F5F9;
   --ink-200: #E2E8F0;
@@ -31,38 +66,49 @@
 
   /* ---- Surfaces ---- */
   --surface-1: #FFFFFF;
-  --surface-2: #F8FAFC;
-  --surface-3: #F1F5F9;
-  --surface-4: #F0FDFA;
+  --surface-2: #FFFCF7;
+  --surface-3: #FAF6EE;
+  --surface-4: #F5EBD3;
 
-  /* ---- Accent ---- */
+  /* ---- Accent (kept for non-brand chrome) ---- */
   --accent-orange: #F97316;
   --accent-purple: #8B5CF6;
 
   /* ---- Semantic ---- */
-  --success: #10B981;
-  --warning: #F59E0B;
-  --danger:  #EF4444;
-  --info:    #3B82F6;
+  --success: #15803D;
+  --warning: #C9A961;
+  --danger:  #B91C1C;
+  --info:    #1E40AF;
 
-  /* ---- Gradients ---- */
-  --grad-hero: linear-gradient(135deg, #0F172A 0%, #134E4A 50%, #0D9488 100%);
-  --grad-cta:  linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
-  --grad-soft: linear-gradient(180deg, #F8FAFC 0%, #F0FDFA 100%);
-  --grad-dark: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-  --grad-card: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+  /* ---- Gradients (theme-aware) ---- */
+  /* Hero / dark sections — deepest noir with gold drift */
+  --grad-hero: linear-gradient(135deg, #0A0A0A 0%, #0F0F0F 35%, #1A1A1A 70%, #2A2A2A 100%);
+  /* CTA gradient — gold pill */
+  --grad-cta:  linear-gradient(135deg, #C9A961 0%, #D4AF37 100%);
+  /* Soft body gradient (legacy ivory) */
+  --grad-soft: linear-gradient(180deg, #1A1A1A 0%, #0F0F0F 100%);
+  /* Pure noir (alt sections) */
+  --grad-dark: linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 60%, #2A2A2A 100%);
+  /* Card surface — dark noir cabinet with warm interior */
+  --grad-card: linear-gradient(145deg, #1A1A1A 0%, #0F0F0F 100%);
+  /* Gold whisper (for subtle accent stripes) */
+  --grad-gold-soft: linear-gradient(135deg, rgba(201, 169, 97, 0) 0%, rgba(201, 169, 97, 0.28) 50%, rgba(201, 169, 97, 0) 100%);
+  /* Editorial light-mode variants (used when html.theme-light) */
+  --grad-soft-light: linear-gradient(180deg, #FFFCF7 0%, #FAF6EE 100%);
+  --grad-card-light: linear-gradient(145deg, #FFFFFF 0%, #FDFAF1 100%);
 
   /* ---- Elevation ---- */
-  --shadow-xs:  0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-xs:  0 1px 2px rgba(10, 10, 10, 0.04);
   --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-glow: 0 0 15px rgba(20, 184, 166, 0.3);
-  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  --shadow-brand: 0 20px 40px -12px rgba(20, 184, 166, 0.35);
-  --shadow-brand-sm: 0 8px 16px -8px rgba(20, 184, 166, 0.25);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.10), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+  --shadow-2xl: 0 25px 50px -12px rgb(10 10 10 / 0.18);
+  --shadow-glow:     0 0 20px rgba(201, 169, 97, 0.35);
+  --shadow-glass:    0 8px 32px 0 rgba(46, 37, 16, 0.12);
+  --shadow-brand:    0 20px 40px -12px rgba(201, 169, 97, 0.40);
+  --shadow-brand-sm: 0 8px 16px -8px rgba(201, 169, 97, 0.30);
+  --shadow-noir:     0 24px 48px -16px rgba(10, 10, 10, 0.45);
 
   /* ---- Motion ---- */
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
@@ -72,63 +118,97 @@
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ---- Typography ---- */
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Playfair Display', 'DM Serif Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', 'DM Serif Display', Georgia, serif;
+  --font-script: 'Caveat', 'Dancing Script', cursive;
   --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
   --font-family: var(--font-sans);
 
   /* ---- Legacy aliases (backward compat) ---- */
-  --color-primary: var(--brand-500);
-  --color-primary-light: var(--brand-400);
-  --color-primary-dark: var(--brand-700);
-  --color-primary-50: var(--brand-50);
-  --color-primary-100: var(--brand-100);
-  --color-primary-200: var(--brand-200);
-  --color-primary-300: var(--brand-300);
-  --color-primary-400: var(--brand-400);
-  --color-primary-500: var(--brand-500);
-  --color-primary-600: var(--brand-600);
-  --color-primary-700: var(--brand-700);
-  --color-primary-800: var(--brand-800);
-  --color-primary-900: var(--brand-900);
-  --color-secondary: var(--accent-orange);
-  --color-secondary-light: #FFEDD5;
-  --color-secondary-dark: #EA580C;
+  --color-primary: var(--gold-500);
+  --color-primary-light: var(--gold-400);
+  --color-primary-dark: var(--gold-700);
+  --color-primary-50: var(--gold-50);
+  --color-primary-100: var(--gold-100);
+  --color-primary-200: var(--gold-200);
+  --color-primary-300: var(--gold-300);
+  --color-primary-400: var(--gold-400);
+  --color-primary-500: var(--gold-500);
+  --color-primary-600: var(--gold-600);
+  --color-primary-700: var(--gold-700);
+  --color-primary-800: var(--gold-800);
+  --color-primary-900: var(--gold-900);
+  --color-secondary: var(--noir-950);
+  --color-secondary-light: var(--noir-700);
+  --color-secondary-dark: var(--noir-950);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--danger);
   --color-info: var(--info);
-  --color-text-primary: var(--ink-900);
+  --color-text-primary: var(--noir-950);
   --color-text-secondary: var(--ink-600);
   --color-text-light: var(--ink-400);
   --color-text-white: #FFFFFF;
   --color-bg-primary: var(--surface-1);
-  --color-bg-secondary: var(--surface-2);
-  --color-bg-tertiary: var(--surface-3);
-  --color-bg-dark: var(--ink-900);
+  --color-bg-secondary: var(--ivory-50);
+  --color-bg-tertiary: var(--ivory-100);
+  --color-bg-dark: var(--noir-950);
   --color-bg-card: var(--surface-1);
   --color-border: var(--ink-200);
   --color-border-light: var(--ink-100);
-  --color-border-dark: var(--ink-300);
+  --color-border-dark: var(--gold-300);
 }
 
 /* ===============================================
-   TAILWIND v4 @theme
+   TAILWIND v4 @theme — exposes tokens as utilities
    =============================================== */
 @theme {
-  --color-brand-50:  #F0FDFA;
-  --color-brand-100: #CCFBF1;
-  --color-brand-200: #99F6E4;
-  --color-brand-300: #5EEAD4;
-  --color-brand-400: #2DD4BF;
-  --color-brand-500: #14B8A6;
-  --color-brand-600: #0D9488;
-  --color-brand-700: #0F766E;
-  --color-brand-800: #115E59;
-  --color-brand-900: #134E4A;
-  --color-brand-950: #042F2E;
+  /* brand (gold-mapped) */
+  --color-brand-50:  #FDFAF1;
+  --color-brand-100: #F5EBD3;
+  --color-brand-200: #EBDCB1;
+  --color-brand-300: #E5C770;
+  --color-brand-400: #D4AF37;
+  --color-brand-500: #C9A961;
+  --color-brand-600: #B8923A;
+  --color-brand-700: #8B6F2C;
+  --color-brand-800: #5C4A1D;
+  --color-brand-900: #2E2510;
+  --color-brand-950: #1A1508;
 
+  /* gold */
+  --color-gold-50:  #FDFAF1;
+  --color-gold-100: #F5EBD3;
+  --color-gold-200: #EBDCB1;
+  --color-gold-300: #E5C770;
+  --color-gold-400: #D4AF37;
+  --color-gold-500: #C9A961;
+  --color-gold-600: #B8923A;
+  --color-gold-700: #8B6F2C;
+  --color-gold-800: #5C4A1D;
+  --color-gold-900: #2E2510;
+
+  /* noir */
+  --color-noir-50:  #F5F5F5;
+  --color-noir-100: #E5E5E5;
+  --color-noir-200: #D4D4D4;
+  --color-noir-300: #A3A3A3;
+  --color-noir-400: #737373;
+  --color-noir-500: #525252;
+  --color-noir-600: #404040;
+  --color-noir-700: #2A2A2A;
+  --color-noir-800: #1A1A1A;
+  --color-noir-900: #0F0F0F;
+  --color-noir-950: #0A0A0A;
+
+  /* ivory */
+  --color-ivory-50:  #FFFCF7;
+  --color-ivory-100: #FAF6EE;
+  --color-ivory-200: #F2EAD8;
+  --color-ivory-300: #E8DEC4;
+
+  /* ink (slate) */
   --color-ink-50:  #F8FAFC;
   --color-ink-100: #F1F5F9;
   --color-ink-200: #E2E8F0;
@@ -141,7 +221,8 @@
   --color-ink-900: #0F172A;
 
   --font-family-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-family-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-display: 'Playfair Display', 'DM Serif Display', Georgia, serif;
+  --font-family-script: 'Caveat', 'Dancing Script', cursive;
 }
 
 /* ===============================================
@@ -158,12 +239,18 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-body);
-  color: var(--ink-900);
-  background-color: var(--surface-2);
+  color: var(--ivory-100);
+  background-color: var(--noir-950);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Light-mode variant — toggleable via admin (adds .theme-light to <html>) */
+html.theme-light body {
+  color: var(--noir-950);
+  background-color: var(--ivory-50);
 }
 
 #root {
@@ -173,44 +260,91 @@ body {
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--surface-2); }
-::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: 999px; border: 2px solid var(--surface-2); }
-::-webkit-scrollbar-thumb:hover { background: var(--brand-500); }
+::-webkit-scrollbar-track { background: var(--noir-900); }
+::-webkit-scrollbar-thumb { background: var(--gold-700); border-radius: 999px; border: 2px solid var(--noir-900); }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-500); }
 
-::selection { background-color: var(--brand-200); color: var(--brand-900); }
+::selection { background-color: var(--gold-500); color: var(--noir-950); }
 
 /* ===============================================
    TYPOGRAPHY
    =============================================== */
 .font-display {
   font-family: var(--font-heading);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
+  font-feature-settings: "lnum" 1;
+}
+
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .text-display-xl {
   font-family: var(--font-heading);
-  font-size: clamp(2.25rem, 5vw, 3rem);
-  line-height: 1.08;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+  line-height: 1.04;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .text-display-lg {
   font-family: var(--font-heading);
-  font-size: clamp(1.875rem, 4vw, 2.5rem);
-  line-height: 1.1;
+  font-size: clamp(2rem, 4.2vw, 2.75rem);
+  line-height: 1.08;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.018em;
 }
 .text-display-md {
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.625rem, 3.2vw, 2.125rem);
   line-height: 1.15;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 .text-balance { text-wrap: balance; }
 .text-pretty  { text-wrap: pretty; }
+
+/* Editorial "gold script underline" — used on hero highlight word */
+.gold-underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.gold-underline::after {
+  content: '';
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.18em;
+  height: 0.32em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 8 C 40 2, 80 11, 120 5 S 180 9, 198 4' stroke='%23C9A961' stroke-width='3' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+/* Section divider — thin gold line + centered diamond */
+.gold-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gold-500);
+}
+.gold-divider::before,
+.gold-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-300), transparent);
+}
+.gold-divider .diamond {
+  width: 8px; height: 8px;
+  transform: rotate(45deg);
+  background: var(--gold-400);
+  box-shadow: 0 0 8px rgba(201,169,97,0.5);
+}
 
 /* ===============================================
    GRADIENTS + EFFECTS
@@ -220,15 +354,22 @@ body {
 .grad-soft   { background: var(--grad-soft); }
 .grad-dark   { background: var(--grad-dark); }
 .grad-card   { background: var(--grad-card); }
+.grad-gold-soft { background: var(--grad-gold-soft); }
 
 .text-grad-brand {
-  background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-400) 100%);
+  background: linear-gradient(135deg, var(--gold-700) 0%, var(--gold-500) 50%, var(--gold-400) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .text-grad-hero {
-  background: linear-gradient(135deg, #99F6E4 0%, #5EEAD4 50%, #2DD4BF 100%);
+  background: linear-gradient(135deg, var(--gold-300) 0%, var(--gold-400) 50%, var(--gold-500) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-grad-noir {
+  background: linear-gradient(135deg, var(--noir-950) 0%, var(--noir-700) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -239,16 +380,16 @@ body {
 
 /* Glass morphism */
 .glass {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 252, 247, 0.78);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(201, 169, 97, 0.18);
 }
 .glass-dark {
-  background: rgba(15, 23, 42, 0.72);
+  background: rgba(15, 15, 15, 0.78);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(201, 169, 97, 0.22);
 }
 
 /* Noise texture overlay */
@@ -262,12 +403,12 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* Aurora blob */
+/* Aurora blob (softer warm wash) */
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.5;
+  opacity: 0.45;
   pointer-events: none;
   animation: aurora-drift 18s ease-in-out infinite;
 }
@@ -292,22 +433,22 @@ body {
 }
 
 /* ===============================================
-   LEGACY GRADIENT UTILITIES
+   LEGACY GRADIENT UTILITIES (now gold-mapped)
    =============================================== */
-.bg-gradient-primary { background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-800) 100%); }
+.bg-gradient-primary { background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-700) 100%); }
 .bg-gradient-hero    { background: var(--grad-hero); }
-.bg-gradient-accent  { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); }
+.bg-gradient-accent  { background: linear-gradient(135deg, var(--noir-800) 0%, var(--noir-950) 100%); }
 .bg-gradient-dark    { background: var(--grad-dark); }
 .bg-gradient-card    { background: var(--grad-card); }
 .text-gradient-primary {
-  background: linear-gradient(135deg, var(--brand-600) 0%, var(--brand-400) 100%);
+  background: linear-gradient(135deg, var(--gold-700) 0%, var(--gold-400) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* ===============================================
-   CARD + BUTTON BASE (legacy)
+   CARD + BUTTON BASE (legacy, gold-mapped)
    =============================================== */
 .card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -319,13 +460,14 @@ body {
 
 .btn-primary {
   background: var(--grad-cta);
-  color: #FFFFFF;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-heading);
+  color: var(--noir-950);
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
   transition: all var(--transition-fast);
-  border: none;
+  border: 1px solid var(--gold-600);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -334,22 +476,22 @@ body {
 }
 .btn-primary:hover {
   transform: translateY(-1px) scale(1.02);
-  box-shadow: var(--shadow-glow);
-  filter: brightness(1.05);
+  box-shadow: var(--shadow-brand);
+  filter: brightness(1.04);
 }
 .btn-primary:active {
   transform: scale(0.98);
 }
 
 .btn-secondary {
-  background: #FFFFFF;
-  color: var(--brand-700);
+  background: var(--noir-950);
+  color: var(--gold-300);
   padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   font-weight: 600;
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   transition: all var(--transition-fast);
-  border: 1.5px solid var(--ink-200);
+  border: 1px solid var(--gold-500);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -357,18 +499,20 @@ body {
   gap: 0.5rem;
 }
 .btn-secondary:hover {
-  border-color: var(--brand-500);
-  background: var(--brand-50);
+  color: #FFFFFF;
+  border-color: var(--gold-400);
+  background: var(--noir-800);
+  box-shadow: var(--shadow-brand-sm);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--brand-600);
+  color: var(--noir-950);
   padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   font-weight: 600;
   transition: all var(--transition-fast);
-  border: 1.5px solid var(--brand-600);
+  border: 1.5px solid var(--gold-500);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -376,8 +520,8 @@ body {
   gap: 0.5rem;
 }
 .btn-outline:hover {
-  background: var(--brand-600);
-  color: #FFFFFF;
+  background: var(--gold-100);
+  border-color: var(--gold-600);
 }
 
 /* ===============================================
@@ -390,25 +534,25 @@ body {
   border-radius: 0.75rem;
   font-size: 1rem;
   font-family: var(--font-body);
-  color: var(--ink-900);
+  color: var(--noir-950);
   background-color: #FFFFFF;
   transition: all var(--transition-fast);
   outline: none;
 }
 .input-field:focus {
-  border-color: var(--brand-500);
-  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
+  border-color: var(--gold-500);
+  box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.15);
 }
 .input-field::placeholder { color: var(--ink-400); }
 .input-error {
   border-color: var(--danger) !important;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08) !important;
+  box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.10) !important;
 }
 .input-label {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--ink-700);
+  color: var(--noir-700);
   margin-bottom: 0.375rem;
 }
 .error-message {
@@ -419,7 +563,7 @@ body {
 
 /* Status badges (legacy) */
 .badge          { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; }
-.badge-new      { background: #CCFBF1; color: #134E4A; }
+.badge-new      { background: var(--gold-100); color: var(--gold-800); }
 .badge-contacted{ background: #FEF3C7; color: #92400E; }
 .badge-converted{ background: #D1FAE5; color: #047857; }
 .badge-closed   { background: #FEE2E2; color: #991B1B; }
@@ -452,12 +596,12 @@ body {
   animation: kenBurns 8s ease-in-out forwards;
 }
 
-/* CTA pulse glow */
+/* CTA pulse glow (gold) */
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(20, 184, 166, 0.3); }
-  50%      { box-shadow: 0 0 20px rgba(20, 184, 166, 0.6); }
+  0%, 100% { box-shadow: 0 0 8px rgba(201, 169, 97, 0.35); }
+  50%      { box-shadow: 0 0 24px rgba(201, 169, 97, 0.65); }
 }
-.pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.pulse-glow { animation: pulseGlow 2.4s ease-in-out infinite; }
 
 /* Count-up text shimmer */
 @keyframes countShimmer {
@@ -466,42 +610,43 @@ body {
 }
 
 .shimmer-bg {
-  background: linear-gradient(90deg, #F1F5F9 0%, #E2E8F0 40%, #F1F5F9 80%);
+  background: linear-gradient(90deg, var(--ivory-100) 0%, var(--ivory-200) 40%, var(--ivory-100) 80%);
   background-size: 1000px 100%;
   animation: shimmer 2s linear infinite;
 }
 
 /* ===============================================
-   HERO SHOWER — falling light particles
+   GOLD DUST — falling particles for hero
+   (recolored from white shower to warm gold)
    =============================================== */
 .shower { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .shower-drop {
   position: absolute; top: -10%; width: 1.5px;
-  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.8) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(229, 199, 112, 0.55) 40%, rgba(212, 175, 55, 0.85) 100%);
   animation: shower-fall linear infinite; opacity: 0; border-radius: 999px; filter: blur(0.3px);
 }
 .shower-sparkle {
   position: absolute; width: 4px; height: 4px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%);
+  background: radial-gradient(circle, rgba(229,199,112,0.95), rgba(229,199,112,0) 70%);
   animation: shower-twinkle var(--twinkle-dur, 4s) ease-in-out infinite; opacity: 0;
 }
 @keyframes shower-fall {
   0%   { transform: translateY(-20vh) translateX(0); opacity: 0; }
-  10%  { opacity: 0.6; }
-  90%  { opacity: 0.6; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
   100% { transform: translateY(120vh) translateX(-20px); opacity: 0; }
 }
 @keyframes shower-twinkle {
   0%, 100% { opacity: 0; transform: scale(0.6); }
-  50%      { opacity: 0.9; transform: scale(1.3); }
+  50%      { opacity: 0.95; transform: scale(1.3); }
 }
 
 /* ===============================================
-   SLIDER GRADIENTS (legacy)
+   SLIDER GRADIENTS (legacy — gold-mapped overlays)
    =============================================== */
-.slider-gradient-1 { background: linear-gradient(135deg, #042F2E 0%, #0D9488 50%, #14B8A6 100%); }
-.slider-gradient-2 { background: linear-gradient(135deg, #134E4A 0%, #0F766E 50%, #2DD4BF 100%); }
-.slider-gradient-3 { background: linear-gradient(135deg, #115E59 0%, #0D9488 50%, #5EEAD4 100%); }
+.slider-gradient-1 { background: linear-gradient(135deg, #0A0A0A 0%, #2E2510 50%, #5C4A1D 100%); }
+.slider-gradient-2 { background: linear-gradient(135deg, #1A1A1A 0%, #5C4A1D 50%, #C9A961 100%); }
+.slider-gradient-3 { background: linear-gradient(135deg, #2A2A2A 0%, #8B6F2C 50%, #D4AF37 100%); }
 
 /* ===============================================
    CONTAINERS
@@ -524,15 +669,15 @@ body {
    REACT-SELECT + DATEPICKER OVERRIDES
    =============================================== */
 .react-select__control { border-color: var(--ink-200) !important; border-width: 1.5px !important; border-radius: 0.75rem !important; min-height: 46px !important; box-shadow: none !important; }
-.react-select__control--is-focused { border-color: var(--brand-500) !important; box-shadow: 0 0 0 4px rgba(20,184,166,0.12) !important; }
-.react-select__option--is-focused  { background-color: var(--brand-50) !important; }
-.react-select__option--is-selected { background-color: var(--brand-600) !important; }
+.react-select__control--is-focused { border-color: var(--gold-500) !important; box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.15) !important; }
+.react-select__option--is-focused  { background-color: var(--gold-50) !important; }
+.react-select__option--is-selected { background-color: var(--gold-500) !important; color: var(--noir-950) !important; }
 .react-datepicker-wrapper { width: 100%; }
 .react-datepicker__input-container input {
   width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--ink-200); border-radius: 0.75rem;
-  font-size: 1rem; font-family: var(--font-body); color: var(--ink-900); background: white; transition: all var(--transition-fast); outline: none;
+  font-size: 1rem; font-family: var(--font-body); color: var(--noir-950); background: white; transition: all var(--transition-fast); outline: none;
 }
-.react-datepicker__input-container input:focus { border-color: var(--brand-500); box-shadow: 0 0 0 4px rgba(20,184,166,0.12); }
+.react-datepicker__input-container input:focus { border-color: var(--gold-500); box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.15); }
 
 /* ===============================================
    GOOGLE TRANSLATE SUPPRESSION
@@ -546,7 +691,7 @@ body { top: 0 !important; }
    ACCESSIBILITY
    =============================================== */
 :focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--gold-500);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -566,4 +711,331 @@ body { top: 0 !important; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ===============================================
+   PREMIUM CREATIVE MICRO-INTERACTIONS
+   =============================================== */
+
+/* Custom cursor follower removed — native browser cursor restored. */
+
+/* Sticky scroll-progress gold bar at top */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #C9A961 50%, #D4AF37 100%);
+  transform-origin: 0 0;
+  z-index: 100;
+  box-shadow: 0 0 12px rgba(201, 169, 97, 0.55);
+  pointer-events: none;
+}
+
+/* 3D tilt card surface — set via inline style transform from JS */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tilt-card-inner {
+  transform: translateZ(40px);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Magnetic CTA — wrapper applies translate based on cursor distance */
+.magnetic-cta {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Word-reveal — used on hero headlines */
+.word-reveal {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.word-reveal > span {
+  display: inline-block;
+  transform: translateY(110%) rotate(8deg);
+  opacity: 0;
+  animation: word-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--word-delay, 0s);
+}
+@keyframes word-rise {
+  to { transform: translateY(0) rotate(0); opacity: 1; }
+}
+
+/* Floating gold particles for hero (CSS-only ambient) */
+.float-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #E5C770, #C9A961 60%, transparent 100%);
+  opacity: 0;
+  animation: float-rise var(--float-dur, 12s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  pointer-events: none;
+  filter: blur(0.5px);
+}
+@keyframes float-rise {
+  0%   { opacity: 0; transform: translateY(0) translateX(0); }
+  10%  { opacity: 0.85; }
+  50%  { transform: translateY(-200px) translateX(30px); opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-420px) translateX(-20px); opacity: 0; }
+}
+
+/* Spotlight that follows cursor on hero panel */
+.cursor-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), rgba(229,199,112,0.18), transparent 60%);
+  transition: background 0.25s;
+}
+
+/* Editorial drawn-line gold underline that draws on viewport entry */
+.draw-underline {
+  position: relative;
+  display: inline-block;
+}
+.draw-underline::after {
+  content: '';
+  position: absolute;
+  left: -4%; right: -4%;
+  bottom: -0.18em;
+  height: 0.28em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 14' preserveAspectRatio='none'><path d='M3 9 C 50 2, 110 13, 170 5 S 230 11, 237 4' stroke='%23D4AF37' stroke-width='3' fill='none' stroke-linecap='round' pathLength='1' stroke-dasharray='1' stroke-dashoffset='1'><animate attributeName='stroke-dashoffset' from='1' to='0' dur='1.4s' fill='freeze' begin='0.1s'/></path></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+/* Number shimmer — applied to count-up stats */
+.number-shimmer {
+  background: linear-gradient(90deg, #C9A961 0%, #E5C770 50%, #C9A961 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: number-shimmer 4s ease-in-out infinite;
+}
+@keyframes number-shimmer {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}
+
+/* ===============================================
+   ADMIN PANEL — global dark+gold overrides
+   Scoped to .admin-content so customer site is not affected.
+   These re-skin every page that still uses light bg-white/gray utilities.
+   `[data-admin-theme="light"] .admin-content` flips to ivory + black + gold accents.
+   =============================================== */
+
+/* DARK MODE (default) — re-skin within admin-content */
+.admin-shell[data-admin-theme="dark"] .admin-content {
+  color: #FAF6EE;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content h1,
+.admin-shell[data-admin-theme="dark"] .admin-content h2,
+.admin-shell[data-admin-theme="dark"] .admin-content h3,
+.admin-shell[data-admin-theme="dark"] .admin-content h4,
+.admin-shell[data-admin-theme="dark"] .admin-content h5,
+.admin-shell[data-admin-theme="dark"] .admin-content h6 {
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
+}
+
+/* Surfaces: bg-white / bg-gray-50 / bg-gray-100 → noir cabinets */
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-white { background-color: var(--noir-900) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-gray-50 { background-color: var(--noir-800) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-gray-100 { background-color: var(--noir-800) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-gray-200 { background-color: var(--noir-700) !important; }
+
+/* Text shades: gray-* → ink+ivory */
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-900,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-800 { color: #FFFFFF !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-700 { color: #E5E5E5 !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-600 { color: #CBD5E1 !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-500 { color: #94A3B8 !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-400 { color: #737373 !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-gray-300 { color: #525252 !important; }
+
+/* Borders: gray-* → gold semi-transparent */
+.admin-shell[data-admin-theme="dark"] .admin-content .border-gray-100,
+.admin-shell[data-admin-theme="dark"] .admin-content .border-gray-200,
+.admin-shell[data-admin-theme="dark"] .admin-content .border-gray-300 {
+  border-color: rgba(201, 169, 97, 0.22) !important;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.admin-shell[data-admin-theme="dark"] .admin-content .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(201, 169, 97, 0.18) !important;
+}
+
+/* Hover states */
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:bg-gray-50:hover,
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:bg-gray-100:hover,
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:bg-gray-200:hover {
+  background-color: var(--noir-700) !important;
+}
+
+/* Inputs / Selects / Textareas — keep dark with gold focus */
+.admin-shell[data-admin-theme="dark"] .admin-content input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="file"]),
+.admin-shell[data-admin-theme="dark"] .admin-content textarea,
+.admin-shell[data-admin-theme="dark"] .admin-content select {
+  background-color: var(--noir-900) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(201, 169, 97, 0.30) !important;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content input::placeholder,
+.admin-shell[data-admin-theme="dark"] .admin-content textarea::placeholder {
+  color: #94A3B8 !important;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content input:focus,
+.admin-shell[data-admin-theme="dark"] .admin-content textarea:focus,
+.admin-shell[data-admin-theme="dark"] .admin-content select:focus {
+  border-color: #C9A961 !important;
+  box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.15) !important;
+  outline: none !important;
+}
+/* Date input calendar icon visibility on dark */
+.admin-shell[data-admin-theme="dark"] .admin-content input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) sepia(1) saturate(2) hue-rotate(20deg);
+  cursor: pointer;
+}
+
+/* Primary buttons (bg-blue-*) → gold gradient */
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-blue-500,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-blue-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-blue-700,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-gradient-to-r.from-blue-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-gradient-to-r.from-blue-500 {
+  background: linear-gradient(135deg, #C9A961 0%, #D4AF37 100%) !important;
+  color: var(--noir-950) !important;
+  border-color: #B8923A !important;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:bg-blue-700:hover,
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:from-blue-700:hover {
+  filter: brightness(1.05);
+}
+.admin-shell[data-admin-theme="dark"] .admin-content .text-blue-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-blue-700,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-blue-800 {
+  color: #E5C770 !important;
+}
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-blue-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-blue-100 {
+  background-color: rgba(201, 169, 97, 0.12) !important;
+  color: #E5C770 !important;
+}
+
+/* Status pill colors — dark variants */
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-green-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-green-100 { background-color: rgba(34, 197, 94, 0.12) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-green-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-green-700 { color: #6ee7b7 !important; }
+
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-yellow-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-yellow-100 { background-color: rgba(234, 179, 8, 0.15) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-yellow-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-yellow-700 { color: #facc15 !important; }
+
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-red-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-red-100 { background-color: rgba(239, 68, 68, 0.12) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-red-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-red-700 { color: #fca5a5 !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:bg-red-50:hover { background-color: rgba(239, 68, 68, 0.18) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .hover\:text-red-600:hover { color: #fca5a5 !important; }
+
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-purple-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-purple-100 { background-color: rgba(168, 85, 247, 0.15) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-purple-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-purple-700 { color: #d8b4fe !important; }
+
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-amber-50 { background-color: rgba(245, 158, 11, 0.12) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .border-amber-200 { border-color: rgba(245, 158, 11, 0.30) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-amber-700,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-amber-800,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-amber-900 { color: #fde68a !important; }
+
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-orange-50,
+.admin-shell[data-admin-theme="dark"] .admin-content .bg-orange-100 { background-color: rgba(249, 115, 22, 0.15) !important; }
+.admin-shell[data-admin-theme="dark"] .admin-content .text-orange-600,
+.admin-shell[data-admin-theme="dark"] .admin-content .text-orange-700 { color: #fdba74 !important; }
+
+/* LIGHT MODE — golden ivory bg + black text + gold accents */
+.admin-shell[data-admin-theme="light"] .admin-content {
+  color: var(--noir-900);
+}
+.admin-shell[data-admin-theme="light"] .admin-content h1,
+.admin-shell[data-admin-theme="light"] .admin-content h2,
+.admin-shell[data-admin-theme="light"] .admin-content h3,
+.admin-shell[data-admin-theme="light"] .admin-content h4,
+.admin-shell[data-admin-theme="light"] .admin-content h5,
+.admin-shell[data-admin-theme="light"] .admin-content h6 {
+  color: var(--noir-950);
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
+}
+
+/* Light mode surfaces — gold-tinged ivory */
+.admin-shell[data-admin-theme="light"] .admin-content .bg-white { background-color: #FFFFFF !important; }
+.admin-shell[data-admin-theme="light"] .admin-content .bg-gray-50 { background-color: var(--ivory-100) !important; }
+.admin-shell[data-admin-theme="light"] .admin-content .bg-gray-100 { background-color: var(--ivory-200) !important; }
+.admin-shell[data-admin-theme="light"] .admin-content .bg-gray-200 { background-color: var(--ivory-300) !important; }
+
+/* Borders */
+.admin-shell[data-admin-theme="light"] .admin-content .border-gray-100,
+.admin-shell[data-admin-theme="light"] .admin-content .border-gray-200,
+.admin-shell[data-admin-theme="light"] .admin-content .border-gray-300 {
+  border-color: #EBDCB1 !important;
+}
+
+/* Light mode primary buttons (blue → gold) */
+.admin-shell[data-admin-theme="light"] .admin-content .bg-blue-600,
+.admin-shell[data-admin-theme="light"] .admin-content .bg-blue-700,
+.admin-shell[data-admin-theme="light"] .admin-content .bg-gradient-to-r.from-blue-600,
+.admin-shell[data-admin-theme="light"] .admin-content .bg-gradient-to-r.from-blue-500 {
+  background: linear-gradient(135deg, #C9A961 0%, #D4AF37 100%) !important;
+  color: var(--noir-950) !important;
+  border-color: #B8923A !important;
+}
+.admin-shell[data-admin-theme="light"] .admin-content .text-blue-600,
+.admin-shell[data-admin-theme="light"] .admin-content .text-blue-700 {
+  color: #8B6F2C !important;
+}
+.admin-shell[data-admin-theme="light"] .admin-content .bg-blue-50,
+.admin-shell[data-admin-theme="light"] .admin-content .bg-blue-100 {
+  background-color: rgba(201, 169, 97, 0.12) !important;
+  color: #8B6F2C !important;
+}
+
+/* Inputs in light mode */
+.admin-shell[data-admin-theme="light"] .admin-content input:focus,
+.admin-shell[data-admin-theme="light"] .admin-content textarea:focus,
+.admin-shell[data-admin-theme="light"] .admin-content select:focus {
+  border-color: #C9A961 !important;
+  box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.15) !important;
+  outline: none !important;
+}
+
+/* Page card lift — works in both modes */
+.admin-shell .admin-content .rounded-xl,
+.admin-shell .admin-content .rounded-2xl {
+  border-radius: 1rem;
+}
+.admin-shell .admin-content .shadow-sm {
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.18) !important;
+}
+.admin-shell[data-admin-theme="light"] .admin-content .shadow-sm {
+  box-shadow: 0 4px 12px rgba(46, 37, 16, 0.08) !important;
+}
+
+/* Add a soft gold rim around primary cards in dark mode */
+.admin-shell[data-admin-theme="dark"] .admin-content > div > .bg-white,
+.admin-shell[data-admin-theme="dark"] .admin-content > div .rounded-xl.bg-white,
+.admin-shell[data-admin-theme="dark"] .admin-content > div .rounded-2xl.bg-white {
+  border: 1px solid rgba(201, 169, 97, 0.22);
 }

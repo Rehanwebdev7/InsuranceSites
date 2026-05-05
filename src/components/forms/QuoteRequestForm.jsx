@@ -229,7 +229,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
               animate={{ opacity: 1, scale: 1 }}
               className="flex-1 flex flex-col items-center justify-center px-5 py-10 text-center"
             >
-              <div className="w-16 h-16 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#F5EBD3] text-[#8B6F2C] border border-[#C9A961] flex items-center justify-center mb-4">
                 <FiCheck className="text-2xl" strokeWidth={3} />
               </div>
               <h3 className="text-lg font-display font-semibold text-ink-900 mb-1.5">
@@ -248,7 +248,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {!service && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <FiGrid className="text-teal-600" />
+                      <FiGrid className="text-[#8B6F2C]" />
                       <h3 className="text-sm font-semibold text-ink-900">Choose your service</h3>
                     </div>
                     <input type="hidden" {...register('selectedServiceId')} />
@@ -286,7 +286,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                                   onClick={() => handleServiceSelect(itemValue)}
                                   className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
                                     isSelected
-                                      ? 'bg-teal-50 text-teal-800 font-semibold'
+                                      ? 'bg-[#FDFAF1] text-[#5C4A1D] font-semibold'
                                       : 'text-ink-700 hover:bg-ink-50'
                                   }`}
                                 >
@@ -304,7 +304,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {/* Personal info */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <FiUser className="text-teal-600" />
+                    <FiUser className="text-[#8B6F2C]" />
                     <h3 className="text-sm font-semibold text-ink-900">Personal Information</h3>
                   </div>
                   <div className="space-y-3">
@@ -346,7 +346,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                   <>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FiTruck className="text-teal-600" />
+                        <FiTruck className="text-[#8B6F2C]" />
                         <h3 className="text-sm font-semibold text-ink-900">Vehicle Details</h3>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -379,14 +379,14 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {/* Policy details */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <FiFileText className="text-teal-600" />
+                    <FiFileText className="text-[#8B6F2C]" />
                     <h3 className="text-sm font-semibold text-ink-900">Policy Details</h3>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-ink-50 rounded-xl mb-3">
                     <span className="text-sm font-semibold text-ink-900">Is Active Policy?</span>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" {...register('hasActivePolicy')} className="sr-only peer" />
-                      <div className="w-12 h-6 bg-ink-200 rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-teal-600" />
+                      <div className="w-12 h-6 bg-ink-200 rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-[#C9A961]" />
                     </label>
                   </div>
                   <AnimatePresence>
@@ -419,8 +419,8 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                   </AnimatePresence>
                 </div>
 
-                <p className="text-xs text-ink-500 bg-teal-50 border border-teal-100 rounded-xl px-4 py-3 leading-relaxed flex items-start gap-2">
-                  <FiLock className="text-teal-600 mt-0.5 shrink-0" />
+                <p className="text-xs text-ink-600 bg-[#FDFAF1] border border-[#EBDCB1] rounded-xl px-4 py-3 leading-relaxed flex items-start gap-2">
+                  <FiLock className="text-[#8B6F2C] mt-0.5 shrink-0" />
                   Your information is encrypted and never shared with third parties. We will only use it to share your quotes.
                 </p>
               </div>

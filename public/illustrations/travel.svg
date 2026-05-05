@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="travBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="55%" stop-color="#C9A961"/>
+      <stop offset="100%" stop-color="#5C4A1D"/>
+    </linearGradient>
+    <linearGradient id="globeHi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#E5C770" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="planeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A2A2A"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="120" cy="100" rx="105" ry="65" fill="url(#travBlob)" opacity="0.95"/>
+
+  <!-- Globe with rotating continents -->
+  <circle cx="120" cy="100" r="50" fill="url(#globeGrad)"/>
+  <!-- Continents — slowly drift across the globe (rotation feel) -->
+  <g style="clip-path: circle(50px at 120px 100px);">
+    <g>
+      <path d="M86 90 Q92 84 100 86 Q108 92 102 100 Q94 104 86 100 Z" fill="#0A0A0A" opacity="0.35"/>
+      <path d="M124 78 Q138 80 144 90 Q146 100 138 102 Q128 100 122 92 Z" fill="#0A0A0A" opacity="0.35"/>
+      <path d="M104 110 Q116 108 130 116 Q138 124 130 130 Q116 130 106 122 Z" fill="#0A0A0A" opacity="0.35"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0; -10 0; 0 0; 10 0; 0 0" dur="14s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <!-- Latitude/longitude lines -->
+  <ellipse cx="120" cy="100" rx="50" ry="20" fill="none" stroke="#0A0A0A" stroke-width="1" opacity="0.5"/>
+  <ellipse cx="120" cy="100" rx="40" ry="50" fill="none" stroke="#0A0A0A" stroke-width="1" opacity="0.5"/>
+  <ellipse cx="120" cy="100" rx="20" ry="50" fill="none" stroke="#0A0A0A" stroke-width="1" opacity="0.4"/>
+  <line x1="70" y1="100" x2="170" y2="100" stroke="#0A0A0A" stroke-width="1" opacity="0.5"/>
+  <line x1="120" y1="50" x2="120" y2="150" stroke="#0A0A0A" stroke-width="1" opacity="0.5"/>
+  <!-- Globe highlight -->
+  <ellipse cx="106" cy="84" rx="22" ry="14" fill="url(#globeHi)" transform="rotate(-30 106 84)"/>
+  <!-- Globe stand -->
+  <rect x="116" y="150" width="8" height="10" fill="#1A1A1A"/>
+  <ellipse cx="120" cy="162" rx="20" ry="3" fill="#0A0A0A"/>
+
+  <!-- Plane (gently floating along arc) -->
+  <g>
+    <g transform="translate(40 38) rotate(-12)">
+      <path d="M0 12 L40 4 L60 6 L72 12 L60 18 L40 20 L0 12 Z" fill="url(#planeGrad)"/>
+      <path d="M28 12 L42 0 L46 0 L40 12 Z" fill="url(#planeGrad)"/>
+      <path d="M28 12 L42 24 L46 24 L40 12 Z" fill="url(#planeGrad)"/>
+      <path d="M64 12 L72 0 L74 0 L72 12 Z" fill="url(#planeGrad)"/>
+      <circle cx="50" cy="11" r="1.4" fill="#E5C770"/>
+      <circle cx="55" cy="11" r="1.4" fill="#E5C770"/>
+      <circle cx="60" cy="11" r="1.4" fill="#E5C770"/>
+      <path d="M70 9 Q72 7 73 11 Q72 14 70 13 Z" fill="#E5C770"/>
+    </g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 8 -4; 0 0; -6 4; 0 0" dur="5s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- Travel arc trail -->
+  <path d="M30 50 Q60 30 100 30" stroke="#C9A961" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+
+  <!-- Compass rose mini -->
+  <g transform="translate(204 144)">
+    <circle cx="0" cy="0" r="14" fill="#0A0A0A"/>
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#C9A961" stroke-width="1"/>
+    <path d="M0 -10 L3 0 L0 10 L-3 0 Z" fill="#E5C770"/>
+    <path d="M-10 0 L0 -3 L10 0 L0 3 Z" fill="#C9A961"/>
+    <text x="0" y="-12" font-family="serif" font-size="5" fill="#E5C770" text-anchor="middle">N</text>
+  </g>
+
+  <!-- Sparkles -->
+  <circle cx="200" cy="40" r="2" fill="#D4AF37"/>
+  <circle cx="220" cy="68" r="1.6" fill="#C9A961"/>
+  <circle cx="22" cy="100" r="1.5" fill="#E5C770"/>
+  <circle cx="32" cy="160" r="1.4" fill="#D4AF37"/>
+  <path d="M210 22 L216 22 M213 19 L213 25" stroke="#C9A961" stroke-width="1" stroke-linecap="round"/>
+</svg>

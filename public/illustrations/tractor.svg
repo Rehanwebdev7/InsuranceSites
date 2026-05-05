@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="tracBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="tracBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </linearGradient>
+    <linearGradient id="tracCab" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#E5C770"/>
+    </linearGradient>
+    <radialGradient id="tracRim" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#E5C770"/>
+      <stop offset="100%" stop-color="#5C4A1D"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="120" cy="115" rx="108" ry="55" fill="url(#tracBlob)" opacity="0.95"/>
+  <ellipse cx="120" cy="150" rx="74" ry="5" fill="#0A0A0A" opacity="0.16"/>
+
+  <!-- Engine block -->
+  <rect x="74" y="68" width="60" height="50" rx="4" fill="url(#tracBody)"/>
+  <rect x="78" y="74" width="52" height="6" fill="#5C4A1D"/>
+  <rect x="78" y="84" width="52" height="6" fill="#5C4A1D"/>
+  <rect x="78" y="94" width="52" height="6" fill="#5C4A1D"/>
+  <!-- Engine grille shine -->
+  <line x1="80" y1="76" x2="128" y2="76" stroke="#FDFAF1" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- Cab roof -->
+  <path d="M118 36 L168 36 L168 56 L118 56 Z" fill="#0A0A0A"/>
+  <path d="M114 42 L172 42" stroke="#C9A961" stroke-width="2"/>
+
+  <!-- Cab -->
+  <path d="M122 56 L168 56 L172 118 L118 118 Z" fill="url(#tracBody)" opacity="0.92"/>
+  <!-- Cab windshield -->
+  <path d="M126 60 L164 60 L168 96 L122 96 Z" fill="url(#tracCab)"/>
+  <line x1="145" y1="60" x2="146" y2="96" stroke="#5C4A1D" stroke-width="1.2"/>
+  <!-- Cab door frame -->
+  <rect x="124" y="98" width="46" height="20" rx="1" fill="none" stroke="#5C4A1D" stroke-width="1"/>
+  <rect x="158" y="106" width="6" height="2" rx="1" fill="#0A0A0A"/>
+
+  <!-- Exhaust pipe -->
+  <rect x="138" y="32" width="6" height="32" rx="1" fill="#1A1A1A"/>
+  <ellipse cx="141" cy="32" rx="4" ry="2" fill="#0A0A0A"/>
+  <!-- Smoke (rising puffs) -->
+  <circle cx="148" cy="22" r="3" fill="#D4D4D4" opacity="0.5">
+    <animate attributeName="cy" values="32;6" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.55;0" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2;5" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="156" cy="14" r="2.5" fill="#D4D4D4" opacity="0.4">
+    <animate attributeName="cy" values="32;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.4;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1.5;4.5" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Headlights (top of engine) -->
+  <ellipse cx="78" cy="68" rx="4" ry="3" fill="#FDFAF1"/>
+  <ellipse cx="78" cy="68" rx="2" ry="1.5" fill="#D4AF37"/>
+
+  <!-- Front bumper / weight -->
+  <rect x="68" y="100" width="18" height="20" rx="1" fill="#0A0A0A"/>
+  <rect x="70" y="106" width="14" height="2" fill="#3A3A3A"/>
+  <rect x="70" y="112" width="14" height="2" fill="#3A3A3A"/>
+
+  <!-- Front small wheel -->
+  <circle cx="72" cy="130" r="14" fill="#0A0A0A"/>
+  <circle cx="72" cy="130" r="10" fill="#1A1A1A"/>
+  <circle cx="72" cy="130" r="6" fill="url(#tracRim)"/>
+  <circle cx="72" cy="130" r="2" fill="#0A0A0A"/>
+
+  <!-- Rear large wheel with treads (rotating) -->
+  <circle cx="172" cy="118" r="32" fill="#0A0A0A"/>
+  <circle cx="172" cy="118" r="26" fill="#1A1A1A"/>
+  <!-- Treads + spokes — rotating together -->
+  <g transform="translate(172 118)">
+    <g stroke="#0A0A0A" stroke-width="3" fill="none">
+      <line x1="0" y1="-32" x2="0" y2="-26"/>
+      <line x1="0" y1="26" x2="0" y2="32"/>
+      <line x1="-32" y1="0" x2="-26" y2="0"/>
+      <line x1="26" y1="0" x2="32" y2="0"/>
+      <line x1="-24" y1="-24" x2="-20" y2="-20"/>
+      <line x1="20" y1="20" x2="24" y2="24"/>
+      <line x1="-24" y1="24" x2="-20" y2="20"/>
+      <line x1="20" y1="-20" x2="24" y2="-24"/>
+      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <circle cx="172" cy="118" r="14" fill="url(#tracRim)"/>
+  <g transform="translate(172 118)">
+    <g stroke="#0A0A0A" stroke-width="1.8" fill="none">
+      <line x1="0" y1="-10" x2="0" y2="10"/>
+      <line x1="-10" y1="0" x2="10" y2="0"/>
+      <line x1="-7" y1="-7" x2="7" y2="7"/>
+      <line x1="7" y1="-7" x2="-7" y2="7"/>
+      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <circle cx="172" cy="118" r="3" fill="#0A0A0A"/>
+
+  <!-- Sparkles -->
+  <circle cx="22" cy="50" r="2" fill="#D4AF37"/>
+  <circle cx="218" cy="58" r="1.6" fill="#C9A961"/>
+  <circle cx="36" cy="80" r="1.4" fill="#E5C770"/>
+  <path d="M30 100 L36 100 M33 97 L33 103" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+</svg>

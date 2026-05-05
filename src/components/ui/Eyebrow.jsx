@@ -6,13 +6,13 @@ import React from 'react';
  */
 const toneMap = {
   brand:
-    'text-teal-700 bg-teal-50 border border-teal-100',
+    'text-[#8B6F2C] bg-[#FDFAF1] border border-[#EBDCB1]',
   light:
-    'text-teal-100 bg-white/10 border border-white/15 backdrop-blur',
+    'text-[#E5C770] bg-[rgba(229,199,112,0.10)] border border-[rgba(201,169,97,0.30)] backdrop-blur',
   dark:
-    'text-ink-700 bg-ink-50 border border-ink-100',
+    'text-noir-700 bg-ivory-100 border border-[#EBDCB1]',
   warm:
-    'text-amber-700 bg-amber-50 border border-amber-100',
+    'text-[#5C4A1D] bg-[#F5EBD3] border border-[#E5C770]',
 };
 
 const Eyebrow = ({ tone = 'brand', icon, children, className = '' }) => {

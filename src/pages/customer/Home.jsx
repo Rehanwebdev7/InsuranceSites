@@ -1,17 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  FiShield, FiClock, FiMousePointer, FiEdit3, FiCheckCircle, FiHeart, FiLock, FiZap,
+  FiShield, FiClock, FiLock,
 } from 'react-icons/fi';
 import { FaHeadset } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import HeroShowcase from '../../components/common/HeroShowcase';
+import HeroSlider from '../../components/common/HeroSlider';
 import ServiceCard from '../../components/common/ServiceCard';
 import QuoteRequestForm from '../../components/forms/QuoteRequestForm';
 import CTASection from '../../components/common/CTASection';
 import TestimonialsSection from '../../components/common/TestimonialsSection';
-import { Section, Eyebrow, Stat, SkeletonCard } from '../../components/ui';
+import DecodedStory from '../../components/common/DecodedStory';
+import ComparisonStrip from '../../components/common/ComparisonStrip';
+import { Section, Stat, SkeletonCard } from '../../components/ui';
 
 import { addLead } from '../../services/leadService';
 import { useCustomerData } from '../../contexts/CustomerDataContext';
@@ -40,13 +42,6 @@ const whyChooseUs = [
     title: 'Your data stays yours.',
     desc: 'Bank-grade encryption, zero third-party sharing, ever.',
   },
-];
-
-const processSteps = [
-  { step: '01', title: 'Pick what you’re insuring', desc: 'Health, life, vehicle, travel — tap and go.', icon: FiMousePointer },
-  { step: '02', title: 'Tell us the basics', desc: 'Takes about as long as a text message.', icon: FiEdit3 },
-  { step: '03', title: 'See your best options', desc: 'Side-by-side quotes from 20+ insurers.', icon: FiCheckCircle },
-  { step: '04', title: 'Stay covered', desc: 'Instant policy delivery, zero paperwork.', icon: FiShield },
 ];
 
 const trustStats = [
@@ -109,25 +104,26 @@ const Home = () => {
 
   return (
     <>
-      <HeroShowcase onOpenQuote={() => handleGetQuote(null)} />
+      {/* Magazine-style hero with masthead, numbered features, image collage, gold seal, live ticker */}
+      <HeroSlider />
 
-      {/* Services — uniform grid, no featured variant */}
+      {/* Services — uniform grid with new illustration-dominant cards */}
       <Section
         id="services"
         tone="default"
         size="md"
         eyebrow="What we cover"
         title="Policies for everything you care about."
-        subtitle="Health, life, vehicle, travel, business — whatever needs protecting, we’ve got an honest quote for it."
+        subtitle="Health, life, vehicle, travel, business — whatever needs protecting, we've got an honest quote for it."
       >
         {servicesLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {activeServices.map((service, index) => (
               <ServiceCard
                 key={service.id}
@@ -140,46 +136,13 @@ const Home = () => {
         )}
       </Section>
 
-      {/* How it works */}
-      <Section
-        tone="soft"
-        size="md"
-        eyebrow="Simple process"
-        title="Four steps. About two cups of chai."
-        subtitle="No jargon, no nested menus, no ‘please hold while we transfer you.’"
-      >
-        <div className="relative">
-          <div aria-hidden className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-0.5">
-            <svg width="100%" height="2" className="text-teal-300">
-              <line x1="0" y1="1" x2="100%" y2="1" stroke="currentColor" strokeWidth="2" strokeDasharray="6 8" />
-            </svg>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-5 relative">
-            {processSteps.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ delay: index * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="relative text-center group"
-              >
-                <div className="relative z-10 mx-auto mb-4 w-20 h-20 rounded-2xl bg-white border border-ink-100 shadow-[0_12px_24px_-12px_rgba(11,18,32,0.1)] flex items-center justify-center group-hover:border-teal-200 group-hover:shadow-[0_20px_40px_-12px_rgba(16,185,129,0.25)] transition-all duration-500">
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-50 to-transparent" />
-                  <item.icon className="relative z-10 text-2xl text-teal-700" />
-                  <div className="absolute -top-2 -right-2 w-9 h-9 rounded-full bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center shadow-[0_8px_16px_-8px_rgba(16,185,129,0.4)]">
-                    <span className="text-[0.625rem] font-display font-bold text-white">{item.step}</span>
-                  </div>
-                </div>
-                <h3 className="text-base font-display font-semibold text-ink-900 mb-1">{item.title}</h3>
-                <p className="text-sm text-ink-500 max-w-[240px] mx-auto leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </Section>
+      {/* "Insurance, decoded" — magazine-style 3-chapter scroll story */}
+      <DecodedStory />
 
-      {/* Why choose us — new symmetric layout */}
+      {/* "Us vs the rest" — premium comparison table */}
+      <ComparisonStrip brandName={brandName} />
+
+      {/* Why choose us */}
       <Section
         tone="default"
         size="md"
@@ -187,13 +150,16 @@ const Home = () => {
         title="Why people actually stick with us."
         subtitle="Not just cheap rates — honest humans, fast claims, and the kind of service worth telling your cousin about."
       >
-        {/* Stats strip — horizontal, compact */}
-        <div className="mb-10 rounded-3xl grad-hero text-white p-6 md:p-8 relative overflow-hidden">
+        {/* Stats strip — noir bg with gold count-up */}
+        <div className="mb-10 rounded-3xl grad-hero text-white p-6 md:p-8 relative overflow-hidden border border-[rgba(201,169,97,0.25)]">
           <div aria-hidden className="absolute inset-0 pointer-events-none">
-            <div className="aurora-blob w-[360px] h-[360px] -top-20 -left-20 bg-teal-500/30" />
             <div
-              className="aurora-blob w-[300px] h-[300px] -bottom-20 -right-10 bg-teal-400/20"
-              style={{ animationDelay: '3s' }}
+              className="aurora-blob w-[360px] h-[360px] -top-20 -left-20"
+              style={{ backgroundColor: 'rgba(201, 169, 97, 0.30)' }}
+            />
+            <div
+              className="aurora-blob w-[300px] h-[300px] -bottom-20 -right-10"
+              style={{ backgroundColor: 'rgba(212, 175, 55, 0.20)', animationDelay: '3s' }}
             />
           </div>
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
@@ -218,17 +184,17 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ delay: index * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative bg-white border border-ink-100 rounded-2xl p-6 hover:border-teal-200 hover:shadow-[0_20px_40px_-16px_rgba(16,185,129,0.2)] transition-all duration-500"
+              className="group relative bg-noir-900 border border-[rgba(201,169,97,0.20)] rounded-2xl p-6 hover:border-[#C9A961] hover:shadow-[0_20px_40px_-16px_rgba(201,169,97,0.30)] transition-all duration-500"
             >
               <div className="flex items-start gap-4">
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 group-hover:bg-teal-100 transition-colors">
+                <div className="shrink-0 w-12 h-12 rounded-xl bg-noir-800 border border-[rgba(201,169,97,0.30)] flex items-center justify-center text-[#E5C770] group-hover:bg-gradient-to-br group-hover:from-[#C9A961] group-hover:to-[#8B6F2C] group-hover:text-noir-950 transition-all">
                   <item.icon className="text-xl" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-[1.0625rem] font-display font-semibold text-ink-900 mb-1.5">
+                  <h3 className="text-[1.0625rem] font-display font-semibold text-white mb-1.5 tracking-tight">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-ink-500 leading-relaxed">{item.desc}</p>
+                  <p className="text-sm text-ink-300 leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             </motion.div>

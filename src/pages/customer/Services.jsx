@@ -73,18 +73,21 @@ const Services = () => {
 
   return (
     <>
-      {/* Compact hero strip — no huge padding, services visible above fold */}
-      <section className="relative isolate overflow-hidden grad-hero text-white">
+      {/* Compact hero strip — noir + gold */}
+      <section className="relative isolate overflow-hidden bg-noir-950 text-white">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
-          <div className="aurora-blob w-[420px] h-[420px] -top-24 -left-20 bg-teal-500/30" />
           <div
-            className="aurora-blob w-[360px] h-[360px] -bottom-24 -right-16 bg-teal-400/25"
-            style={{ animationDelay: '3s' }}
+            className="aurora-blob w-[420px] h-[420px] -top-24 -left-20"
+            style={{ backgroundColor: 'rgba(229,199,112,0.30)' }}
           />
           <div
-            className="absolute inset-0 opacity-[0.04]"
+            className="aurora-blob w-[360px] h-[360px] -bottom-24 -right-16"
+            style={{ backgroundColor: 'rgba(212,175,55,0.20)', animationDelay: '3s' }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.05]"
             style={{
-              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)',
+              backgroundImage: 'radial-gradient(circle, #C9A961 1px, transparent 1px)',
               backgroundSize: '32px 32px',
             }}
           />
@@ -96,21 +99,34 @@ const Services = () => {
             transition={{ duration: 0.5 }}
             className="inline-flex"
           >
-            <Eyebrow tone="light">Our catalogue</Eyebrow>
+            <Eyebrow tone="brand">Our catalogue</Eyebrow>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-display font-semibold mt-3 mb-3 text-balance text-white"
+            className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold mt-3 mb-3 text-balance text-white tracking-tight"
           >
-            Every kind of cover, under one roof.
+            Every kind of cover,{' '}
+            <span className="italic relative inline-block">
+              under one roof.
+              <span
+                aria-hidden
+                className="absolute -bottom-1 left-0 right-0 h-2 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 10' preserveAspectRatio='none'><path d='M3 7 C 50 2, 110 9, 170 4 S 230 8, 237 3' stroke='%23C9A961' stroke-width='3' fill='none' stroke-linecap='round'/></svg>\")",
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '100% 100%',
+                }}
+              />
+            </span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-sm md:text-base text-teal-100/80 max-w-xl mx-auto leading-relaxed mb-5"
+            className="text-sm md:text-base text-ink-300 max-w-xl mx-auto leading-relaxed mb-5"
           >
             Tap any card to get instant quotes from 20+ IRDAI-licensed insurers.
           </motion.p>
@@ -123,13 +139,13 @@ const Services = () => {
             className="max-w-md mx-auto"
           >
             <div className="relative">
-              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400" />
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C9A961]" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search policies…"
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/95 backdrop-blur-md border border-white/20 text-ink-900 placeholder:text-ink-400 outline-none focus:ring-4 focus:ring-teal-500/30 transition-all"
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-noir-800 border border-[rgba(201,169,97,0.30)] text-white placeholder:text-ink-400 outline-none focus:ring-4 focus:ring-[#C9A961]/20 focus:border-[#C9A961] transition-all"
               />
             </div>
           </motion.div>
@@ -137,7 +153,7 @@ const Services = () => {
       </section>
 
       {/* Services grid — tight top spacing so first row is above fold */}
-      <section className="py-10 md:py-14 bg-[var(--surface-2)]">
+      <section className="py-10 md:py-14 bg-noir-900">
         <Container>
           {categories.length > 0 && (
             <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -149,8 +165,8 @@ const Services = () => {
                     onClick={() => setActiveCategory(cat)}
                     className={`px-4 py-2 text-sm font-semibold rounded-full border transition-all ${
                       isActive
-                        ? 'bg-teal-700 text-white border-teal-700 shadow-[0_8px_16px_-8px_rgba(16,185,129,0.35)]'
-                        : 'bg-white text-ink-600 border-ink-100 hover:border-teal-200 hover:text-teal-700'
+                        ? 'bg-gradient-to-br from-[#C9A961] to-[#8B6F2C] text-noir-950 border-[#E5C770] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.55)]'
+                        : 'bg-noir-800 text-ink-300 border-[rgba(201,169,97,0.20)] hover:border-[#C9A961] hover:text-[#E5C770]'
                     }`}
                   >
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -186,7 +202,7 @@ const Services = () => {
       </section>
 
       {/* Contact nudge */}
-      <section className="py-10 md:py-14 bg-white">
+      <section className="py-10 md:py-14 bg-noir-950">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -195,11 +211,11 @@ const Services = () => {
             transition={{ duration: 0.55 }}
             className="text-center max-w-2xl mx-auto"
           >
-            <Eyebrow>Can&apos;t find what you need?</Eyebrow>
-            <h2 className="text-2xl md:text-3xl font-display font-semibold mt-3 mb-3 text-balance">
-              We cover the unusual stuff too.
+            <Eyebrow tone="light">Can&apos;t find what you need?</Eyebrow>
+            <h2 className="font-display text-2xl md:text-3xl font-semibold mt-3 mb-3 text-balance text-white tracking-tight">
+              We cover the <span className="italic text-[#E5C770]">unusual stuff</span> too.
             </h2>
-            <p className="text-ink-500 mb-6 leading-relaxed text-sm md:text-base">
+            <p className="text-ink-300 mb-6 leading-relaxed text-sm md:text-base">
               Specialised policies, corporate plans, niche risks — tell us what you have in mind
               and we&apos;ll get back within the hour.
             </p>

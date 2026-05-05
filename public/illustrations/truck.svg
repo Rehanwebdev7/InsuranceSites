@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="truckBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="cargoBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A2A2A"/>
+      <stop offset="100%" stop-color="#0F0F0F"/>
+    </linearGradient>
+    <linearGradient id="truckCab" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </linearGradient>
+    <linearGradient id="cabGlass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#E5C770"/>
+    </linearGradient>
+    <radialGradient id="truckRim" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#E5C770"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="120" cy="115" rx="108" ry="55" fill="url(#truckBlob)" opacity="0.95"/>
+  <ellipse cx="120" cy="150" rx="76" ry="5" fill="#0A0A0A" opacity="0.16"/>
+
+  <!-- Cargo box -->
+  <rect x="80" y="58" width="110" height="74" rx="3" fill="url(#cargoBox)"/>
+  <!-- Cargo box panels -->
+  <rect x="86" y="64" width="98" height="62" rx="1" fill="none" stroke="#3A3A3A" stroke-width="1"/>
+  <line x1="118" y1="64" x2="118" y2="126" stroke="#3A3A3A" stroke-width="1"/>
+  <line x1="150" y1="64" x2="150" y2="126" stroke="#3A3A3A" stroke-width="1"/>
+  <!-- Brand band -->
+  <rect x="86" y="80" width="98" height="14" fill="#C9A961"/>
+  <text x="135" y="90" font-family="serif" font-style="italic" font-size="9" fill="#0A0A0A" text-anchor="middle" font-weight="700">CARGO</text>
+  <!-- Door hinges -->
+  <rect x="186" y="80" width="3" height="6" fill="#E5C770"/>
+  <rect x="186" y="106" width="3" height="6" fill="#E5C770"/>
+
+  <!-- Cab -->
+  <path d="M30 78 L66 78 Q78 78 82 86 L82 132 L30 132 Z" fill="url(#truckCab)"/>
+  <!-- Cab top -->
+  <rect x="30" y="74" width="52" height="6" rx="2" fill="#8B6F2C"/>
+  <!-- Cab window -->
+  <path d="M36 86 L66 86 Q72 86 76 92 L76 106 L36 106 Z" fill="url(#cabGlass)"/>
+  <line x1="58" y1="86" x2="58" y2="106" stroke="#1A1A1A" stroke-width="1.4"/>
+  <!-- Cab door -->
+  <rect x="36" y="108" width="40" height="20" rx="1" fill="none" stroke="#5C4A1D" stroke-width="1"/>
+  <rect x="68" y="118" width="6" height="2" rx="1" fill="#0A0A0A"/>
+  <!-- Headlights -->
+  <rect x="32" y="116" width="6" height="4" rx="1" fill="#FDFAF1"/>
+  <rect x="32" y="124" width="6" height="3" rx="1" fill="#D4AF37"/>
+  <!-- Bumper -->
+  <rect x="28" y="128" width="56" height="6" rx="1" fill="#0A0A0A"/>
+
+  <!-- Wheels (rotating spokes) -->
+  <g>
+    <circle cx="50" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="50" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="50" cy="138" r="6" fill="url(#truckRim)"/>
+    <g transform="translate(50 138)" stroke="#0A0A0A" stroke-width="1">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="50" cy="138" r="1.6" fill="#0A0A0A"/>
+  </g>
+  <g>
+    <circle cx="106" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="106" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="106" cy="138" r="6" fill="url(#truckRim)"/>
+    <g transform="translate(106 138)" stroke="#0A0A0A" stroke-width="1">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="106" cy="138" r="1.6" fill="#0A0A0A"/>
+  </g>
+  <g>
+    <circle cx="138" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="138" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="138" cy="138" r="6" fill="url(#truckRim)"/>
+    <g transform="translate(138 138)" stroke="#0A0A0A" stroke-width="1">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="138" cy="138" r="1.6" fill="#0A0A0A"/>
+  </g>
+  <g>
+    <circle cx="170" cy="138" r="13" fill="#0A0A0A"/>
+    <circle cx="170" cy="138" r="9" fill="#1A1A1A"/>
+    <circle cx="170" cy="138" r="6" fill="url(#truckRim)"/>
+    <g transform="translate(170 138)" stroke="#0A0A0A" stroke-width="1">
+      <g><line x1="-5" y1="0" x2="5" y2="0"/><line x1="0" y1="-5" x2="0" y2="5"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite"/>
+      </g>
+    </g>
+    <circle cx="170" cy="138" r="1.6" fill="#0A0A0A"/>
+  </g>
+
+  <!-- Sparkles -->
+  <circle cx="22" cy="46" r="2" fill="#D4AF37"/>
+  <circle cx="216" cy="48" r="1.8" fill="#C9A961"/>
+  <circle cx="226" cy="68" r="1.4" fill="#E5C770"/>
+  <path d="M210 32 L216 32 M213 29 L213 35" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

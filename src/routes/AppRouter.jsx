@@ -20,6 +20,7 @@ import TermsConditions from '../pages/customer/TermsConditions';
 
 // Common
 import ErrorBoundary from '../components/common/ErrorBoundary';
+import BrandLoader from '../components/common/BrandLoader';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/Dashboard';
@@ -40,11 +41,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <BrandLoader caption="Verifying your session" />;
   }
 
   if (!user) {
@@ -71,11 +68,7 @@ const PermissionGuard = ({ permission, children }) => {
 const SuperAdminRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <BrandLoader caption="Verifying your session" />;
   }
   if (!user || user.role !== 'super_admin') {
     return <Navigate to="/admin" replace />;
@@ -88,11 +81,7 @@ const PublicRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="w-full max-w-md flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
-      </div>
-    );
+    return <BrandLoader fullscreen={false} caption="One moment" size="sm" />;
   }
 
   if (user) {

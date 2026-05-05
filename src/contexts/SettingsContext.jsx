@@ -14,9 +14,9 @@ const fmt5 = (digits) => {
 };
 
 const DEFAULT_COLORS = {
-  primary: '#14B8A6',   // Vibrant Teal (brand-500)
-  secondary: '#F97316', // Warm Orange accent
-  accent: '#0D9488',    // Dark Teal (brand-600)
+  primary: '#C9A961',   // Heritage Gold (brand-500)
+  secondary: '#0A0A0A', // Rich Noir
+  accent: '#D4AF37',    // Highlight Gold
 };
 
 const DEFAULT_HERO_SETTINGS = {
@@ -36,6 +36,10 @@ const DEFAULT_SETTINGS = {
   siteTitle: 'XYZ Insurance - Trusted Vehicle Insurance Partner',
   brandLogo: '',
   brandFavicon: '',
+  // Theme — admin manageable (dark|light preset + optional custom overrides)
+  themeMode: 'dark',
+  customBg: '',
+  customText: '',
   phone10: '9876543210',
   altPhone10: '9876543211',
   whatsapp10: '9876543210',
@@ -284,6 +288,25 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     applyBrandColors(brandColors);
   }, [brandColors]);
+
+  // Apply theme mode + custom bg/text overrides
+  useEffect(() => {
+    const mode = rawSettings.themeMode === 'light' ? 'light' : 'dark';
+    document.documentElement.classList.remove('theme-dark', 'theme-light');
+    document.documentElement.classList.add(`theme-${mode}`);
+
+    // Custom bg/text overrides — only apply if explicitly set
+    if (rawSettings.customBg) {
+      document.body.style.backgroundColor = rawSettings.customBg;
+    } else {
+      document.body.style.backgroundColor = '';
+    }
+    if (rawSettings.customText) {
+      document.body.style.color = rawSettings.customText;
+    } else {
+      document.body.style.color = '';
+    }
+  }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText]);
 
   // Update favicon and page title dynamically
   useEffect(() => {

@@ -40,18 +40,30 @@ const HeroShowcase = ({ onOpenQuote }) => {
   // If no slider images at all, show a minimal branded hero
   if (!hasImages) {
     return (
-      <section className="relative bg-gradient-to-br from-teal-900 via-teal-800 to-teal-950 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-28 text-center">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-semibold text-balance mb-4">
+      <section className="relative bg-ivory-50 text-noir-950 overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #C9A961 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+        />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-28 text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full bg-white border border-[#EBDCB1] text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[#8B6F2C]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C9A961] animate-pulse-slow" />
+            Heritage protection
+          </div>
+          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-semibold text-balance mb-5 tracking-tight text-noir-950">
             {settings?.brandName || 'Insurance'}
           </h1>
-          <p className="text-base md:text-lg text-teal-100/80 max-w-2xl mx-auto mb-8">
+          <p className="text-base md:text-lg text-ink-700 max-w-2xl mx-auto mb-8">
             Compare honest quotes from 20+ IRDAI-licensed insurers in under 60 seconds.
           </p>
           <button
             type="button"
             onClick={onOpenQuote}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-white text-teal-900 font-semibold text-[0.9375rem] shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-br from-[#C9A961] to-[#D4AF37] text-noir-950 font-semibold text-[0.9375rem] tracking-wide border border-[#B8923A] shadow-[0_18px_36px_-12px_rgba(201,169,97,0.5)] hover:-translate-y-0.5 active:scale-[0.98] transition-all"
           >
             Get quotes
           </button>
@@ -62,7 +74,7 @@ const HeroShowcase = ({ onOpenQuote }) => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-ink-900"
+      className="relative w-full overflow-hidden bg-noir-950"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -95,8 +107,8 @@ const HeroShowcase = ({ onOpenQuote }) => {
                 aria-label={`Go to slide ${index + 1}`}
                 className={`rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? 'w-8 h-2 bg-white shadow-lg'
-                    : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+                    ? 'w-8 h-2 bg-[#C9A961] shadow-lg'
+                    : 'w-2 h-2 bg-white/60 hover:bg-white/90'
                 }`}
               />
             ))}

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <defs>
+    <linearGradient id="caraBlob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#F5EBD3"/>
+    </linearGradient>
+    <linearGradient id="caraBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDFAF1"/>
+      <stop offset="100%" stop-color="#E5C770"/>
+    </linearGradient>
+    <linearGradient id="caraTrim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </linearGradient>
+    <linearGradient id="caraWindow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="100%" stop-color="#0A0A0A"/>
+    </linearGradient>
+    <radialGradient id="caraRim" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#E5C770"/>
+      <stop offset="100%" stop-color="#8B6F2C"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="120" cy="115" rx="108" ry="55" fill="url(#caraBlob)" opacity="0.95"/>
+  <ellipse cx="120" cy="150" rx="84" ry="5" fill="#0A0A0A" opacity="0.16"/>
+
+  <!-- Caravan body -->
+  <path d="M28 76 Q42 60 70 60 L188 60 Q210 64 214 88 L214 124 Q214 130 208 130 L36 130 Q28 130 28 124 Z" fill="url(#caraBody)"/>
+  <!-- Top accent -->
+  <path d="M28 76 Q42 60 70 60 L188 60 Q210 64 214 88" stroke="url(#caraTrim)" stroke-width="3" fill="none"/>
+  <!-- Side trim line -->
+  <rect x="32" y="100" width="180" height="3" fill="url(#caraTrim)"/>
+
+  <!-- Windows -->
+  <rect x="40" y="80" width="22" height="18" rx="2" fill="url(#caraWindow)"/>
+  <line x1="40" y1="89" x2="62" y2="89" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+  <line x1="51" y1="80" x2="51" y2="98" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+
+  <rect x="68" y="80" width="22" height="18" rx="2" fill="url(#caraWindow)"/>
+  <line x1="68" y1="89" x2="90" y2="89" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+  <line x1="79" y1="80" x2="79" y2="98" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+
+  <rect x="124" y="80" width="22" height="18" rx="2" fill="url(#caraWindow)"/>
+  <line x1="124" y1="89" x2="146" y2="89" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+  <line x1="135" y1="80" x2="135" y2="98" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+
+  <rect x="152" y="80" width="22" height="18" rx="2" fill="url(#caraWindow)"/>
+  <line x1="152" y1="89" x2="174" y2="89" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+  <line x1="163" y1="80" x2="163" y2="98" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+
+  <rect x="180" y="80" width="22" height="18" rx="2" fill="url(#caraWindow)"/>
+  <line x1="180" y1="89" x2="202" y2="89" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+  <line x1="191" y1="80" x2="191" y2="98" stroke="#C9A961" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- Door -->
+  <rect x="96" y="80" width="22" height="46" rx="2" fill="url(#caraTrim)"/>
+  <rect x="100" y="84" width="14" height="14" rx="1" fill="url(#caraWindow)"/>
+  <line x1="100" y1="91" x2="114" y2="91" stroke="#C9A961" stroke-width="0.6" opacity="0.7"/>
+  <!-- Door handle -->
+  <circle cx="113" cy="108" r="1.8" fill="#0A0A0A"/>
+  <!-- Step -->
+  <rect x="98" y="126" width="18" height="3" fill="#0A0A0A"/>
+
+  <!-- Awning -->
+  <path d="M42 60 Q90 50 168 50 Q200 52 210 62" stroke="#0A0A0A" stroke-width="1.5" fill="none"/>
+  <path d="M44 56 L50 62 M62 50 L66 56 M88 48 L92 54 M114 48 L118 54 M140 48 L144 54 M166 50 L170 56 M192 54 L196 60" stroke="#C9A961" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Hitch -->
+  <path d="M212 100 L226 102 L226 108 L212 108" stroke="#0A0A0A" stroke-width="2" fill="#1A1A1A"/>
+  <circle cx="227" cy="105" r="3" fill="#0A0A0A"/>
+
+  <!-- Wheels with covers -->
+  <g>
+    <circle cx="64" cy="132" r="14" fill="#0A0A0A"/>
+    <circle cx="64" cy="132" r="10" fill="#1A1A1A"/>
+    <circle cx="64" cy="132" r="6" fill="url(#caraRim)"/>
+    <circle cx="64" cy="132" r="2" fill="#0A0A0A"/>
+  </g>
+  <g>
+    <circle cx="170" cy="132" r="14" fill="#0A0A0A"/>
+    <circle cx="170" cy="132" r="10" fill="#1A1A1A"/>
+    <circle cx="170" cy="132" r="6" fill="url(#caraRim)"/>
+    <circle cx="170" cy="132" r="2" fill="#0A0A0A"/>
+  </g>
+
+  <!-- Tail/marker lights -->
+  <rect x="208" y="116" width="4" height="6" rx="1" fill="#D4AF37"/>
+  <rect x="32" y="116" width="4" height="6" rx="1" fill="#D4AF37"/>
+
+  <!-- Sparkles -->
+  <circle cx="22" cy="50" r="2" fill="#D4AF37"/>
+  <circle cx="220" cy="42" r="1.6" fill="#C9A961"/>
+  <path d="M210 30 L216 30 M213 27 L213 33" stroke="#C9A961" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

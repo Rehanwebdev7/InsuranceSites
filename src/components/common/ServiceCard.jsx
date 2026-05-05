@@ -12,7 +12,8 @@ import {
   FaCaravan, FaSuitcaseRolling, FaGlobeAsia, FaHorse,
 } from 'react-icons/fa';
 import { GiCow, GiBull, GiChargingBull, GiBuffaloHead, GiGoat, GiSheep } from 'react-icons/gi';
-import { FiArrowRight, FiCheck } from 'react-icons/fi';
+import { FiArrowRight, FiStar } from 'react-icons/fi';
+import { resolveServiceIllustration } from '../../data/illustrationGallery';
 
 const iconMap = {
   FaMotorcycle, FaCar, FaCarSide, FaCarCrash, FaTruck, FaTruckMoving,
@@ -28,149 +29,147 @@ const iconMap = {
 };
 
 /**
- * ServiceCard — premium teal design.
- * PRESERVED props: service, onGetQuote, index
- * PRESERVED behavior: clicking card or CTA fires onGetQuote(service)
+ * ServiceCard — quickinsure-inspired:
+ * A large cream OVAL container holds the GIF/PNG/SVG illustration in its
+ * center. Title and "Get quote" link sit below. No card border on the outside.
  *
- * New: reads optional service.features (array) and service.description with graceful fallbacks.
- * Also supports optional `featured` boolean from service for a richer layout variant.
+ * Resolution priority for what goes inside the oval:
+ *   1. service.illustrationUrl  — admin uploaded GIF/PNG (preferred, transparent bg ideal)
+ *   2. service.illustrationKey  — picked from bundled SVG gallery
+ *   3. service.icon             — auto-mapped to bundled SVG illustration
+ *   4. fallback react-icon glyph
  */
 const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
-  const { title, icon, color, description, features } = service || {};
+  const { title, icon, description, featured } = service || {};
+  const resolvedSrc = resolveServiceIllustration(service);
   const IconComponent = iconMap[icon] || FaShieldAlt;
 
   const handleClick = () => {
     if (onGetQuote) onGetQuote(service);
   };
 
-  const bullets = Array.isArray(features) && features.length > 0
-    ? features.slice(0, 3)
-    : [];
-
   return (
-    <motion.div
-      role="button"
-      tabIndex={0}
+    <motion.button
+      type="button"
       onClick={handleClick}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          handleClick();
-        }
-      }}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6 }}
-      className={[
-        'group relative h-full w-full flex flex-col text-left',
-        'bg-white rounded-3xl overflow-hidden',
-        'border border-ink-100',
-        'shadow-[0_2px_4px_rgba(11,18,32,0.04)]',
-        'transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        'hover:border-teal-200 hover:shadow-[0_24px_48px_-16px_rgba(16,185,129,0.25),0_0_0_1px_rgba(16,185,129,0.08)]',
-      ].join(' ')}
+      transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      className="group relative flex flex-col items-center text-center px-3 py-4 cursor-pointer bg-transparent border-0 outline-none focus-visible:ring-2 focus-visible:ring-[#C9A961] focus-visible:ring-offset-4 focus-visible:ring-offset-noir-950 rounded-2xl"
     >
-      {/* Glow accent on hover */}
-      <div
+      {/* Magazine number — tiny, top-right corner, decorative */}
+      <span
         aria-hidden
-        className="pointer-events-none absolute -top-20 -right-20 w-56 h-56 rounded-full bg-gradient-to-br from-teal-100 to-transparent opacity-0 group-hover:opacity-70 blur-3xl transition-opacity duration-700"
-      />
-
-      {/* Illustration zone */}
-      <div
-        className="relative h-36 flex items-center justify-center overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${color || '#10B981'}0a 0%, ${color || '#10B981'}18 100%)`,
-        }}
+        className="absolute top-1 right-3 font-display italic text-[0.65rem] font-semibold text-[#8B6F2C]/50 tracking-widest pointer-events-none z-10"
       >
-        {/* Decorative grid */}
+        № {String(index + 1).padStart(2, '0')}
+      </span>
+
+      {/* Featured ribbon */}
+      {featured && (
+        <span
+          aria-hidden
+          className="absolute top-1 left-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-noir-900 text-[#E5C770] text-[0.55rem] font-bold uppercase tracking-[0.14em] border border-[#C9A961] pointer-events-none z-10"
+        >
+          <FiStar className="text-[0.7em] fill-current" />
+          Popular
+        </span>
+      )}
+
+      {/* OVAL container — cream blob, holds the GIF/illustration centered inside */}
+      <div className="relative w-full max-w-[300px] aspect-[5/4] mt-5 mb-5">
+        {/* Soft gold halo behind oval, blooms on hover */}
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.05]"
+          className="pointer-events-none absolute -inset-6 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl"
           style={{
-            backgroundImage: `radial-gradient(circle, ${color || '#10B981'} 1px, transparent 1px)`,
-            backgroundSize: '18px 18px',
+            background:
+              'radial-gradient(ellipse at center, rgba(212,175,55,0.45) 0%, rgba(201,169,97,0.20) 40%, transparent 70%)',
           }}
         />
-        {/* Circle accents */}
+
+        {/* The cream oval — CSS rendered, large, oval shape */}
         <div
           aria-hidden
-          className="absolute -top-10 -right-10 w-36 h-36 rounded-full opacity-[0.08] group-hover:opacity-[0.16] transition-opacity duration-500"
-          style={{ backgroundColor: color || '#10B981' }}
-        />
-        <div
-          aria-hidden
-          className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500"
-          style={{ backgroundColor: color || '#10B981' }}
+          className="absolute inset-0 rounded-[50%] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+          style={{
+            background:
+              'radial-gradient(ellipse at 40% 35%, #FFFCF7 0%, #FAF6EE 50%, #F5EBD3 100%)',
+            boxShadow:
+              '0 28px 56px -16px rgba(0,0,0,0.55), inset 0 -8px 20px rgba(201,169,97,0.18), inset 0 4px 10px rgba(255,252,247,0.8)',
+          }}
         />
 
-        {/* Icon */}
+        {/* Subtle gold rim at bottom of oval (depth) */}
+        <div
+          aria-hidden
+          className="absolute left-[10%] right-[10%] bottom-[-2px] h-[6px] rounded-[50%] blur-md opacity-50"
+          style={{ background: 'rgba(201,169,97,0.55)' }}
+        />
+
+        {/* The GIF/PNG/SVG illustration sits CENTERED inside the oval */}
         <motion.div
-          whileHover={{ scale: 1.08, rotate: [0, -4, 4, 0] }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10"
+          className="absolute inset-0 flex items-center justify-center p-6"
+          whileHover={{ scale: 1.06, y: -3 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div
-            className="flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-white/70 backdrop-blur-sm border border-white/60 shadow-[0_12px_24px_-12px_rgba(11,18,32,0.14)]"
-          >
-            <IconComponent
-              className="text-4xl md:text-5xl drop-shadow-sm"
-              style={{ color: color || '#047857' }}
+          {resolvedSrc ? (
+            <img
+              src={resolvedSrc}
+              alt={title || 'Insurance service'}
+              loading="lazy"
+              className="max-w-[78%] max-h-[78%] object-contain drop-shadow-[0_12px_24px_rgba(46,37,16,0.20)]"
             />
-          </div>
+          ) : (
+            <IconComponent
+              className="text-[5rem] drop-shadow-[0_8px_16px_rgba(46,37,16,0.18)]"
+              style={{ color: '#8B6F2C' }}
+            />
+          )}
         </motion.div>
 
-        {/* Accent underline */}
-        <div
+        {/* Tiny twinkling sparkles around the oval (purely decorative) */}
+        <span
           aria-hidden
-          className="absolute bottom-0 left-0 right-0 h-[3px]"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${color || '#10B981'}, transparent)`,
-          }}
+          className="absolute -top-2 right-6 w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          style={{ animation: 'pulseSoft 2s ease-in-out infinite', animationDelay: '0.2s' }}
+        />
+        <span
+          aria-hidden
+          className="absolute top-8 -right-2 w-1 h-1 rounded-full bg-[#E5C770] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          style={{ animation: 'pulseSoft 2.4s ease-in-out infinite', animationDelay: '0.6s' }}
+        />
+        <span
+          aria-hidden
+          className="absolute bottom-4 -left-2 w-1 h-1 rounded-full bg-[#C9A961] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          style={{ animation: 'pulseSoft 2.8s ease-in-out infinite', animationDelay: '1s' }}
         />
       </div>
 
-      {/* Content */}
-      <div className="relative flex flex-col flex-1 p-5 md:p-6">
-        <h3 className="text-[1.0625rem] md:text-lg font-display font-semibold text-ink-900 leading-tight mb-2">
-          {title}
-        </h3>
+      {/* Title */}
+      <h3 className="font-display text-[1.15rem] md:text-[1.25rem] font-semibold text-white leading-[1.2] mb-1 tracking-tight transition-colors duration-300 group-hover:text-[#E5C770]">
+        {title}
+      </h3>
 
-        {description && (
-          <p className="text-sm text-ink-500 leading-relaxed mb-4 line-clamp-2">
-            {description}
-          </p>
-        )}
+      {description && (
+        <p className="text-[0.78rem] text-ink-400 leading-relaxed line-clamp-1 max-w-[260px] mb-3">
+          {description}
+        </p>
+      )}
 
-        {bullets.length > 0 && (
-          <ul className="space-y-1.5 mb-5">
-            {bullets.map((f, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-ink-600">
-                <FiCheck className="shrink-0 mt-0.5 text-teal-600" />
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* Actions */}
-        <div className="mt-auto flex items-center gap-3">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              handleClick();
-            }}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-br from-teal-600 to-teal-800 shadow-[0_8px_16px_-8px_rgba(16,185,129,0.4)] hover:shadow-[0_16px_32px_-12px_rgba(16,185,129,0.45)] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
-          >
-            Get quote
-            <FiArrowRight className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
-      </div>
-    </motion.div>
+      {/* Get quote link with animated gold underline */}
+      <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold tracking-wide text-[#C9A961] relative pb-1 mb-1">
+        <span className="relative">
+          Get quote
+          <span
+            aria-hidden
+            className="absolute left-0 right-0 -bottom-0.5 h-[1.5px] bg-[#C9A961] origin-left transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          />
+        </span>
+        <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+      </span>
+    </motion.button>
   );
 };
 
