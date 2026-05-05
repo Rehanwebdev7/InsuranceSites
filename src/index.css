@@ -158,6 +158,45 @@
   --color-border: var(--ink-200);
   --color-border-light: var(--ink-100);
   --color-border-dark: var(--gold-300);
+
+  /* ===============================================
+     SITE TOKENS — admin-controlled customer-site theme
+     Defaults = Heritage Dark. Light mode flips them via
+     html[data-site-theme="light"]. Admin Theme page can
+     override --site-accent / --site-bg / --site-text.
+     =============================================== */
+  --site-bg:            #0A0A0A;
+  --site-bg-soft:       #0F0F0F;
+  --site-surface:       #1A1A1A;
+  --site-surface-2:     #2A2A2A;
+  --site-text:          #FFFFFF;
+  --site-text-muted:    #A3A3A3;
+  --site-text-subtle:   #737373;
+  --site-border:        rgba(201, 169, 97, 0.22);
+  --site-border-soft:   rgba(201, 169, 97, 0.14);
+  --site-accent:        #C9A961;
+  --site-accent-soft:   rgba(201, 169, 97, 0.15);
+  --site-accent-strong: #8B6F2C;
+  --site-accent-on:     #0A0A0A;
+  --site-button-bg:     linear-gradient(135deg, #C9A961 0%, #8B6F2C 100%);
+  --site-button-text:   #0A0A0A;
+}
+
+/* Light-mode overrides for site tokens */
+html[data-site-theme="light"] {
+  --site-bg:            #FAF6EE;
+  --site-bg-soft:       #FFFCF7;
+  --site-surface:       #FFFFFF;
+  --site-surface-2:     #FDFAF1;
+  --site-text:          #0F0F0F;
+  --site-text-muted:    #475569;
+  --site-text-subtle:   #94A3B8;
+  --site-border:        #EBDCB1;
+  --site-border-soft:   #F5EBD3;
+  --site-accent:        #8B6F2C;
+  --site-accent-soft:   rgba(201, 169, 97, 0.20);
+  --site-accent-strong: #5C4A1D;
+  --site-accent-on:     #FFFFFF;
 }
 
 /* ===============================================
@@ -1039,3 +1078,91 @@ body { top: 0 !important; }
 .admin-shell[data-admin-theme="dark"] .admin-content > div .rounded-2xl.bg-white {
   border: 1px solid rgba(201, 169, 97, 0.22);
 }
+
+/* ===============================================
+   CUSTOMER-SITE THEME OVERLAY
+   When admin flips Theme to "light", utility classes used
+   across the customer site flip to ivory tokens. Scoped to
+   [data-site-frame] so the admin panel is unaffected.
+   =============================================== */
+
+/* Light-mode: noir backgrounds → ivory surfaces */
+html[data-site-theme="light"] [data-site-frame] .bg-noir-950 { background-color: var(--site-bg) !important; }
+html[data-site-theme="light"] [data-site-frame] .bg-noir-900 { background-color: var(--site-surface) !important; }
+html[data-site-theme="light"] [data-site-frame] .bg-noir-800 { background-color: var(--site-surface-2) !important; }
+html[data-site-theme="light"] [data-site-frame] .bg-noir-700 { background-color: #F2EAD8 !important; }
+
+/* Half-opacity noir overlays (used for hero scrims, drawers) */
+html[data-site-theme="light"] [data-site-frame] .bg-noir-950\/65,
+html[data-site-theme="light"] [data-site-frame] .bg-noir-950\/35,
+html[data-site-theme="light"] [data-site-frame] .bg-noir-900\/85,
+html[data-site-theme="light"] [data-site-frame] .bg-noir-900\/95 {
+  background-color: rgba(46, 37, 16, 0.18) !important;
+}
+
+/* RGB-stamped header background */
+html[data-site-theme="light"] [data-site-frame] [class*="bg-[rgba(10,10,10"] {
+  background-color: rgba(255, 252, 247, 0.9) !important;
+}
+
+/* Light-mode: white-ish text → noir text */
+html[data-site-theme="light"] [data-site-frame] .text-white { color: var(--site-text) !important; }
+html[data-site-theme="light"] [data-site-frame] .text-ink-100 { color: var(--site-text) !important; }
+html[data-site-theme="light"] [data-site-frame] .text-ink-200 { color: var(--site-text) !important; }
+html[data-site-theme="light"] [data-site-frame] .text-ink-300 { color: var(--site-text-muted) !important; }
+html[data-site-theme="light"] [data-site-frame] .text-ink-400 { color: var(--site-text-muted) !important; }
+html[data-site-theme="light"] [data-site-frame] .text-ink-500 { color: var(--site-text-subtle) !important; }
+
+/* Light-mode: gold-tinted text shifts to bronze for contrast on ivory */
+html[data-site-theme="light"] [data-site-frame] .text-\[\#E5C770\] { color: #8B6F2C !important; }
+
+/* Borders: gold-rgba → ivory-gold */
+html[data-site-theme="light"] [data-site-frame] [class*="border-[rgba(201,169,97"] {
+  border-color: #EBDCB1 !important;
+}
+
+/* Hero/dark gradient backgrounds → light gradient */
+html[data-site-theme="light"] [data-site-frame] .bg-\[var\(--grad-hero\)\],
+html[data-site-theme="light"] [data-site-frame] .bg-\[var\(--grad-dark\)\] {
+  background: linear-gradient(135deg, var(--site-bg) 0%, var(--site-surface-2) 100%) !important;
+}
+
+/* Hero floating gold seal stamps — desaturate slightly on light */
+html[data-site-theme="light"] [data-site-frame] [class*="from-[#C9A961]"][class*="to-[#8B6F2C]"] {
+  /* keep gold gradient — signature accent */
+}
+
+/* Customer-site forms: inputs that were dark-shell flip to white */
+html[data-site-theme="light"] [data-site-frame] input.bg-noir-900,
+html[data-site-theme="light"] [data-site-frame] textarea.bg-noir-900,
+html[data-site-theme="light"] [data-site-frame] select.bg-noir-900 {
+  background-color: var(--site-surface) !important;
+  color: var(--site-text) !important;
+  border-color: var(--site-border) !important;
+}
+
+/* Toast — already dark-themed via inline class. Override on light. */
+html[data-site-theme="light"] [data-site-frame] .Toastify__toast {
+  background-color: var(--site-surface) !important;
+  color: var(--site-text) !important;
+  border-color: var(--site-border) !important;
+}
+
+/* ============== ACCENT-AWARE OVERRIDES ==============
+   When admin picks a custom accent (--site-accent), the
+   gold-pill CTA gradient and gold accent-text follow it.
+   Default accent = #C9A961 so existing look is unchanged.
+   ===================================================== */
+
+/* Primary gold-pill CTAs (the .from-[#C9A961].to-[#D4AF37] gradient pattern) */
+[data-site-frame] [class*="from-[#C9A961]"][class*="to-[#D4AF37]"],
+[data-site-frame] [class*="from-[#C9A961]"][class*="to-[#8B6F2C]"] {
+  background-image: linear-gradient(135deg, var(--site-accent) 0%, var(--site-accent-strong) 100%) !important;
+}
+
+/* Common gold-text utilities → accent */
+[data-site-frame] .text-\[\#C9A961\] { color: var(--site-accent) !important; }
+[data-site-frame] .text-\[\#D4AF37\] { color: var(--site-accent) !important; }
+
+/* Gold border swap — keep #C9A961 as the canonical accent border */
+[data-site-frame] .border-\[\#C9A961\] { border-color: var(--site-accent) !important; }

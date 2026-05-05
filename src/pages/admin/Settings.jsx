@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiSave, FiPhone, FiMail, FiMapPin, FiGlobe, FiDroplet, FiRefreshCw, FiImage, FiLoader, FiUpload, FiTrash2, FiCloud, FiCheck } from 'react-icons/fi';
+import { FiSave, FiPhone, FiMail, FiMapPin, FiGlobe, FiDroplet, FiRefreshCw, FiImage, FiLoader, FiUpload, FiTrash2, FiCloud, FiCheck, FiArrowRight } from 'react-icons/fi';
 import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn, FaYoutube, FaGoogleDrive } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useSettings } from '../../contexts/SettingsContext';
@@ -530,63 +531,46 @@ const AdminSettings = () => {
           </div>
         </SectionCard>
 
-        {/* ── Theme / Brand Colors ── */}
-        <SectionCard
-          title="Brand Colors"
-          icon={FiDroplet}
-          delay={0.25}
-          headerRight={
-            isCustomized ? (
-              <button onClick={handleResetTheme} className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-                <FiRefreshCw className="w-3.5 h-3.5" /> Reset
-              </button>
-            ) : null
-          }
-        >
-          <div className="space-y-5">
-            {Object.entries(colors).map(([key, value]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">{key}</label>
-                <div className="flex gap-3">
-                  <input
-                    type="color"
-                    value={value}
-                    onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="w-12 h-10 rounded-lg cursor-pointer border border-gray-200"
-                  />
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="#2563eb"
-                  />
-                  <div
-                    className="w-10 h-10 rounded-lg border border-gray-200 flex-shrink-0"
-                    style={{ backgroundColor: value }}
-                  />
-                </div>
-              </div>
-            ))}
+        {/* ── Site Theme summary (edit on Theme page) ── */}
+        <SectionCard title="Site Theme" icon={FiDroplet} delay={0.25}>
+          <p className="text-sm text-gray-500 mb-5">
+            The customer-site mode, accent color, and optional bg / text overrides are managed on the dedicated Theme page.
+          </p>
 
-            {/* Preview */}
-            <div className="pt-4 border-t border-gray-100">
-              <p className="text-xs font-medium text-gray-500 mb-3">PREVIEW</p>
-              <div className="p-4 rounded-lg" style={{ backgroundColor: colors.primary }}>
-                <h3 className="text-white text-lg font-bold mb-1">Primary</h3>
-                <p className="text-white/80 text-sm mb-3">Used for header, buttons & links</p>
-                <button className="px-4 py-1.5 bg-white rounded-lg text-sm font-medium" style={{ color: colors.primary }}>Button</button>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mt-3">
-                <div className="p-3 rounded-lg" style={{ backgroundColor: colors.secondary }}>
-                  <p className="text-white text-sm font-semibold">Secondary</p>
-                </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: colors.accent }}>
-                  <p className="text-white text-sm font-semibold">Accent</p>
-                </div>
-              </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <span className="text-sm font-medium text-gray-700">Mode</span>
+              <span className="text-sm font-semibold text-gray-900 capitalize">
+                {form.themeMode || 'dark'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <span className="text-sm font-medium text-gray-700">Accent</span>
+              <span className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full border border-gray-200" style={{ backgroundColor: colors.primary || '#C9A961' }} />
+                <span className="text-sm font-mono text-gray-900">{colors.primary || '#C9A961'}</span>
+              </span>
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <span className="text-sm font-medium text-gray-700">Background override</span>
+              <span className="text-sm font-mono text-gray-700">
+                {form.customBg || <span className="italic text-gray-400">— preset —</span>}
+              </span>
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+              <span className="text-sm font-medium text-gray-700">Text override</span>
+              <span className="text-sm font-mono text-gray-700">
+                {form.customText || <span className="italic text-gray-400">— preset —</span>}
+              </span>
             </div>
           </div>
+
+          <Link
+            to="/admin/theme"
+            className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-noir-950 bg-gradient-to-r from-[#C9A961] to-[#8B6F2C] hover:from-[#D4AF37] hover:to-[#C9A961] border border-[#E5C770] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.55)] hover:shadow-[0_16px_32px_-12px_rgba(201,169,97,0.65)] transition-all"
+          >
+            Edit on Theme page <FiArrowRight className="w-4 h-4" />
+          </Link>
         </SectionCard>
 
         {/* Hero Slider settings — hidden for now, uncomment when needed */}

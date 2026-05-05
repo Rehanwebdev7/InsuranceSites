@@ -106,6 +106,40 @@ const loadLocalSettings = () => {
   return DEFAULT_SETTINGS;
 };
 
+// Apply admin-controlled site tokens (--site-*) to the customer-facing UI.
+// Mode toggles the data-site-theme attribute on <html>; accent / bg / text
+// overrides are stamped as inline style on documentElement so they win over
+// the css :root defaults but stay below !important utility classes.
+const applySiteTheme = ({ mode, accent, customBg, customText }) => {
+  const root = document.documentElement;
+  root.setAttribute('data-site-theme', mode === 'light' ? 'light' : 'dark');
+
+  // Accent override — also derive soft (alpha tint) and strong (darker)
+  if (accent) {
+    root.style.setProperty('--site-accent', accent);
+    root.style.setProperty('--site-accent-soft', `color-mix(in srgb, ${accent} 18%, transparent)`);
+    root.style.setProperty('--site-accent-strong', `color-mix(in srgb, ${accent} 65%, black)`);
+  } else {
+    root.style.removeProperty('--site-accent');
+    root.style.removeProperty('--site-accent-soft');
+    root.style.removeProperty('--site-accent-strong');
+  }
+
+  if (customBg) {
+    root.style.setProperty('--site-bg', customBg);
+    root.style.setProperty('--site-bg-soft', `color-mix(in srgb, ${customBg} 88%, white)`);
+  } else {
+    root.style.removeProperty('--site-bg');
+    root.style.removeProperty('--site-bg-soft');
+  }
+
+  if (customText) {
+    root.style.setProperty('--site-text', customText);
+  } else {
+    root.style.removeProperty('--site-text');
+  }
+};
+
 // Apply brand colors as CSS custom properties + dynamic overrides
 const STYLE_ID = 'brand-colors-override';
 const applyBrandColors = (colors) => {
@@ -295,18 +329,15 @@ export const SettingsProvider = ({ children }) => {
     document.documentElement.classList.remove('theme-dark', 'theme-light');
     document.documentElement.classList.add(`theme-${mode}`);
 
-    // Custom bg/text overrides — only apply if explicitly set
-    if (rawSettings.customBg) {
-      document.body.style.backgroundColor = rawSettings.customBg;
-    } else {
-      document.body.style.backgroundColor = '';
-    }
-    if (rawSettings.customText) {
-      document.body.style.color = rawSettings.customText;
-    } else {
-      document.body.style.color = '';
-    }
-  }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText]);
+    // Drive customer-site tokens (--site-*) — picked up by header, hero,
+    // footer, buttons, cards. Admin panel is unaffected (uses data-admin-theme).
+    applySiteTheme({
+      mode,
+      accent: brandColors.primary,
+      customBg: rawSettings.customBg,
+      customText: rawSettings.customText,
+    });
+  }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, brandColors.primary]);
 
   // Update favicon and page title dynamically
   useEffect(() => {

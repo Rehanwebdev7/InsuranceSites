@@ -13,6 +13,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { deleteImage as deleteDriveImage } from '../googleDrive';
 
 // ===== Collection Names =====
 const COLLECTIONS = {
@@ -211,6 +212,7 @@ const fromFirestoreService = (docSnap) => {
     isVehicleInsurance: d.isVehicleInsurance !== false,
     illustrationKey: d.illustrationKey || '',
     illustrationUrl: d.illustrationUrl || '',
+    illustrationDriveId: d.illustrationDriveId || '',
     createdAt: d.createdAt?.toDate?.()?.toISOString() || d.createdAt || '',
     updatedAt: d.updatedAt?.toDate?.()?.toISOString() || d.updatedAt || '',
   };
@@ -248,6 +250,7 @@ export const addService = async (serviceData) => {
     isVehicleInsurance: serviceData.isVehicleInsurance !== false,
     illustrationKey: serviceData.illustrationKey || '',
     illustrationUrl: serviceData.illustrationUrl || '',
+    illustrationDriveId: serviceData.illustrationDriveId || '',
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -260,12 +263,30 @@ export const addService = async (serviceData) => {
 };
 
 /**
- * Update a service
+ * Update a service. If `illustrationDriveId` is changing (new image or removed),
+ * the previous Drive file is deleted best-effort before the Firestore write.
  */
 export const updateService = async (serviceId, updates) => {
   if (!db) throw new Error('Firebase not configured');
 
   const docRef = doc(db, COLLECTIONS.SERVICES, serviceId);
+
+  // Drive cleanup — only when caller explicitly passed a new illustrationDriveId
+  if (updates.illustrationDriveId !== undefined) {
+    try {
+      const prevSnap = await getDoc(docRef);
+      const prevDriveId = prevSnap.exists() ? (prevSnap.data().illustrationDriveId || '') : '';
+      const nextDriveId = updates.illustrationDriveId || '';
+      if (prevDriveId && prevDriveId !== nextDriveId) {
+        try { await deleteDriveImage(prevDriveId); } catch (e) {
+          console.warn('Drive cleanup failed for old service image', prevDriveId, e);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not read previous service for Drive cleanup', e);
+    }
+  }
+
   const updateData = { updatedAt: serverTimestamp() };
 
   if (updates.title !== undefined) updateData.serviceName = updates.title;
@@ -283,16 +304,30 @@ export const updateService = async (serviceId, updates) => {
   if (updates.isVehicleInsurance !== undefined) updateData.isVehicleInsurance = updates.isVehicleInsurance;
   if (updates.illustrationKey !== undefined) updateData.illustrationKey = updates.illustrationKey;
   if (updates.illustrationUrl !== undefined) updateData.illustrationUrl = updates.illustrationUrl;
+  if (updates.illustrationDriveId !== undefined) updateData.illustrationDriveId = updates.illustrationDriveId;
 
   await updateDoc(docRef, updateData);
   return { id: serviceId, ...updates };
 };
 
 /**
- * Delete a service
+ * Delete a service. The associated Drive image (if any) is removed best-effort first.
  */
 export const deleteService = async (serviceId) => {
   if (!db) throw new Error('Firebase not configured');
+
+  try {
+    const snap = await getDoc(doc(db, COLLECTIONS.SERVICES, serviceId));
+    const driveId = snap.exists() ? (snap.data().illustrationDriveId || '') : '';
+    if (driveId) {
+      try { await deleteDriveImage(driveId); } catch (e) {
+        console.warn('Drive cleanup failed for service image', driveId, e);
+      }
+    }
+  } catch (e) {
+    console.warn('Could not read service for Drive cleanup before delete', e);
+  }
+
   await deleteDoc(doc(db, COLLECTIONS.SERVICES, serviceId));
   return true;
 };

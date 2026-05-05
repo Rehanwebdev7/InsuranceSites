@@ -19,7 +19,11 @@ const CustomerLayout = () => {
 
   return (
     <CustomerDataProvider>
-      <div className="min-h-screen flex flex-col bg-noir-950 text-white">
+      <div
+        data-site-frame
+        className="min-h-screen flex flex-col"
+        style={{ backgroundColor: 'var(--site-bg)', color: 'var(--site-text)' }}
+      >
         <PremiumAnimationLayer />
         <Header />
         {/* All pages sit below the fixed header (h-16 mobile / h-[72px] desktop) */}

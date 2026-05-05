@@ -1,263 +1,371 @@
-import { useState } from 'react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useState, useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { motion } from 'framer-motion';
-import { FiRefreshCw, FiMoon, FiSun, FiSliders, FiSave } from 'react-icons/fi';
+import { FiRefreshCw, FiMoon, FiSun, FiDroplet, FiSave, FiArrowRight } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import useAdminTheme from '../../hooks/useAdminTheme';
+
+const DEFAULT_ACCENT = '#C9A961';
 
 const AdminTheme = () => {
-  const { theme, updateColor, resetTheme, isCustomized } = useTheme();
-  const { rawSettings, updateSettings, saveSettings } = useSettings();
-  const [colors, setColors] = useState({
-    primary: theme.colors?.primary || '#C9A961',
-    secondary: theme.colors?.secondary || '#0A0A0A',
-    accent: theme.colors?.accent || '#D4AF37',
-  });
-  const [isSavingMode, setIsSavingMode] = useState(false);
+  const adminTheme = useAdminTheme();
+  const isLightAdmin = adminTheme === 'light';
 
-  const handleColorChange = (key, value) => {
-    setColors({ ...colors, [key]: value });
-    updateColor(key, value);
+  const { rawSettings, updateSettings, saveSettings, brandColors, setBrandColors } = useSettings();
+
+  // Local working state — pulled from settings on mount, synced on save.
+  const [mode, setMode] = useState(rawSettings.themeMode || 'dark');
+  const [accent, setAccent] = useState(brandColors?.primary || DEFAULT_ACCENT);
+  const [bgOverride, setBgOverride] = useState(rawSettings.customBg || '');
+  const [textOverride, setTextOverride] = useState(rawSettings.customText || '');
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => { setMode(rawSettings.themeMode || 'dark'); }, [rawSettings.themeMode]);
+  useEffect(() => { setAccent(brandColors?.primary || DEFAULT_ACCENT); }, [brandColors?.primary]);
+  useEffect(() => { setBgOverride(rawSettings.customBg || ''); }, [rawSettings.customBg]);
+  useEffect(() => { setTextOverride(rawSettings.customText || ''); }, [rawSettings.customText]);
+
+  // Live preview — push changes to runtime tokens immediately so preview reflects edits
+  // before the admin clicks Save.
+  useEffect(() => {
+    updateSettings({ themeMode: mode, customBg: bgOverride, customText: textOverride });
+    setBrandColors((prev) => ({ ...prev, primary: accent }));
+    // We intentionally don't include the setters in deps — react-redux pattern.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, accent, bgOverride, textOverride]);
+
+  const isDirty =
+    mode !== (rawSettings.themeMode || 'dark') ||
+    accent !== (brandColors?.primary || DEFAULT_ACCENT) ||
+    bgOverride !== (rawSettings.customBg || '') ||
+    textOverride !== (rawSettings.customText || '');
+
+  const handleReset = () => {
+    setMode('dark');
+    setAccent(DEFAULT_ACCENT);
+    setBgOverride('');
+    setTextOverride('');
+    toast.info('Reverted to default Heritage Gold (dark)');
   };
 
-  const handleModeChange = (mode) => {
-    updateSettings({ themeMode: mode });
-  };
-
-  const handleCustomChange = (field, value) => {
-    updateSettings({ [field]: value });
-  };
-
-  const handleSaveModeAndCustom = async () => {
-    setIsSavingMode(true);
+  const handleSave = async () => {
+    setIsSaving(true);
     try {
-      await saveSettings();
-      toast.success('Theme settings saved');
+      // settings doc uses `colors.primary` for accent
+      const next = {
+        ...rawSettings,
+        themeMode: mode,
+        customBg: bgOverride,
+        customText: textOverride,
+        colors: { ...(rawSettings.colors || {}), primary: accent },
+      };
+      await saveSettings(next);
+      toast.success('Theme saved — customer site updated');
     } catch (err) {
       console.error(err);
-      toast.error('Failed to save theme settings');
+      toast.error('Failed to save theme: ' + (err.message || 'try again'));
     } finally {
-      setIsSavingMode(false);
+      setIsSaving(false);
     }
   };
 
-  const themeMode = rawSettings.themeMode || 'dark';
-  const customBg = rawSettings.customBg || '';
-  const customText = rawSettings.customText || '';
+  // Admin-panel theme tokens (page chrome, not the customer-site preview)
+  const tt = isLightAdmin
+    ? {
+        heading: 'text-noir-950',
+        sub: 'text-ink-500',
+        card: 'bg-white border border-[#EBDCB1]',
+        cardHeading: 'text-noir-950',
+        cardSub: 'text-ink-500',
+        label: 'text-ink-700',
+        input: 'bg-white text-noir-900 border-[#EBDCB1] focus:border-[#C9A961] focus:ring-[rgba(201,169,97,0.30)]',
+        chipIdle: 'border-[#EBDCB1] hover:border-[#C9A961] bg-white',
+        chipActive: 'border-[#C9A961] bg-[rgba(201,169,97,0.12)] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.45)]',
+        clearLink: 'text-red-600 hover:underline',
+      }
+    : {
+        heading: 'text-white',
+        sub: 'text-ink-400',
+        card: 'bg-noir-900 border border-[rgba(201,169,97,0.22)]',
+        cardHeading: 'text-white',
+        cardSub: 'text-ink-400',
+        label: 'text-ink-200',
+        input: 'bg-noir-800 text-white border-[rgba(201,169,97,0.25)] focus:border-[#C9A961] focus:ring-[rgba(201,169,97,0.30)]',
+        chipIdle: 'border-[rgba(201,169,97,0.22)] hover:border-[#C9A961] bg-noir-800',
+        chipActive: 'border-[#C9A961] bg-[rgba(201,169,97,0.15)] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.45)]',
+        clearLink: 'text-red-300 hover:underline',
+      };
+
+  // Compute preview tokens using the SAME logic SettingsContext applies at runtime,
+  // so the swatch previews are pixel-accurate.
+  const previewBg = bgOverride || (mode === 'light' ? '#FAF6EE' : '#0A0A0A');
+  const previewSurface = mode === 'light' ? '#FFFFFF' : '#1A1A1A';
+  const previewText = textOverride || (mode === 'light' ? '#0F0F0F' : '#FFFFFF');
+  const previewMuted = mode === 'light' ? '#475569' : '#A3A3A3';
+  const previewBorder = mode === 'light' ? '#EBDCB1' : 'rgba(201,169,97,0.22)';
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      {/* Page header */}
+      <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Theme Settings</h1>
-          <p className="text-gray-500">Switch between dark / light modes, customize background & text colors, and tweak brand palette</p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-display italic text-[0.6rem] font-semibold text-[#C9A961] tracking-widest">Nº 04</span>
+            <span className="w-5 h-px bg-[#C9A961]" />
+            <span className={`text-[0.6rem] font-semibold uppercase tracking-[0.18em] ${tt.cardSub}`}>Site theme</span>
+          </div>
+          <h1 className={`text-2xl font-display font-bold tracking-tight ${tt.heading}`}>Customer-site theme</h1>
+          <p className={`text-sm ${tt.sub}`}>Light / dark, accent color, optional background &amp; text overrides. Drives the public site only — admin panel keeps its own toggle.</p>
         </div>
-        {isCustomized && (
-          <button onClick={resetTheme} className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiRefreshCw className="w-4 h-4" /> Reset palette
-          </button>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Theme mode selector */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-sm p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-2">
-            <FiSliders className="text-amber-600" /> Theme Mode
-          </h2>
-          <p className="text-sm text-gray-500 mb-5">Choose the dominant background tone for the public site.</p>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => handleModeChange('dark')}
-              className={`relative rounded-xl border-2 p-4 text-left transition-all ${
-                themeMode === 'dark'
-                  ? 'border-amber-500 bg-amber-50/40 shadow-md'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <FiMoon className="text-gray-700" />
-                <span className="font-semibold text-gray-800">Dark (Noir + Gold)</span>
-              </div>
-              <div className="h-12 rounded-lg overflow-hidden flex">
-                <div className="flex-1" style={{ background: 'linear-gradient(135deg,#0A0A0A,#1A1A1A)' }} />
-                <div className="w-12" style={{ backgroundColor: '#C9A961' }} />
-                <div className="w-6" style={{ backgroundColor: '#D4AF37' }} />
-              </div>
-              <p className="mt-2 text-xs text-gray-500 italic">Premium luxury — recommended</p>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleModeChange('light')}
-              className={`relative rounded-xl border-2 p-4 text-left transition-all ${
-                themeMode === 'light'
-                  ? 'border-amber-500 bg-amber-50/40 shadow-md'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <FiSun className="text-gray-700" />
-                <span className="font-semibold text-gray-800">Light (Ivory + Gold)</span>
-              </div>
-              <div className="h-12 rounded-lg overflow-hidden flex border border-gray-200">
-                <div className="flex-1" style={{ background: 'linear-gradient(135deg,#FFFCF7,#FAF6EE)' }} />
-                <div className="w-12" style={{ backgroundColor: '#C9A961' }} />
-                <div className="w-6" style={{ backgroundColor: '#D4AF37' }} />
-              </div>
-              <p className="mt-2 text-xs text-gray-500 italic">Editorial daylight feel</p>
-            </button>
-          </div>
-        </motion.div>
-
-        {/* Custom bg + text overrides */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-white rounded-xl shadow-sm p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Custom Override</h2>
-          <p className="text-sm text-gray-500 mb-5">Optional — if set, these override the preset background and text color across the whole site.</p>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Background color</label>
-              <div className="flex gap-3 items-center">
-                <input
-                  type="color"
-                  value={customBg || '#0A0A0A'}
-                  onChange={(e) => handleCustomChange('customBg', e.target.value)}
-                  className="w-12 h-10 rounded cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={customBg}
-                  onChange={(e) => handleCustomChange('customBg', e.target.value)}
-                  placeholder="(empty = use preset)"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
-                />
-                {customBg && (
-                  <button
-                    type="button"
-                    onClick={() => handleCustomChange('customBg', '')}
-                    className="text-xs text-red-600 hover:underline whitespace-nowrap"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Text color</label>
-              <div className="flex gap-3 items-center">
-                <input
-                  type="color"
-                  value={customText || '#FAF6EE'}
-                  onChange={(e) => handleCustomChange('customText', e.target.value)}
-                  className="w-12 h-10 rounded cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={customText}
-                  onChange={(e) => handleCustomChange('customText', e.target.value)}
-                  placeholder="(empty = use preset)"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
-                />
-                {customText && (
-                  <button
-                    type="button"
-                    onClick={() => handleCustomChange('customText', '')}
-                    className="text-xs text-red-600 hover:underline whitespace-nowrap"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </div>
-            <p className="text-xs text-gray-400 italic">
-              Tip: leave both empty for the cleanest brand-aligned look. Only override when a specific contrast is needed.
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
           <button
-            onClick={handleSaveModeAndCustom}
-            disabled={isSavingMode}
-            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-br from-[#C9A961] to-[#D4AF37] text-noir-950 font-semibold border border-[#B8923A] shadow hover:shadow-lg transition-all disabled:opacity-60"
+            onClick={handleReset}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${isLightAdmin ? 'text-ink-700 hover:bg-ivory-100 border border-[#EBDCB1]' : 'text-ink-200 hover:bg-noir-800 border border-[rgba(201,169,97,0.22)]'}`}
           >
-            <FiSave className="w-4 h-4" />
-            {isSavingMode ? 'Saving…' : 'Save mode & overrides'}
+            <FiRefreshCw className="w-4 h-4" /> Reset
           </button>
-        </motion.div>
+          <button
+            onClick={handleSave}
+            disabled={isSaving || !isDirty}
+            className="flex items-center gap-2 px-5 py-2 rounded-lg font-semibold border border-[#E5C770] bg-gradient-to-r from-[#C9A961] to-[#8B6F2C] text-noir-950 hover:from-[#D4AF37] hover:to-[#C9A961] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.55)] hover:shadow-[0_16px_32px_-12px_rgba(201,169,97,0.65)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <FiSave className="w-4 h-4" /> {isSaving ? 'Saving…' : 'Save'}
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl shadow-sm p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">Brand Palette</h2>
-          <div className="space-y-4">
-            {Object.entries(colors).map(([key, value]) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">{key}</label>
-                <div className="flex gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* ----------- Left column: controls ----------- */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Mode */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`rounded-2xl shadow-sm p-6 ${tt.card}`}
+          >
+            <h2 className={`text-lg font-display font-semibold tracking-tight mb-1 ${tt.cardHeading}`}>1. Mode</h2>
+            <p className={`text-sm mb-5 ${tt.cardSub}`}>Sets the dominant background &amp; text contrast for the public site.</p>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { id: 'dark', label: 'Heritage Dark', icon: FiMoon, swatch: 'linear-gradient(135deg,#0A0A0A,#1A1A1A)', accentChip: '#C9A961', sub: 'Premium · noir + gold' },
+                { id: 'light', label: 'Heritage Light', icon: FiSun, swatch: 'linear-gradient(135deg,#FFFCF7,#FAF6EE)', accentChip: '#8B6F2C', sub: 'Daylight · ivory + gold' },
+              ].map((opt) => {
+                const Icon = opt.icon;
+                const active = mode === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setMode(opt.id)}
+                    className={`relative rounded-xl border-2 p-4 text-left transition-all ${active ? tt.chipActive : tt.chipIdle}`}
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <Icon className={active ? 'text-[#C9A961]' : (isLightAdmin ? 'text-noir-700' : 'text-ink-300')} />
+                      <span className={`font-semibold tracking-tight ${tt.cardHeading}`}>{opt.label}</span>
+                    </div>
+                    <div className="h-12 rounded-lg overflow-hidden flex border" style={{ borderColor: previewBorder }}>
+                      <div className="flex-1" style={{ background: opt.swatch }} />
+                      <div className="w-10" style={{ backgroundColor: opt.accentChip }} />
+                    </div>
+                    <p className={`mt-2 text-xs italic ${tt.cardSub}`}>{opt.sub}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Accent */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.04 }}
+            className={`rounded-2xl shadow-sm p-6 ${tt.card}`}
+          >
+            <h2 className={`text-lg font-display font-semibold tracking-tight mb-1 ${tt.cardHeading}`}>2. Accent color</h2>
+            <p className={`text-sm mb-5 ${tt.cardSub}`}>Buttons, links, highlights, focus rings. Default Heritage Gold (#C9A961).</p>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={accent}
+                onChange={(e) => setAccent(e.target.value)}
+                className="w-14 h-12 rounded-lg cursor-pointer p-0.5 border"
+                style={{ borderColor: previewBorder }}
+                aria-label="Pick accent color"
+              />
+              <input
+                type="text"
+                value={accent}
+                onChange={(e) => setAccent(e.target.value)}
+                className={`flex-1 px-3 py-2.5 border rounded-lg font-mono text-sm focus:ring-2 focus:outline-none ${tt.input}`}
+                placeholder="#C9A961"
+              />
+              {accent.toUpperCase() !== DEFAULT_ACCENT && (
+                <button type="button" onClick={() => setAccent(DEFAULT_ACCENT)} className={`text-xs whitespace-nowrap ${tt.clearLink}`}>
+                  Use gold default
+                </button>
+              )}
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              {['#C9A961', '#1F6FEB', '#0F8C48', '#A23E48', '#5C3A8B', '#0F2A4A'].map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setAccent(preset)}
+                  className={`w-7 h-7 rounded-full border-2 transition-transform hover:scale-110 ${
+                    accent.toUpperCase() === preset.toUpperCase() ? 'border-[#C9A961] shadow-[0_0_0_2px_rgba(201,169,97,0.30)]' : 'border-transparent'
+                  }`}
+                  style={{ backgroundColor: preset }}
+                  title={preset}
+                />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Bg & text overrides */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08 }}
+            className={`rounded-2xl shadow-sm p-6 ${tt.card}`}
+          >
+            <h2 className={`text-lg font-display font-semibold tracking-tight mb-1 ${tt.cardHeading}`}>3. Optional overrides</h2>
+            <p className={`text-sm mb-5 ${tt.cardSub}`}>Leave empty to use the mode preset. Override only when a specific contrast is needed.</p>
+
+            <div className="space-y-4">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${tt.label}`}>Background color</label>
+                <div className="flex items-center gap-3">
                   <input
                     type="color"
-                    value={value}
-                    onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="w-12 h-10 rounded cursor-pointer"
+                    value={bgOverride || (mode === 'light' ? '#FAF6EE' : '#0A0A0A')}
+                    onChange={(e) => setBgOverride(e.target.value)}
+                    className="w-14 h-10 rounded cursor-pointer p-0.5 border"
+                    style={{ borderColor: previewBorder }}
                   />
                   <input
                     type="text"
-                    value={value}
-                    onChange={(e) => handleColorChange(key, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg font-mono text-sm"
+                    value={bgOverride}
+                    onChange={(e) => setBgOverride(e.target.value)}
+                    placeholder="(empty = use preset)"
+                    className={`flex-1 px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:outline-none ${tt.input}`}
                   />
+                  {bgOverride && (
+                    <button type="button" onClick={() => setBgOverride('')} className={`text-xs whitespace-nowrap ${tt.clearLink}`}>
+                      Clear
+                    </button>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        </motion.div>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${tt.label}`}>Body text color</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={textOverride || (mode === 'light' ? '#0F0F0F' : '#FFFFFF')}
+                    onChange={(e) => setTextOverride(e.target.value)}
+                    className="w-14 h-10 rounded cursor-pointer p-0.5 border"
+                    style={{ borderColor: previewBorder }}
+                  />
+                  <input
+                    type="text"
+                    value={textOverride}
+                    onChange={(e) => setTextOverride(e.target.value)}
+                    placeholder="(empty = use preset)"
+                    className={`flex-1 px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:outline-none ${tt.input}`}
+                  />
+                  {textOverride && (
+                    <button type="button" onClick={() => setTextOverride('')} className={`text-xs whitespace-nowrap ${tt.clearLink}`}>
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="bg-white rounded-xl shadow-sm p-6"
-        >
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">Preview</h2>
-          <div
-            className="p-4 rounded-lg mb-3"
-            style={{
-              backgroundColor: themeMode === 'dark' ? (customBg || '#0A0A0A') : (customBg || '#FFFCF7'),
-              color: themeMode === 'dark' ? (customText || '#FAF6EE') : (customText || '#0A0A0A'),
-              border: '1px solid rgba(201,169,97,0.3)',
-            }}
+        {/* ----------- Right column: live preview ----------- */}
+        <div className="lg:col-span-2 lg:sticky lg:top-20 lg:self-start space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className={`rounded-2xl shadow-sm p-6 ${tt.card}`}
           >
-            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: colors.primary }}>Edition · Vol I</p>
-            <h3 className="text-xl font-bold mb-2 italic" style={{ fontFamily: 'serif' }}>
-              Insurance, delivered like luxury.
-            </h3>
-            <p className="text-sm opacity-80 mb-3">Compare quotes from 20+ insurers in 60 seconds.</p>
-            <button
-              className="px-4 py-2 rounded-full text-sm font-semibold"
+            <div className="flex items-center gap-2 mb-3">
+              <FiDroplet className="text-[#C9A961]" />
+              <h2 className={`text-lg font-display font-semibold tracking-tight ${tt.cardHeading}`}>Live preview</h2>
+            </div>
+            <p className={`text-xs italic mb-4 ${tt.cardSub}`}>This panel renders with the same tokens the public site uses.</p>
+
+            {/* Preview hero card */}
+            <div
+              className="rounded-xl p-5 mb-3 relative overflow-hidden"
               style={{
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.accent})`,
-                color: '#0A0A0A',
+                backgroundColor: previewBg,
+                color: previewText,
+                border: `1px solid ${previewBorder}`,
               }}
             >
-              Get my quote →
-            </button>
-          </div>
-          <div className="p-3 rounded-lg" style={{ backgroundColor: colors.primary, color: '#0A0A0A' }}>
-            <p className="text-sm font-semibold">Primary accent preview</p>
-          </div>
-        </motion.div>
+              <div
+                aria-hidden
+                className="absolute -top-12 -right-12 w-44 h-44 rounded-full pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle, ${accent}33 0%, transparent 65%)`,
+                }}
+              />
+              <p className="text-[0.6rem] uppercase tracking-[0.22em] mb-2 italic font-semibold" style={{ color: accent }}>
+                Edition · Vol I
+              </p>
+              <h3 className="text-xl font-display font-bold mb-2 italic leading-tight">
+                Insurance, delivered like luxury.
+              </h3>
+              <p className="text-sm mb-4" style={{ color: previewMuted }}>
+                Compare honest quotes from 20+ insurers in 60 seconds.
+              </p>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 65%, black))`,
+                  color: mode === 'light' ? '#FFFFFF' : '#0A0A0A',
+                }}
+              >
+                Get my quote <FiArrowRight />
+              </button>
+            </div>
+
+            {/* Surface card */}
+            <div
+              className="rounded-xl p-4 mb-3"
+              style={{
+                backgroundColor: previewSurface,
+                color: previewText,
+                border: `1px solid ${previewBorder}`,
+              }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: accent }}>Service card</p>
+              <p className="font-display font-semibold mb-1 tracking-tight">Two-Wheeler Insurance</p>
+              <p className="text-xs" style={{ color: previewMuted }}>Comprehensive cover from ₹538/yr.</p>
+            </div>
+
+            {/* Token swatches */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {[
+                { label: 'Bg', value: previewBg },
+                { label: 'Surface', value: previewSurface },
+                { label: 'Text', value: previewText },
+                { label: 'Accent', value: accent },
+              ].map((tk) => (
+                <div key={tk.label} className="flex items-center gap-2 px-2 py-1.5 rounded-md border" style={{ borderColor: previewBorder }}>
+                  <span className="w-4 h-4 rounded-full border" style={{ backgroundColor: tk.value, borderColor: previewBorder }} />
+                  <span className={`font-mono ${tt.cardSub}`}>{tk.label}</span>
+                  <span className={`ml-auto font-mono ${tt.cardHeading}`}>{tk.value}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
