@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { motion } from 'framer-motion';
 import { FiRefreshCw, FiMoon, FiSun, FiDroplet, FiSave, FiArrowRight } from 'react-icons/fi';
@@ -11,27 +11,62 @@ const AdminTheme = () => {
   const adminTheme = useAdminTheme();
   const isLightAdmin = adminTheme === 'light';
 
-  const { rawSettings, updateSettings, saveSettings, brandColors, setBrandColors } = useSettings();
+  const { rawSettings, updateSettings, saveSettings, brandColors, setBrandColors, isLoading } = useSettings();
 
-  // Local working state — pulled from settings on mount, synced on save.
+  // Local working state — initialized once from settings, NOT kept in sync.
+  // The previous version had four sync-from-settings effects + a live-preview
+  // effect that wrote back into settings — which created a feedback loop on
+  // every color-picker tick. Now: edit only touches local state + DOM tokens;
+  // context state is updated only on Save.
   const [mode, setMode] = useState(rawSettings.themeMode || 'dark');
   const [accent, setAccent] = useState(brandColors?.primary || DEFAULT_ACCENT);
   const [bgOverride, setBgOverride] = useState(rawSettings.customBg || '');
   const [textOverride, setTextOverride] = useState(rawSettings.customText || '');
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => { setMode(rawSettings.themeMode || 'dark'); }, [rawSettings.themeMode]);
-  useEffect(() => { setAccent(brandColors?.primary || DEFAULT_ACCENT); }, [brandColors?.primary]);
-  useEffect(() => { setBgOverride(rawSettings.customBg || ''); }, [rawSettings.customBg]);
-  useEffect(() => { setTextOverride(rawSettings.customText || ''); }, [rawSettings.customText]);
-
-  // Live preview — push changes to runtime tokens immediately so preview reflects edits
-  // before the admin clicks Save.
+  // One-time hydration after Firestore finishes loading (settings may not be
+  // ready when this page mounts).
+  const hydrated = useRef(false);
   useEffect(() => {
-    updateSettings({ themeMode: mode, customBg: bgOverride, customText: textOverride });
-    setBrandColors((prev) => ({ ...prev, primary: accent }));
-    // We intentionally don't include the setters in deps — react-redux pattern.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (hydrated.current || isLoading) return;
+    setMode(rawSettings.themeMode || 'dark');
+    setAccent(brandColors?.primary || DEFAULT_ACCENT);
+    setBgOverride(rawSettings.customBg || '');
+    setTextOverride(rawSettings.customText || '');
+    hydrated.current = true;
+  }, [isLoading, rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, brandColors?.primary]);
+
+  // Live preview — write CSS tokens directly to <html>. No React state cascade,
+  // so picker drag is smooth and there is no loop. Mirrors SettingsContext.applySiteTheme.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-site-theme', mode === 'light' ? 'light' : 'dark');
+
+    const isCustomAccent = !!accent && accent.toLowerCase() !== DEFAULT_ACCENT.toLowerCase();
+    if (isCustomAccent) {
+      root.setAttribute('data-site-accent', 'custom');
+      root.style.setProperty('--site-accent', accent);
+      root.style.setProperty('--site-accent-soft', `color-mix(in srgb, ${accent} 18%, transparent)`);
+      root.style.setProperty('--site-accent-strong', `color-mix(in srgb, ${accent} 65%, black)`);
+    } else {
+      root.removeAttribute('data-site-accent');
+      root.style.removeProperty('--site-accent');
+      root.style.removeProperty('--site-accent-soft');
+      root.style.removeProperty('--site-accent-strong');
+    }
+
+    if (bgOverride) {
+      root.style.setProperty('--site-bg', bgOverride);
+      root.style.setProperty('--site-bg-soft', `color-mix(in srgb, ${bgOverride} 88%, white)`);
+    } else {
+      root.style.removeProperty('--site-bg');
+      root.style.removeProperty('--site-bg-soft');
+    }
+    if (textOverride) {
+      root.style.setProperty('--site-text', textOverride);
+    } else {
+      root.style.removeProperty('--site-text');
+    }
   }, [mode, accent, bgOverride, textOverride]);
 
   const isDirty =
@@ -40,18 +75,48 @@ const AdminTheme = () => {
     bgOverride !== (rawSettings.customBg || '') ||
     textOverride !== (rawSettings.customText || '');
 
+  // Form-level revert (no Firestore write) — undoes unsaved edits.
   const handleReset = () => {
-    setMode('dark');
-    setAccent(DEFAULT_ACCENT);
-    setBgOverride('');
-    setTextOverride('');
-    toast.info('Reverted to default Heritage Gold (dark)');
+    setMode(rawSettings.themeMode || 'dark');
+    setAccent(brandColors?.primary || DEFAULT_ACCENT);
+    setBgOverride(rawSettings.customBg || '');
+    setTextOverride(rawSettings.customText || '');
+    toast.info('Reverted unsaved changes');
+  };
+
+  // One-click restore: sets all four controls back to the brand baseline
+  // (Heritage Gold · Dark) AND persists immediately to Firestore. Use this if
+  // the theme has been messed up and you want a known-good starting point.
+  const handleRestoreDefault = async () => {
+    if (!window.confirm('Restore the default Heritage Gold (Dark) theme? This will overwrite the saved theme.')) return;
+    setIsSaving(true);
+    try {
+      const next = {
+        ...rawSettings,
+        themeMode: 'dark',
+        customBg: '',
+        customText: '',
+        colors: { ...(rawSettings.colors || {}), primary: DEFAULT_ACCENT },
+      };
+      await saveSettings(next);
+      setMode('dark');
+      setAccent(DEFAULT_ACCENT);
+      setBgOverride('');
+      setTextOverride('');
+      updateSettings({ themeMode: 'dark', customBg: '', customText: '' });
+      setBrandColors((prev) => ({ ...prev, primary: DEFAULT_ACCENT }));
+      toast.success('Default Heritage Gold (Dark) restored');
+    } catch (err) {
+      console.error(err);
+      toast.error('Restore failed: ' + (err.message || 'try again'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // settings doc uses `colors.primary` for accent
       const next = {
         ...rawSettings,
         themeMode: mode,
@@ -60,6 +125,10 @@ const AdminTheme = () => {
         colors: { ...(rawSettings.colors || {}), primary: accent },
       };
       await saveSettings(next);
+      // Sync context state so SettingsContext's effects re-run with the new
+      // values and isDirty flips to false.
+      updateSettings({ themeMode: mode, customBg: bgOverride, customText: textOverride });
+      setBrandColors((prev) => ({ ...prev, primary: accent }));
       toast.success('Theme saved — customer site updated');
     } catch (err) {
       console.error(err);
@@ -117,12 +186,22 @@ const AdminTheme = () => {
           <h1 className={`text-2xl font-display font-bold tracking-tight ${tt.heading}`}>Customer-site theme</h1>
           <p className={`text-sm ${tt.sub}`}>Light / dark, accent color, optional background &amp; text overrides. Drives the public site only — admin panel keeps its own toggle.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={handleReset}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${isLightAdmin ? 'text-ink-700 hover:bg-ivory-100 border border-[#EBDCB1]' : 'text-ink-200 hover:bg-noir-800 border border-[rgba(201,169,97,0.22)]'}`}
+            disabled={!isDirty}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isLightAdmin ? 'text-ink-700 hover:bg-ivory-100 border border-[#EBDCB1]' : 'text-ink-200 hover:bg-noir-800 border border-[rgba(201,169,97,0.22)]'}`}
+            title="Discard unsaved edits"
           >
-            <FiRefreshCw className="w-4 h-4" /> Reset
+            <FiRefreshCw className="w-4 h-4" /> Revert
+          </button>
+          <button
+            onClick={handleRestoreDefault}
+            disabled={isSaving}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${isLightAdmin ? 'text-[#8B6F2C] border border-[#C9A961] bg-[rgba(201,169,97,0.08)] hover:bg-[rgba(201,169,97,0.16)]' : 'text-[#E5C770] border border-[#C9A961] bg-[rgba(201,169,97,0.08)] hover:bg-[rgba(201,169,97,0.18)]'}`}
+            title="Restore the default Heritage Gold (Dark) theme and save"
+          >
+            <FiDroplet className="w-4 h-4" /> Restore default
           </button>
           <button
             onClick={handleSave}
@@ -309,23 +388,23 @@ const AdminTheme = () => {
             >
               <div
                 aria-hidden
-                className="absolute -top-12 -right-12 w-44 h-44 rounded-full pointer-events-none"
+                className="absolute -top-16 -right-16 w-32 h-32 rounded-full pointer-events-none"
                 style={{
-                  background: `radial-gradient(circle, ${accent}33 0%, transparent 65%)`,
+                  background: `radial-gradient(circle, ${accent}1F 0%, transparent 70%)`,
                 }}
               />
-              <p className="text-[0.6rem] uppercase tracking-[0.22em] mb-2 italic font-semibold" style={{ color: accent }}>
+              <p className="text-[0.6rem] uppercase tracking-[0.22em] mb-2 italic font-semibold relative" style={{ color: accent }}>
                 Edition · Vol I
               </p>
-              <h3 className="text-xl font-display font-bold mb-2 italic leading-tight">
+              <h3 className="text-xl font-display font-bold mb-2 italic leading-tight relative" style={{ color: previewText }}>
                 Insurance, delivered like luxury.
               </h3>
-              <p className="text-sm mb-4" style={{ color: previewMuted }}>
+              <p className="text-sm mb-4 relative" style={{ color: previewMuted }}>
                 Compare honest quotes from 20+ insurers in 60 seconds.
               </p>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold relative"
                 style={{
                   background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 65%, black))`,
                   color: mode === 'light' ? '#FFFFFF' : '#0A0A0A',
@@ -345,7 +424,7 @@ const AdminTheme = () => {
               }}
             >
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: accent }}>Service card</p>
-              <p className="font-display font-semibold mb-1 tracking-tight">Two-Wheeler Insurance</p>
+              <p className="font-display font-semibold mb-1 tracking-tight" style={{ color: previewText }}>Two-Wheeler Insurance</p>
               <p className="text-xs" style={{ color: previewMuted }}>Comprehensive cover from ₹538/yr.</p>
             </div>
 

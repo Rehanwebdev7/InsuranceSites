@@ -1086,8 +1086,13 @@ body { top: 0 !important; }
    [data-site-frame] so the admin panel is unaffected.
    =============================================== */
 
-/* Light-mode: noir backgrounds → ivory surfaces */
-html[data-site-theme="light"] [data-site-frame] .bg-noir-950 { background-color: var(--site-bg) !important; }
+/* Page background flip — applies in BOTH modes so admin's optional Bg override
+   is reflected on the public site. Default --site-bg matches bg-noir-950 in
+   dark mode, so this is a no-op when bgOverride is empty.
+   Surface / lighter surface flips stay light-mode-only — we do not want bgOverride
+   to also bleed through into card backgrounds (it would kill visual hierarchy). */
+[data-site-frame] .bg-noir-950 { background-color: var(--site-bg) !important; }
+
 html[data-site-theme="light"] [data-site-frame] .bg-noir-900 { background-color: var(--site-surface) !important; }
 html[data-site-theme="light"] [data-site-frame] .bg-noir-800 { background-color: var(--site-surface-2) !important; }
 html[data-site-theme="light"] [data-site-frame] .bg-noir-700 { background-color: #F2EAD8 !important; }
@@ -1149,20 +1154,22 @@ html[data-site-theme="light"] [data-site-frame] .Toastify__toast {
 }
 
 /* ============== ACCENT-AWARE OVERRIDES ==============
-   When admin picks a custom accent (--site-accent), the
-   gold-pill CTA gradient and gold accent-text follow it.
-   Default accent = #C9A961 so existing look is unchanged.
+   These rules ONLY fire when the admin picks a non-default
+   accent (data-site-accent="custom" is set on <html> by
+   SettingsContext.applySiteTheme). Default Heritage Gold keeps
+   its original literal #C9A961 → #D4AF37 brand gradient untouched.
    ===================================================== */
 
 /* Primary gold-pill CTAs (the .from-[#C9A961].to-[#D4AF37] gradient pattern) */
-[data-site-frame] [class*="from-[#C9A961]"][class*="to-[#D4AF37]"],
-[data-site-frame] [class*="from-[#C9A961]"][class*="to-[#8B6F2C]"] {
+html[data-site-accent="custom"] [data-site-frame] [class*="from-[#C9A961]"][class*="to-[#D4AF37]"],
+html[data-site-accent="custom"] [data-site-frame] [class*="from-[#C9A961]"][class*="to-[#8B6F2C]"] {
   background-image: linear-gradient(135deg, var(--site-accent) 0%, var(--site-accent-strong) 100%) !important;
 }
 
 /* Common gold-text utilities → accent */
-[data-site-frame] .text-\[\#C9A961\] { color: var(--site-accent) !important; }
-[data-site-frame] .text-\[\#D4AF37\] { color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .text-\[\#C9A961\] { color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .text-\[\#D4AF37\] { color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .text-\[\#E5C770\] { color: var(--site-accent) !important; }
 
 /* Gold border swap — keep #C9A961 as the canonical accent border */
-[data-site-frame] .border-\[\#C9A961\] { border-color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .border-\[\#C9A961\] { border-color: var(--site-accent) !important; }

@@ -29,6 +29,7 @@ import AdminLeadDetail from '../pages/admin/LeadDetail';
 import AdminServices from '../pages/admin/Services';
 import AdminSlider from '../pages/admin/Slider';
 import AdminSettings from '../pages/admin/Settings';
+import AdminTheme from '../pages/admin/Theme';
 import AdminTestimonials from '../pages/admin/Testimonials';
 import AdminManagement from '../pages/admin/AdminManagement';
 import SetupSuperAdmin from '../pages/admin/SetupSuperAdmin';
@@ -141,6 +142,7 @@ const router = createBrowserRouter([
       { path: 'slider', element: <PermissionGuard permission="slider"><AdminSlider /></PermissionGuard> },
       { path: 'testimonials', element: <PermissionGuard permission="testimonials"><AdminTestimonials /></PermissionGuard> },
       { path: 'settings', element: <PermissionGuard permission="settings"><AdminSettings /></PermissionGuard> },
+      { path: 'theme', element: <PermissionGuard permission="settings"><AdminTheme /></PermissionGuard> },
       { path: 'admins', element: <SuperAdminRoute><AdminManagement /></SuperAdminRoute> },
     ],
   },

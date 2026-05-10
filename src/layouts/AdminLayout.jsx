@@ -4,7 +4,7 @@ import { useSettings } from '../contexts/SettingsContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiHome, FiFileText, FiGrid,
-  FiLogOut, FiMenu, FiX, FiImage, FiSettings,
+  FiLogOut, FiMenu, FiX, FiImage, FiSettings, FiDroplet,
   FiChevronsLeft, FiChevronsRight, FiStar, FiUsers, FiSun, FiMoon,
 } from 'react-icons/fi';
 import { useState, useEffect, useMemo } from 'react';
@@ -23,6 +23,7 @@ const ALL_NAV_ITEMS = [
   { path: '/admin/slider', icon: FiImage, label: 'Slider', permission: 'slider' },
   { path: '/admin/testimonials', icon: FiStar, label: 'Testimonials', permission: 'testimonials' },
   { path: '/admin/admins', icon: FiUsers, label: 'Admin Management', superAdminOnly: true },
+  { path: '/admin/theme', icon: FiDroplet, label: 'Theme', permission: 'settings' },
   { path: '/admin/settings', icon: FiSettings, label: 'Settings', permission: 'settings' },
 ];
 

@@ -110,16 +110,23 @@ const loadLocalSettings = () => {
 // Mode toggles the data-site-theme attribute on <html>; accent / bg / text
 // overrides are stamped as inline style on documentElement so they win over
 // the css :root defaults but stay below !important utility classes.
+const DEFAULT_GOLD = '#c9a961';
 const applySiteTheme = ({ mode, accent, customBg, customText }) => {
   const root = document.documentElement;
   root.setAttribute('data-site-theme', mode === 'light' ? 'light' : 'dark');
 
-  // Accent override — also derive soft (alpha tint) and strong (darker)
-  if (accent) {
+  // Accent: only override when it's a CUSTOM color. Default gold falls back to
+  // the :root tokens AND skips the data-site-accent attribute, so the literal
+  // gold gradient classes (`from-[#C9A961] to-[#D4AF37]`) keep their original
+  // bright gold look.
+  const isCustomAccent = !!accent && accent.toLowerCase() !== DEFAULT_GOLD;
+  if (isCustomAccent) {
+    root.setAttribute('data-site-accent', 'custom');
     root.style.setProperty('--site-accent', accent);
     root.style.setProperty('--site-accent-soft', `color-mix(in srgb, ${accent} 18%, transparent)`);
     root.style.setProperty('--site-accent-strong', `color-mix(in srgb, ${accent} 65%, black)`);
   } else {
+    root.removeAttribute('data-site-accent');
     root.style.removeProperty('--site-accent');
     root.style.removeProperty('--site-accent-soft');
     root.style.removeProperty('--site-accent-strong');

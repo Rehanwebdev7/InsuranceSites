@@ -155,7 +155,12 @@ const AdminSettings = () => {
           await exchangeFn({ authCode: response.code });
           toast.success('Google Drive connected successfully! Image uploads will now work.');
         } catch (err) {
-          toast.error('Failed to connect: ' + (err.message || 'Unknown error'));
+          console.error('Drive connect error:', err);
+          const code = err.code || '';
+          const detail = err.details?.message || err.details || '';
+          const msg = err.message && err.message !== code ? err.message : '';
+          const surfaced = [code, msg, typeof detail === 'string' ? detail : ''].filter(Boolean).join(' · ');
+          toast.error('Drive connect failed: ' + (surfaced || 'Unknown error — check browser console'));
         } finally {
           setDriveConnecting(false);
         }
