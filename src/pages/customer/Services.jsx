@@ -177,7 +177,7 @@ const Services = () => {
           )}
 
           {servicesLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {Array.from({ length: 8 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
@@ -187,7 +187,7 @@ const Services = () => {
               <p className="text-ink-500">No policies match your search. Try a different keyword.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {filteredServices.map((service, index) => (
                 <ServiceCard
                   key={service.id}

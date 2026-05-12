@@ -95,10 +95,10 @@ const Footer = () => {
       </div>
 
       {/* Main footer */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
-          {/* Brand column */}
-          <div className="lg:col-span-4">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 lg:pt-14 pb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-8 sm:gap-x-8 lg:gap-12">
+          {/* Brand column — full row on mobile/tablet */}
+          <div className="col-span-2 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-2.5 mb-5">
               {settings?.brandLogo ? (
                 <img
@@ -143,8 +143,8 @@ const Footer = () => {
             )}
           </div>
 
-          {/* Services */}
-          <div className="lg:col-span-3">
+          {/* Services — 1/2 on mobile */}
+          <div className="col-span-1 lg:col-span-3">
             <h3 className="font-display text-white font-semibold text-sm mb-5 tracking-[0.14em] uppercase">
               <span className="inline-flex items-center gap-2">
                 <span className="w-4 h-[1px] bg-[#C9A961]" />
@@ -166,8 +166,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Company */}
-          <div className="lg:col-span-2">
+          {/* Company — 1/2 on mobile (next to Services) */}
+          <div className="col-span-1 lg:col-span-2">
             <h3 className="font-display text-white font-semibold text-sm mb-5 tracking-[0.14em] uppercase">
               <span className="inline-flex items-center gap-2">
                 <span className="w-4 h-[1px] bg-[#C9A961]" />
@@ -189,8 +189,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div className="lg:col-span-3">
+          {/* Contact — full row on mobile (it has wider items) */}
+          <div className="col-span-2 lg:col-span-3">
             <h3 className="font-display text-white font-semibold text-sm mb-5 tracking-[0.14em] uppercase">
               <span className="inline-flex items-center gap-2">
                 <span className="w-4 h-[1px] bg-[#C9A961]" />

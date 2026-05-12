@@ -26,7 +26,7 @@ export const PERMISSION_LABELS = {
 };
 
 // ===== Application Name =====
-export const APP_NAME = 'XYZ Insurance';
+export const APP_NAME = 'MH Insurance';
 
 // ===== Contact Information =====
 export const CONTACT_INFO = {

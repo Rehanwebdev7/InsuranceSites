@@ -17,7 +17,7 @@ const ROWS = [
 ];
 
 const ComparisonStrip = ({ brandName = 'Bharat' }) => (
-  <section className="relative bg-noir-900 py-16 md:py-24 overflow-hidden">
+  <section className="relative bg-noir-900 py-10 md:py-14 overflow-hidden">
     {/* Soft warm wash */}
     <div
       aria-hidden
@@ -42,7 +42,7 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-8"
       >
         <div className="flex items-center justify-center gap-3 mb-4">
           <span className="w-10 h-px bg-[#C9A961]" />
@@ -72,7 +72,7 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
         className="relative rounded-3xl overflow-hidden bg-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_36px_72px_-24px_rgba(0,0,0,0.7),0_0_0_1px_rgba(201,169,97,0.10)]"
       >
         {/* Table header */}
-        <div className="grid grid-cols-[1fr_auto_auto] md:grid-cols-[1fr_180px_180px] border-b border-[rgba(201,169,97,0.20)] bg-noir-950">
+        <div className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] border-b border-[rgba(201,169,97,0.20)] bg-noir-950">
           <div className="px-5 py-5 md:px-8 md:py-6">
             <span className="font-display italic text-[0.7rem] font-semibold text-[#C9A961] tracking-[0.18em] uppercase">
               The trait
@@ -102,7 +102,7 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
           {ROWS.map((row, i) => (
             <div
               key={i}
-              className="grid grid-cols-[1fr_auto_auto] md:grid-cols-[1fr_180px_180px] hover:bg-noir-900 transition-colors"
+              className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] hover:bg-noir-900 transition-colors"
             >
               <div className="px-5 py-4 md:px-8 md:py-5 text-sm md:text-[0.9375rem] text-white">
                 {row.trait}

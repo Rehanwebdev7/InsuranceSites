@@ -75,7 +75,7 @@ const AdminLayout = () => {
 
   const logoSrc = settings?.brandLogo;
   const faviconSrc = settings?.brandFavicon;
-  const brandName = settings?.brandName || 'XYZ Insurance';
+  const brandName = settings?.brandName || 'MH Insurance';
   const sidebarWidth = collapsed ? 'w-[72px]' : 'w-64';
   const mainMargin = collapsed ? 'lg:ml-[72px]' : 'lg:ml-64';
 

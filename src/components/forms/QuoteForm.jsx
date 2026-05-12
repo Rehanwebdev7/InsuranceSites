@@ -142,7 +142,7 @@ const QuoteForm = ({ isOpen, onClose, onSubmit, service }) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="quote-modal-title"
-            className="relative z-10 w-full max-w-3xl max-h-[92vh] bg-white rounded-3xl shadow-[0_40px_80px_-16px_rgba(11,18,32,0.4)] overflow-hidden grid md:grid-cols-[1fr,260px]"
+            className="customer-form-dark relative z-10 w-full max-w-3xl max-h-[92vh] rounded-3xl shadow-[0_40px_80px_-16px_rgba(0,0,0,0.6)] overflow-hidden grid md:grid-cols-[1fr,260px]"
             initial={{ opacity: 0, scale: 0.96, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 8 }}

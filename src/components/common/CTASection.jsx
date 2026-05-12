@@ -7,15 +7,15 @@ import { useSettings } from '../../contexts/SettingsContext';
 const CTASection = () => {
   const { settings } = useSettings();
   return (
-    <section className="relative py-12 md:py-16 bg-ivory-50">
+    <section className="relative py-12 md:py-16 bg-noir-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* CTA panel — noir bg with gold detailing */}
+        {/* CTA panel — same dark cabinet card as About/Home stats (consistent across site) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative isolate overflow-hidden rounded-[2rem] md:rounded-[2.5rem] grad-hero shadow-[0_40px_80px_-24px_rgba(10,10,10,0.45)] border border-[rgba(201,169,97,0.25)]"
+          className="relative isolate overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-noir-900 to-noir-800 shadow-[0_40px_80px_-24px_rgba(10,10,10,0.45)] border border-[rgba(201,169,97,0.30)]"
         >
           {/* Warm aurora blobs */}
           <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">

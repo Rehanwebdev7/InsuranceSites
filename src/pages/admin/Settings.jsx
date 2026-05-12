@@ -280,7 +280,7 @@ const AdminSettings = () => {
                 type="text"
                 value={form.brandName || ''}
                 onChange={(e) => update('brandName', e.target.value)}
-                placeholder="XYZ Insurance"
+                placeholder="MH Insurance"
               />
               <InputField
                 label="Site Title"
@@ -288,7 +288,7 @@ const AdminSettings = () => {
                 type="text"
                 value={form.siteTitle || ''}
                 onChange={(e) => update('siteTitle', e.target.value)}
-                placeholder="XYZ Insurance - Trusted Vehicle Insurance Partner"
+                placeholder="MH Insurance - Trusted Vehicle Insurance Partner"
               />
             </div>
 

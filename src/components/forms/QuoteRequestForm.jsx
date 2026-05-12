@@ -185,7 +185,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
           role="dialog"
           aria-modal="true"
           aria-labelledby="quote-modal-title"
-          className="relative z-10 w-full max-w-lg bg-white rounded-2xl md:rounded-3xl shadow-[0_40px_80px_-16px_rgba(11,18,32,0.4)] flex flex-col overflow-hidden"
+          className="customer-form-dark relative z-10 w-full max-w-lg rounded-2xl md:rounded-3xl shadow-[0_40px_80px_-16px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden"
           style={{ maxHeight: 'min(92vh, 820px)' }}
           initial={{ opacity: 0, scale: 0.96, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

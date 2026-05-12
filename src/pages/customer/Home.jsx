@@ -44,10 +44,11 @@ const whyChooseUs = [
   },
 ];
 
+// Single source of truth for trust stats — same values on Home & About.
 const trustStats = [
-  { value: 47382, suffix: '+', label: 'Happy customers' },
-  { value: 23, suffix: '+', label: 'Insurance partners' },
-  { value: '8.6Cr+', suffix: '', label: 'Claims settled' },
+  { value: 50, suffix: 'K+', label: 'Happy customers' },
+  { value: 20, suffix: '+', label: 'Insurance partners' },
+  { value: 98, suffix: '%', label: 'Claims settled' },
   { value: 24, suffix: '/7', label: 'Human support' },
 ];
 
@@ -117,13 +118,13 @@ const Home = () => {
         subtitle="Health, life, vehicle, travel, business — whatever needs protecting, we've got an honest quote for it."
       >
         {servicesLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
             {activeServices.map((service, index) => (
               <ServiceCard
                 key={service.id}
@@ -150,27 +151,21 @@ const Home = () => {
         title="Why people actually stick with us."
         subtitle="Not just cheap rates — honest humans, fast claims, and the kind of service worth telling your cousin about."
       >
-        {/* Stats strip — noir bg with gold count-up */}
-        <div className="mb-10 rounded-3xl grad-hero text-white p-6 md:p-8 relative overflow-hidden border border-[rgba(201,169,97,0.25)]">
-          <div aria-hidden className="absolute inset-0 pointer-events-none">
-            <div
-              className="aurora-blob w-[360px] h-[360px] -top-20 -left-20"
-              style={{ backgroundColor: 'rgba(201, 169, 97, 0.30)' }}
-            />
-            <div
-              className="aurora-blob w-[300px] h-[300px] -bottom-20 -right-10"
-              style={{ backgroundColor: 'rgba(212, 175, 55, 0.20)', animationDelay: '3s' }}
-            />
-          </div>
-          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
+        {/* Stats strip — same dark cabinet card as About page (consistent across site) */}
+        <div className="mb-10 rounded-3xl bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_36px_72px_-24px_rgba(0,0,0,0.7)] p-6 md:p-10 text-white relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse at top right, rgba(201,169,97,0.18) 0%, transparent 60%)',
+            }}
+          />
+          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {trustStats.map((s) => (
-              <Stat
-                key={s.label}
-                value={s.value}
-                suffix={s.suffix}
-                label={s.label}
-                tone="brand"
-              />
+              <div key={s.label} className="text-center md:text-left">
+                <Stat value={s.value} suffix={s.suffix} label={s.label} tone="brand" />
+              </div>
             ))}
           </div>
         </div>

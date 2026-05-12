@@ -84,9 +84,11 @@ const PremiumAnimationLayer = () => {
           const dx = e.clientX - cx;
           const dy = e.clientY - cy;
           const dist = Math.hypot(dx, dy);
-          const radius = Math.max(rect.width, rect.height) * 1.2;
+          // Tighter activation radius + much gentler pull so CTAs nudge subtly
+          // instead of yanking around the cursor.
+          const radius = Math.max(rect.width, rect.height) * 0.9;
           if (dist < radius) {
-            const strength = 0.32 * (1 - dist / radius);
+            const strength = 0.10 * (1 - dist / radius);
             el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
           } else {
             el.style.transform = '';

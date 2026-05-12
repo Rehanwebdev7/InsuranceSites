@@ -110,6 +110,8 @@ const AdminSlider = () => {
       const imageUrl = getImageUrl(fileId);
       const newSlide = await addSliderImage({
         title: `Slide ${slides.length + 1}`,
+        headline: '',
+        subHeadline: '',
         imageUrl,
         driveFileId: fileId,
         order: slides.length,
@@ -168,15 +170,15 @@ const AdminSlider = () => {
     }
   };
 
-  const handleTitleChange = (slideId, title) => {
+  const handleFieldChange = (slideId, field, value) => {
     setSlides((prev) =>
-      prev.map((s) => (s.id === slideId ? { ...s, title } : s))
+      prev.map((s) => (s.id === slideId ? { ...s, [field]: value } : s))
     );
   };
 
-  const handleTitleBlur = (slideId, title) => {
-    updateSliderImage(slideId, { title }).catch((err) =>
-      console.error('Title update failed:', err)
+  const handleFieldBlur = (slideId, field, value) => {
+    updateSliderImage(slideId, { [field]: value }).catch((err) =>
+      console.error(`${field} update failed:`, err)
     );
   };
 
@@ -283,15 +285,15 @@ const AdminSlider = () => {
                 </div>
               </div>
 
-              <div className="p-4">
+              <div className="p-4 space-y-2.5">
                 <div className="grid grid-cols-[minmax(0,1fr),96px] gap-3">
                   <input
                     type="text"
                     value={slide.title || ''}
-                    onChange={(e) => handleTitleChange(slide.id, e.target.value)}
-                    onBlur={(e) => handleTitleBlur(slide.id, e.target.value)}
+                    onChange={(e) => handleFieldChange(slide.id, 'title', e.target.value)}
+                    onBlur={(e) => handleFieldBlur(slide.id, 'title', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="Slide title"
+                    placeholder="Internal label (admin only)"
                   />
                   <input
                     type="number"
@@ -301,6 +303,32 @@ const AdminSlider = () => {
                     onBlur={(e) => handleOrderBlur(slide.id, Number(e.target.value))}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     placeholder="Order"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[0.7rem] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                    Headline <span className="text-gray-400 font-normal normal-case">(big text on the website hero)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={slide.headline || ''}
+                    onChange={(e) => handleFieldChange(slide.id, 'headline', e.target.value)}
+                    onBlur={(e) => handleFieldBlur(slide.id, 'headline', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder='e.g. "Insurance, delivered like luxury."'
+                  />
+                </div>
+                <div>
+                  <label className="block text-[0.7rem] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                    Description <span className="text-gray-400 font-normal normal-case">(sub-text below headline)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={slide.subHeadline || ''}
+                    onChange={(e) => handleFieldChange(slide.id, 'subHeadline', e.target.value)}
+                    onBlur={(e) => handleFieldBlur(slide.id, 'subHeadline', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                    placeholder='Short subtitle for this slide. Leave blank to use the site default.'
                   />
                 </div>
               </div>
@@ -353,8 +381,7 @@ const AdminSlider = () => {
 
       <div className="mt-6 p-4 bg-blue-50 rounded-lg">
         <p className="text-sm text-blue-700">
-          <strong>Tip:</strong> Images are automatically cropped to 16:5 ratio for best display.
-          Use the <FiEye className="inline w-4 h-4" />/<FiEyeOff className="inline w-4 h-4" /> toggle to show/hide slides on the website without deleting them, and use the order field to control slide sequence.
+          <strong>Tip:</strong> Each slide controls its own <em>headline</em> and <em>description</em> on the homepage hero — leave them blank to fall back to the site default. Images are auto-cropped to 16:5. Toggle <FiEye className="inline w-4 h-4" />/<FiEyeOff className="inline w-4 h-4" /> to show/hide without deleting; use the order field to control sequence.
         </p>
       </div>
 

@@ -56,7 +56,7 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col items-center text-center px-3 py-4 cursor-pointer bg-transparent border-0 outline-none focus-visible:ring-2 focus-visible:ring-[#C9A961] focus-visible:ring-offset-4 focus-visible:ring-offset-noir-950 rounded-2xl"
+      className="group relative flex flex-col items-center text-center px-2 py-2 cursor-pointer bg-transparent border-0 outline-none focus-visible:ring-2 focus-visible:ring-[#C9A961] focus-visible:ring-offset-4 focus-visible:ring-offset-noir-950 rounded-2xl"
     >
       {/* Magazine number — tiny, top-right corner, decorative */}
       <span
@@ -77,8 +77,8 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
         </span>
       )}
 
-      {/* OVAL container — cream blob, holds the GIF/illustration centered inside */}
-      <div className="relative w-full max-w-[300px] aspect-[5/4] mt-5 mb-5">
+      {/* OVAL container — image fills the oval, cream ring acts as a thin frame */}
+      <div className="relative w-full max-w-[300px] aspect-[5/4] mt-3 mb-3">
         {/* Soft gold halo behind oval, blooms on hover */}
         <div
           aria-hidden
@@ -89,45 +89,57 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
           }}
         />
 
-        {/* The cream oval — CSS rendered, large, oval shape */}
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-[50%] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-          style={{
-            background:
-              'radial-gradient(ellipse at 40% 35%, #FFFCF7 0%, #FAF6EE 50%, #F5EBD3 100%)',
-            boxShadow:
-              '0 28px 56px -16px rgba(0,0,0,0.55), inset 0 -8px 20px rgba(201,169,97,0.18), inset 0 4px 10px rgba(255,252,247,0.8)',
-          }}
-        />
+        {/* Oval frame group — ring + image scale together on hover */}
+        <div className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]">
+          {/* Cream ring — visible thin frame around the image */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-[50%]"
+            style={{
+              background:
+                'radial-gradient(ellipse at 40% 35%, #FFFCF7 0%, #FAF6EE 50%, #F5EBD3 100%)',
+              boxShadow:
+                '0 28px 56px -16px rgba(0,0,0,0.55), inset 0 -2px 8px rgba(201,169,97,0.22), inset 0 2px 6px rgba(255,252,247,0.85)',
+            }}
+          />
 
-        {/* Subtle gold rim at bottom of oval (depth) */}
-        <div
-          aria-hidden
-          className="absolute left-[10%] right-[10%] bottom-[-2px] h-[6px] rounded-[50%] blur-md opacity-50"
-          style={{ background: 'rgba(201,169,97,0.55)' }}
-        />
+          {/* Subtle gold rim at bottom of oval (depth) */}
+          <div
+            aria-hidden
+            className="absolute left-[10%] right-[10%] bottom-[-2px] h-[6px] rounded-[50%] blur-md opacity-50"
+            style={{ background: 'rgba(201,169,97,0.55)' }}
+          />
 
-        {/* The GIF/PNG/SVG illustration sits CENTERED inside the oval */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center p-6"
-          whileHover={{ scale: 1.06, y: -3 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
           {resolvedSrc ? (
-            <img
-              src={resolvedSrc}
-              alt={title || 'Insurance service'}
-              loading="lazy"
-              className="max-w-[78%] max-h-[78%] object-contain drop-shadow-[0_12px_24px_rgba(46,37,16,0.20)]"
-            />
+            /* WITH image: oval-clipped, image fills the inner area; cream rim shows as thin frame */
+            <div
+              className="absolute inset-[5px] rounded-[50%] overflow-hidden"
+              style={{
+                boxShadow:
+                  'inset 0 0 22px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(201,169,97,0.25)',
+              }}
+            >
+              <img
+                src={resolvedSrc}
+                alt={title || 'Insurance service'}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+              />
+            </div>
           ) : (
-            <IconComponent
-              className="text-[5rem] drop-shadow-[0_8px_16px_rgba(46,37,16,0.18)]"
-              style={{ color: '#8B6F2C' }}
-            />
+            /* NO image: cream oval interior keeps centered fallback icon */
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center p-6"
+              whileHover={{ scale: 1.04, y: -2 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <IconComponent
+                className="text-[5rem] drop-shadow-[0_8px_16px_rgba(46,37,16,0.18)]"
+                style={{ color: '#8B6F2C' }}
+              />
+            </motion.div>
           )}
-        </motion.div>
+        </div>
 
         {/* Tiny twinkling sparkles around the oval (purely decorative) */}
         <span
@@ -153,13 +165,13 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
       </h3>
 
       {description && (
-        <p className="text-[0.78rem] text-ink-400 leading-relaxed line-clamp-1 max-w-[260px] mb-3">
+        <p className="text-[0.78rem] text-ink-400 leading-relaxed line-clamp-1 max-w-[260px] mb-2">
           {description}
         </p>
       )}
 
       {/* Get quote link with animated gold underline */}
-      <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold tracking-wide text-[#C9A961] relative pb-1 mb-1">
+      <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold tracking-wide text-[#C9A961] relative pb-0.5">
         <span className="relative">
           Get quote
           <span

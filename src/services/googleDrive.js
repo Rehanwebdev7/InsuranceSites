@@ -1,50 +1,46 @@
 /**
- * Google Drive operations via Firebase Cloud Functions.
- * Uses service account on the backend — no OAuth, no refresh tokens.
+ * Google Drive operations via the local Express backend.
+ * Backend lives in `backend/` and runs at VITE_DRIVE_BACKEND_URL (default http://localhost:8001).
+ * Same exported API as before — admin pages don't need to change.
  */
-import { httpsCallable } from 'firebase/functions';
-import { functions } from './firebase/firebase';
+import axios from 'axios';
 
-const blobToBase64 = (blob) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
+const BASE = import.meta.env.VITE_DRIVE_BACKEND_URL || 'http://localhost:8001';
+
+const driveAxios = axios.create({
+  baseURL: BASE,
+  timeout: 60000,
+});
 
 /**
- * Upload an image to Google Drive via Cloud Function.
+ * Upload an image to Google Drive via the backend.
  * Returns the Drive file ID.
  */
 export const uploadImage = async (file, fileName) => {
-  if (!functions) throw new Error('Firebase not configured');
+  const form = new FormData();
+  const finalName = fileName || (file && file.name) || `image_${Date.now()}.jpg`;
+  form.append('file', file, finalName);
+  form.append('fileName', finalName);
 
-  const base64Data = await blobToBase64(file);
-  const uploadFn = httpsCallable(functions, 'uploadToDrive');
-  const result = await uploadFn({
-    imageData: base64Data,
-    fileName: fileName || `image_${Date.now()}.jpg`,
-    mimeType: file.type || 'image/jpeg',
-  });
-
-  return result.data.fileId;
+  const { data } = await driveAxios.post('/api/drive/upload', form);
+  if (!data?.ok || !data?.id) {
+    throw new Error(data?.error || 'Drive upload failed');
+  }
+  return data.id;
 };
 
 /**
- * Delete an image from Google Drive via Cloud Function.
+ * Delete an image from Google Drive via the backend.
  */
 export const deleteImage = async (fileId) => {
-  if (!functions) throw new Error('Firebase not configured');
-
-  const deleteFn = httpsCallable(functions, 'deleteFromDrive');
-  await deleteFn({ fileId });
-  return true;
+  if (!fileId) return true;
+  const { data } = await driveAxios.delete(`/api/drive/files/${encodeURIComponent(fileId)}`);
+  return data?.ok === true;
 };
 
 /**
  * Return the publicly-viewable image URL for a Drive file ID.
  */
 export const getImageUrl = (fileId) => {
-  return `https://lh3.googleusercontent.com/d/${fileId}`;
+  return fileId ? `https://lh3.googleusercontent.com/d/${fileId}` : '';
 };

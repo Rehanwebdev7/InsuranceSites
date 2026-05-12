@@ -116,10 +116,10 @@ const Header = () => {
                 type="button"
                 onClick={handleGetQuotes}
                 data-magnetic
-                className="hidden md:inline-flex items-center gap-1.5 px-4 lg:px-5 py-2.5 bg-gradient-to-br from-[#C9A961] to-[#D4AF37] text-noir-950 text-sm font-semibold rounded-full border border-[#B8923A] shadow-[0_8px_16px_-8px_rgba(201,169,97,0.5)] hover:shadow-[0_16px_32px_-12px_rgba(201,169,97,0.6)] transition-shadow duration-300 active:scale-[0.98] whitespace-nowrap"
+                className="hidden md:inline-flex items-center gap-1.5 flex-nowrap px-4 lg:px-5 py-2.5 bg-gradient-to-br from-[#C9A961] to-[#D4AF37] text-noir-950 text-sm font-semibold rounded-full border border-[#B8923A] shadow-[0_6px_14px_-6px_rgba(201,169,97,0.4)] hover:shadow-[0_10px_20px_-8px_rgba(201,169,97,0.5)] transition-shadow duration-300 active:scale-[0.98] whitespace-nowrap"
               >
-                Get quotes
-                <FiArrowRight />
+                <span>Get quotes</span>
+                <FiArrowRight className="shrink-0" />
               </button>
 
               {/* Mobile menu trigger */}

@@ -17,10 +17,11 @@ const toneMap = {
   ivory: 'bg-[var(--ivory-100)] text-noir-950',
 };
 
+// Vertical rhythm — tightened to reduce empty space between sections.
 const sizeMap = {
-  sm: 'py-8 md:py-12',
-  md: 'py-10 md:py-14',
-  lg: 'py-12 md:py-16 lg:py-20',
+  sm: 'py-5 md:py-6',
+  md: 'py-6 md:py-8',
+  lg: 'py-7 md:py-10 lg:py-12',
 };
 
 const Section = ({
@@ -58,7 +59,7 @@ const Section = ({
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={[
-              'flex flex-col gap-3 mb-8 md:mb-10',
+              'flex flex-col gap-2.5 mb-5 md:mb-6',
               align === 'center' ? 'max-w-3xl mx-auto' : 'max-w-2xl',
               alignClass,
               headerClassName,

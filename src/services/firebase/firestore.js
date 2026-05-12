@@ -501,6 +501,8 @@ export const addSliderImage = async (data) => {
 
   const docRef = await addDoc(collection(db, COLLECTIONS.SLIDER_IMAGES), {
     title: data.title || '',
+    headline: data.headline || '',
+    subHeadline: data.subHeadline || '',
     imageUrl: data.imageUrl || '',
     driveFileId: data.driveFileId || '',
     order: data.order ?? 0,
@@ -532,6 +534,8 @@ export const getSliderImages = async () => {
     return {
       id: docSnap.id,
       title: d.title || '',
+      headline: d.headline || '',
+      subHeadline: d.subHeadline || '',
       imageUrl: d.imageUrl || '',
       driveFileId: d.driveFileId || '',
       order: d.order ?? 0,
@@ -551,6 +555,8 @@ export const updateSliderImage = async (id, updates) => {
   const updateData = {};
 
   if (updates.title !== undefined) updateData.title = updates.title;
+  if (updates.headline !== undefined) updateData.headline = updates.headline;
+  if (updates.subHeadline !== undefined) updateData.subHeadline = updates.subHeadline;
   if (updates.order !== undefined) updateData.order = updates.order;
   if (updates.imageUrl !== undefined) updateData.imageUrl = updates.imageUrl;
   if (updates.driveFileId !== undefined) updateData.driveFileId = updates.driveFileId;

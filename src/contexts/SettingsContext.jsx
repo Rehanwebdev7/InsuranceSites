@@ -32,8 +32,8 @@ const DEFAULT_HERO_SETTINGS = {
 };
 
 const DEFAULT_SETTINGS = {
-  brandName: 'XYZ Insurance',
-  siteTitle: 'XYZ Insurance - Trusted Vehicle Insurance Partner',
+  brandName: 'MH Insurance',
+  siteTitle: 'MH Insurance - Trusted Vehicle Insurance Partner',
   brandLogo: '',
   brandFavicon: '',
   // Theme — admin manageable (dark|light preset + optional custom overrides)
@@ -187,7 +187,11 @@ const applyBrandColors = (colors) => {
       --brand-100: color-mix(in srgb, ${p} 12%, white);
       --brand-50:  color-mix(in srgb, ${p} 6%, white);
       --grad-cta:  linear-gradient(135deg, color-mix(in srgb, ${p} 92%, white) 0%, color-mix(in srgb, ${p} 78%, white) 100%);
-      --grad-hero: linear-gradient(135deg, color-mix(in srgb, ${p} 60%, black) 0%, color-mix(in srgb, ${p} 82%, black) 42%, ${p} 100%);
+      /* NOTE: --grad-hero is intentionally NOT overridden here. The hero gradient
+         is a page-surface (noir), not an accent — tinting it with the brand color
+         (e.g. gold) makes panels like CTASection / "stick with us" stats render
+         in solid brand color, which clashes with the dark theme. Let the dark
+         default from index.css (#0A0A0A → #2A2A2A) stand. */
       --shadow-brand: 0 20px 40px -12px color-mix(in srgb, ${p} 35%, transparent);
       --shadow-brand-sm: 0 8px 16px -8px color-mix(in srgb, ${p} 25%, transparent);
     }
@@ -346,11 +350,25 @@ export const SettingsProvider = ({ children }) => {
     });
   }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, brandColors.primary]);
 
-  // Update favicon and page title dynamically
+  // Update favicon and page title dynamically.
+  // We remember the original SVG default written into index.html and restore it
+  // whenever the admin hasn't uploaded a custom favicon (so the tab is never blank).
   useEffect(() => {
     const link = document.querySelector('link[rel="icon"]');
     if (link) {
-      link.href = rawSettings.brandFavicon || 'data:,';
+      if (!link.dataset.defaultHref) {
+        link.dataset.defaultHref = link.getAttribute('href') || '';
+      }
+      const next = (rawSettings.brandFavicon && rawSettings.brandFavicon.trim()) || link.dataset.defaultHref;
+      if (next) {
+        // Force the browser to re-fetch by setting type only when switching to a raster URL.
+        if (rawSettings.brandFavicon && rawSettings.brandFavicon.trim()) {
+          link.removeAttribute('type');
+        } else {
+          link.setAttribute('type', 'image/svg+xml');
+        }
+        link.href = next;
+      }
     }
     if (rawSettings.siteTitle) {
       document.title = rawSettings.siteTitle;
@@ -427,7 +445,7 @@ export const SettingsProvider = ({ children }) => {
   // Compute formatted values from raw 10-digit numbers
   const settings = useMemo(() => ({
     ...rawSettings,
-    brandName: rawSettings.brandName || 'XYZ Insurance',
+    brandName: rawSettings.brandName || 'MH Insurance',
     phone: '+91 ' + fmt5(rawSettings.phone10),
     phoneRaw: '91' + rawSettings.phone10,
     altPhone: rawSettings.altPhone10 ? '+91 ' + fmt5(rawSettings.altPhone10) : '',

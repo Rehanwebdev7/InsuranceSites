@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiEdit3, FiBarChart2, FiCheckCircle } from 'react-icons/fi';
 
 /**
- * Magazine-style 3-step scroll story. Replaces the generic "Four steps" process
- * grid with full-width alternating-side layouts — large serif chapter numbers,
- * editorial photography (uses bundled illustrations), gold rule lines.
+ * Magazine-style 3-step scroll story. Alternating-side layouts on desktop,
+ * stacked on mobile. Replaced bundled illustration files with crisp react-icon
+ * chapter glyphs (smaller, theme-aware, doesn't clash with dark/gold palette).
  */
 const CHAPTERS = [
   {
@@ -15,7 +15,7 @@ const CHAPTERS = [
     italic: 'health, ride, home, business — anything, really.',
     body:
       'No login. No 18-page form. Tap a card, share a few details, and we&rsquo;ll scout the market while you finish your chai.',
-    illustration: '/illustrations/general-shield.svg',
+    Icon: FiEdit3,
     align: 'left',
   },
   {
@@ -25,7 +25,7 @@ const CHAPTERS = [
     italic: 'side-by-side quotes from 20+ insurers.',
     body:
       'Premiums, claim ratios, fine print, exclusions — laid out plainly. We rank by actual value, not commission.',
-    illustration: '/illustrations/business.svg',
+    Icon: FiBarChart2,
     align: 'right',
   },
   {
@@ -35,13 +35,13 @@ const CHAPTERS = [
     italic: 'instant policy. zero paperwork.',
     body:
       'Policy delivered to your inbox in seconds. Renewal reminders before expiry. Claims handled by humans you can call.',
-    illustration: '/illustrations/life.svg',
+    Icon: FiCheckCircle,
     align: 'left',
   },
 ];
 
 const DecodedStory = () => (
-  <section className="relative bg-noir-950 py-12 md:py-16 overflow-hidden">
+  <section className="relative bg-noir-950 py-8 md:py-12 overflow-hidden">
     {/* Background dot grid */}
     <div
       aria-hidden
@@ -89,9 +89,10 @@ const DecodedStory = () => (
       </motion.div>
 
       {/* Chapters */}
-      <div className="space-y-12 md:space-y-16">
+      <div className="space-y-8 md:space-y-12">
         {CHAPTERS.map((c, i) => {
           const isRight = c.align === 'right';
+          const Icon = c.Icon;
           return (
             <motion.div
               key={c.num}
@@ -99,49 +100,46 @@ const DecodedStory = () => (
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.7, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="grid lg:grid-cols-12 gap-6 lg:gap-10 items-center"
+              className="grid lg:grid-cols-12 gap-5 lg:gap-8 items-center"
             >
-              {/* Illustration column */}
-              <div className={`lg:col-span-5 ${isRight ? 'lg:order-2' : 'lg:order-1'}`}>
-                <div className="relative aspect-[5/4] max-w-sm mx-auto">
-                  {/* Layered tear-sheet */}
-                  <div
-                    aria-hidden
-                    className="absolute top-3 right-3 bottom-6 left-6 rounded-3xl bg-noir-800 border border-[rgba(201,169,97,0.20)] shadow-[0_12px_28px_-12px_rgba(0,0,0,0.5)]"
-                  />
-                  <div className="absolute inset-0 rounded-3xl overflow-hidden border-2 border-[#C9A961] bg-gradient-to-br from-[#FDFAF1] via-[#FAF6EE] to-[#F5EBD3] shadow-[0_28px_56px_-16px_rgba(201,169,97,0.30)]">
-                    <div className="absolute inset-0 flex items-center justify-center px-8">
-                      <img
-                        src={c.illustration}
-                        alt={c.headline}
-                        className="w-[78%] h-[78%] object-contain drop-shadow-[0_12px_24px_rgba(46,37,16,0.18)]"
-                        loading="lazy"
-                      />
-                    </div>
-                    {/* Chapter number — huge serif overlay */}
+              {/* Icon column — compact thumbnail on mobile (tiny pill beside the chapter number),
+                  expanded card on desktop on alternating sides. */}
+              <div className={`lg:col-span-4 ${isRight ? 'lg:order-2' : 'lg:order-1'} hidden lg:block`}>
+                <div className="relative aspect-[5/4] max-w-[220px] sm:max-w-[240px] mx-auto">
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_20px_44px_-18px_rgba(0,0,0,0.65)]">
                     <div
                       aria-hidden
-                      className={`absolute top-4 ${isRight ? 'right-5' : 'left-5'} font-display italic font-bold text-[5rem] leading-none text-[#C9A961]/15 select-none`}
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          'radial-gradient(ellipse at center, rgba(201,169,97,0.18) 0%, transparent 65%)',
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Icon className="text-[3.25rem] text-[#D4AF37] drop-shadow-[0_4px_16px_rgba(212,175,55,0.4)]" />
+                    </div>
+                    <div
+                      aria-hidden
+                      className={`absolute top-2 ${isRight ? 'right-3' : 'left-3'} font-display italic font-bold text-[2.25rem] leading-none text-[#C9A961]/30 select-none`}
                     >
                       {c.num}
                     </div>
-                    {/* Gold corner accents */}
-                    <div aria-hidden className="absolute top-3 left-3 w-10 h-10 pointer-events-none">
-                      <div className="absolute top-0 left-0 w-[2px] h-7 bg-[#C9A961]" />
-                      <div className="absolute top-0 left-0 h-[2px] w-7 bg-[#C9A961]" />
+                    <div aria-hidden className="absolute top-2 left-2 w-7 h-7 pointer-events-none">
+                      <div className="absolute top-0 left-0 w-[1.5px] h-5 bg-[#C9A961]" />
+                      <div className="absolute top-0 left-0 h-[1.5px] w-5 bg-[#C9A961]" />
                     </div>
-                    <div aria-hidden className="absolute bottom-3 right-3 w-10 h-10 pointer-events-none">
-                      <div className="absolute bottom-0 right-0 w-[2px] h-7 bg-[#C9A961]" />
-                      <div className="absolute bottom-0 right-0 h-[2px] w-7 bg-[#C9A961]" />
+                    <div aria-hidden className="absolute bottom-2 right-2 w-7 h-7 pointer-events-none">
+                      <div className="absolute bottom-0 right-0 w-[1.5px] h-5 bg-[#C9A961]" />
+                      <div className="absolute bottom-0 right-0 h-[1.5px] w-5 bg-[#C9A961]" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Content column */}
-              <div className={`lg:col-span-7 ${isRight ? 'lg:order-1 lg:pr-6' : 'lg:order-2 lg:pl-6'}`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="font-display italic text-[3rem] md:text-[3.75rem] leading-none font-bold text-[#D4AF37]">
+              <div className={`lg:col-span-8 ${isRight ? 'lg:order-1 lg:pr-4' : 'lg:order-2 lg:pl-4'}`}>
+                <div className="flex items-center gap-3 mb-3 md:mb-4">
+                  <span className="font-display italic text-[2.25rem] sm:text-[3rem] md:text-[3.75rem] leading-none font-bold text-[#D4AF37]">
                     {c.num}
                   </span>
                   <div className="flex flex-col">
@@ -149,6 +147,12 @@ const DecodedStory = () => (
                       {c.chapterLabel}
                     </span>
                     <span className="w-12 h-px bg-[#C9A961] mt-1" />
+                  </div>
+                  {/* Mobile-only icon thumbnail — keeps editorial feel without dominating the screen */}
+                  <div className="lg:hidden ml-auto shrink-0">
+                    <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] flex items-center justify-center shadow-[0_8px_20px_-10px_rgba(0,0,0,0.55)]">
+                      <Icon className="text-[1.5rem] text-[#D4AF37]" />
+                    </div>
                   </div>
                 </div>
 
