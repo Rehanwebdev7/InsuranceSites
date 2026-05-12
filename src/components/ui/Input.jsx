@@ -45,13 +45,13 @@ const Input = forwardRef(function Input(
     : 'block text-[0.8125rem] font-semibold text-noir-700 mb-1.5 tracking-[0.01em]';
 
   const inputClass = isDark
-    ? 'w-full bg-transparent outline-none px-4 py-3 text-[0.9375rem] text-white placeholder:text-ink-400'
-    : 'w-full bg-transparent outline-none px-4 py-3 text-[0.9375rem] text-noir-950 placeholder:text-ink-500';
+    ? 'bg-transparent outline-none focus:outline-none focus:ring-0 py-3 text-[0.9375rem] text-white placeholder:text-ink-400'
+    : 'bg-transparent outline-none focus:outline-none focus:ring-0 py-3 text-[0.9375rem] text-noir-950 placeholder:text-ink-500';
 
   const iconClass = isDark ? 'text-[#E5C770] flex items-center' : 'text-ink-400 flex items-center';
   const prefixClass = isDark
-    ? 'pl-3.5 text-[#E5C770] text-sm font-medium select-none'
-    : 'pl-3.5 text-ink-400 text-sm font-medium select-none';
+    ? 'text-[#E5C770] text-sm font-medium select-none'
+    : 'text-ink-400 text-sm font-medium select-none';
 
   return (
     <div className={['w-full', containerClassName].join(' ')}>
@@ -61,9 +61,9 @@ const Input = forwardRef(function Input(
           {required && <span className={isDark ? 'text-red-400 ml-0.5' : 'text-red-500 ml-0.5'}>*</span>}
         </label>
       )}
-      <div className={['relative flex items-center transition-all duration-200', wrapperClasses].join(' ')}>
-        {leftIcon && <span className={`pl-3.5 ${iconClass}`}>{leftIcon}</span>}
-        {prefix && <span className={prefixClass}>{prefix}</span>}
+      <div className={['relative flex items-center gap-2 px-4 transition-all duration-200', wrapperClasses].join(' ')}>
+        {leftIcon && <span className={`shrink-0 ${iconClass}`}>{leftIcon}</span>}
+        {prefix && <span className={`shrink-0 ${prefixClass}`}>{prefix}</span>}
         <input
           ref={ref}
           type={type}
@@ -77,14 +77,12 @@ const Input = forwardRef(function Input(
           }}
           className={[
             inputClass,
-            leftIcon ? 'pl-2' : '',
-            prefix ? 'pl-2' : '',
-            rightIcon ? 'pr-2' : '',
+            'flex-1',
             className,
           ].join(' ')}
           {...rest}
         />
-        {rightIcon && <span className={`pr-3.5 ${iconClass}`}>{rightIcon}</span>}
+        {rightIcon && <span className={`shrink-0 ${iconClass}`}>{rightIcon}</span>}
       </div>
       {hasError ? (
         <p className={isDark ? 'mt-1.5 text-xs text-red-400 font-medium' : 'mt-1.5 text-xs text-red-600 font-medium'}>

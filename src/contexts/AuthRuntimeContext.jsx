@@ -51,7 +51,9 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       localStorage.removeItem(USER_DATA_KEY);
       setUser(null);
-      return null;
+      const disabledErr = new Error('ACCOUNT_DISABLED');
+      disabledErr.code = 'account/disabled';
+      throw disabledErr;
     }
 
     const userData = {
@@ -98,7 +100,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (mobile, password) => {
     setError(null);
-    setIsLoading(true);
 
     try {
       const email = await getEmailByMobile(mobile);
@@ -111,18 +112,18 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       let errorMsg = err.message || 'Login failed. Please try again.';
 
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        errorMsg = 'Invalid mobile number or password.';
+      if (err.code === 'account/disabled' || err.code === 'auth/user-disabled') {
+        errorMsg = 'Your account has been suspended by the administrator. Please contact your admin for support.';
+      } else if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        errorMsg = 'Incorrect mobile number or password. Please check and try again.';
       } else if (err.code === 'auth/too-many-requests') {
-        errorMsg = 'Too many failed attempts. Please try again later.';
+        errorMsg = 'Too many failed attempts. Please wait a few minutes before trying again.';
       } else if (err.code === 'auth/network-request-failed') {
-        errorMsg = 'Network error. Please check your connection.';
+        errorMsg = 'Network error. Please check your internet connection and try again.';
       }
 
       setError(errorMsg);
       throw new Error(errorMsg);
-    } finally {
-      setIsLoading(false);
     }
   }, [hydrateUser]);
 

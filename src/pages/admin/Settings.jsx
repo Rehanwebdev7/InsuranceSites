@@ -657,39 +657,7 @@ const AdminSettings = () => {
       </div>
 
       {/* Google Drive Setup — full width */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 bg-white rounded-xl shadow-sm p-6"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-              <FaGoogleDrive className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800">Google Drive Connection</h2>
-              <p className="text-xs text-gray-500">One-time setup — connect your Google Drive for image uploads (slider, logo, favicon)</p>
-            </div>
-          </div>
-          <button
-            onClick={handleConnectDrive}
-            disabled={driveConnecting}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              driveConnecting
-                ? 'bg-gray-100 text-gray-400'
-                : 'bg-green-600 text-white hover:bg-green-700'
-            }`}
-          >
-            {driveConnecting ? (
-              <><FiLoader className="w-4 h-4 animate-spin" /> Connecting...</>
-            ) : (
-              <><FiCloud className="w-4 h-4" /> Connect Google Drive</>
-            )}
-          </button>
-        </div>
-      </motion.div>
+{/* Google Drive Connection section hidden */}
 
       {/* Bottom Save */}
       <div className="mt-6 flex justify-end">
