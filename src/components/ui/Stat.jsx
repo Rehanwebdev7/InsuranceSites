@@ -46,7 +46,8 @@ const Stat = ({
     return rounded.toLocaleString();
   };
 
-  const isLight = tone === 'dark' || tone === 'brand';
+  const isBrand = tone === 'brand';
+  const isLight = tone === 'dark' || isBrand;
 
   return (
     <div ref={ref} className={['group', className].join(' ')}>
@@ -54,8 +55,13 @@ const Stat = ({
         <div
           className={[
             'w-11 h-11 rounded-xl mb-3 flex items-center justify-center',
-            isLight ? 'bg-[rgba(229,199,112,0.15)] text-[#E5C770] border border-[rgba(201,169,97,0.30)]' : 'bg-[#FDFAF1] text-[#8B6F2C] border border-[#EBDCB1]',
+            !isBrand && (isLight ? 'bg-[rgba(229,199,112,0.15)] text-[#E5C770] border border-[rgba(201,169,97,0.30)]' : 'bg-[#FDFAF1] text-[#8B6F2C] border border-[#EBDCB1]'),
           ].join(' ')}
+          style={isBrand ? {
+            backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 15%, transparent)',
+            color: 'var(--site-accent, #E5C770)',
+            border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+          } : undefined}
         >
           {icon}
         </div>
@@ -64,8 +70,9 @@ const Stat = ({
         className={[
           'font-display font-semibold leading-none tracking-tight',
           'text-4xl md:text-5xl',
-          isLight ? 'text-[#E5C770]' : 'text-noir-950',
+          !isBrand && (isLight ? 'text-[#E5C770]' : 'text-noir-950'),
         ].join(' ')}
+        style={isBrand ? { color: 'var(--site-accent, #E5C770)' } : undefined}
       >
         {prefix}
         {format(displayValue)}
@@ -75,8 +82,9 @@ const Stat = ({
         <div
           className={[
             'mt-2 text-sm font-medium',
-            isLight ? 'text-ink-300' : 'text-ink-500',
+            !isBrand && (isLight ? 'text-ink-300' : 'text-ink-500'),
           ].join(' ')}
+          style={isBrand ? { color: 'var(--site-text-muted, #CBD5E1)' } : undefined}
         >
           {label}
         </div>
@@ -85,8 +93,9 @@ const Stat = ({
         <div
           className={[
             'mt-1 text-xs',
-            isLight ? 'text-ink-400' : 'text-ink-400',
+            !isBrand && 'text-ink-400',
           ].join(' ')}
+          style={isBrand ? { color: 'var(--site-text-muted, #CBD5E1)' } : undefined}
         >
           {description}
         </div>

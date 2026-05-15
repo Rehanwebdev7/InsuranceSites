@@ -153,14 +153,21 @@ const Home = () => {
         title="Why people actually stick with us."
         subtitle="Not just cheap rates — honest humans, fast claims, and the kind of service worth telling your cousin about."
       >
-        {/* Stats strip — same dark cabinet card as About page (consistent across site) */}
-        <div className="mb-10 rounded-3xl bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_36px_72px_-24px_rgba(0,0,0,0.7)] p-6 md:p-10 text-white relative overflow-hidden">
+        {/* Stats strip */}
+        <div
+          className="mb-10 rounded-3xl p-6 md:p-10 relative overflow-hidden"
+          style={{
+            background: 'color-mix(in srgb, var(--site-accent, #C9A961) 10%, var(--site-bg, #0A0A0A))',
+            border: '1.5px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+            boxShadow: '0 20px 48px -16px color-mix(in srgb, var(--site-accent, #C9A961) 15%, rgba(0,0,0,0.4))',
+          }}
+        >
           <div
             aria-hidden
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'radial-gradient(ellipse at top right, rgba(201,169,97,0.18) 0%, transparent 60%)',
+                'radial-gradient(ellipse at top right, color-mix(in srgb, var(--site-accent, #C9A961) 18%, transparent) 0%, transparent 60%)',
             }}
           />
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
