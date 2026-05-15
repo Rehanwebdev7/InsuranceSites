@@ -181,17 +181,28 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ delay: index * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative bg-noir-900 border border-[rgba(201,169,97,0.20)] rounded-2xl p-6 hover:border-[#C9A961] hover:shadow-[0_20px_40px_-16px_rgba(201,169,97,0.30)] transition-all duration-500"
+              className="group relative rounded-2xl p-6 transition-all duration-500"
+              style={{
+                backgroundColor: 'var(--site-bg)',
+                border: '1.5px solid color-mix(in srgb, var(--site-accent, #C9A961) 25%, transparent)',
+              }}
             >
               <div className="flex items-start gap-4">
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-noir-800 border border-[rgba(201,169,97,0.30)] flex items-center justify-center text-[#E5C770] group-hover:bg-gradient-to-br group-hover:from-[#C9A961] group-hover:to-[#8B6F2C] group-hover:text-noir-950 transition-all">
+                <div
+                  className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all"
+                  style={{
+                    backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 12%, #F0F4F8)',
+                    border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+                    color: 'var(--site-accent, #C9A961)',
+                  }}
+                >
                   <item.icon className="text-xl" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-[1.0625rem] font-display font-semibold text-white mb-1.5 tracking-tight">
+                  <h3 className="text-[1.0625rem] font-display font-semibold mb-1.5 tracking-tight" style={{ color: 'var(--site-text)' }}>
                     {item.title}
                   </h3>
-                  <p className="text-sm text-ink-300 leading-relaxed">{item.desc}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--site-text, #111)/70' }}>{item.desc}</p>
                 </div>
               </div>
             </motion.div>
