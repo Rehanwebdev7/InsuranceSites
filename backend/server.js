@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -15,7 +15,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: FRONTEND_ORIGIN,
+    origin: (origin, cb) => {
+      if (!origin || origin.startsWith('http://localhost')) return cb(null, true);
+      cb(null, origin === FRONTEND_ORIGIN);
+    },
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   })
 );

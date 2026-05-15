@@ -108,11 +108,11 @@ const HeroSlider = () => {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Deep noir gradient wash */}
+      {/* Deep noir gradient wash — uses theme variables for light/dark */}
       <div
         aria-hidden
         className="absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at top right, #2A2A2A 0%, #0F0F0F 50%, #0A0A0A 100%)' }}
+        style={{ background: 'radial-gradient(ellipse at top right, var(--site-surface-2) 0%, var(--site-bg-soft) 50%, var(--site-bg) 100%)' }}
       />
 
       {/* Gold aurora blobs */}

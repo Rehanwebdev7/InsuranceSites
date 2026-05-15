@@ -52,8 +52,8 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
           <span className="w-10 h-px bg-[#C9A961]" />
         </div>
         <h2
-          className="font-display font-semibold text-white text-balance tracking-tight"
-          style={{ fontSize: 'clamp(1.875rem, 4vw, 2.75rem)', lineHeight: 1.08 }}
+          className="font-display font-semibold text-balance tracking-tight"
+          style={{ fontSize: 'clamp(1.875rem, 4vw, 2.75rem)', lineHeight: 1.08, color: 'var(--site-text)' }}
         >
           The difference is{' '}
           <span className="italic text-[#E5C770]">painfully obvious.</span>
@@ -104,7 +104,7 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
               key={i}
               className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] hover:bg-noir-900 transition-colors"
             >
-              <div className="px-5 py-4 md:px-8 md:py-5 text-sm md:text-[0.9375rem] text-white">
+              <div className="px-5 py-4 md:px-8 md:py-5 text-sm md:text-[0.9375rem]" style={{ color: 'var(--site-text)' }}>
                 {row.trait}
               </div>
               <div className="px-3 py-4 md:px-6 md:py-5 flex items-center justify-center border-l border-[rgba(201,169,97,0.10)] bg-noir-950/60">

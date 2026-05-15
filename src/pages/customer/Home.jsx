@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import HeroSlider from '../../components/common/HeroSlider';
 import ServiceCard from '../../components/common/ServiceCard';
 import QuoteRequestForm from '../../components/forms/QuoteRequestForm';
-import CTASection from '../../components/common/CTASection';
 import TestimonialsSection from '../../components/common/TestimonialsSection';
 import DecodedStory from '../../components/common/DecodedStory';
 import ComparisonStrip from '../../components/common/ComparisonStrip';
@@ -118,20 +117,23 @@ const Home = () => {
         subtitle="Health, life, vehicle, travel, business — whatever needs protecting, we've got an honest quote for it."
       >
         {servicesLoading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <SkeletonCard key={i} />
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="w-[30%] sm:w-[22%] lg:w-[17%] shrink-0">
+                <SkeletonCard />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
             {activeServices.map((service, index) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                index={index}
-                onGetQuote={handleGetQuote}
-              />
+              <div key={service.id} className="w-[30%] sm:w-[22%] lg:w-[17%] shrink-0">
+                <ServiceCard
+                  service={service}
+                  index={index}
+                  onGetQuote={handleGetQuote}
+                />
+              </div>
             ))}
           </div>
         )}
@@ -199,9 +201,6 @@ const Home = () => {
 
       {/* Customer Feedback */}
       <TestimonialsSection />
-
-      {/* CTA */}
-      <CTASection />
 
       {/* Quote Modal */}
       <QuoteRequestForm

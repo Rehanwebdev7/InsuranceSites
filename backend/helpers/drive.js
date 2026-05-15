@@ -17,10 +17,11 @@ const readRefreshToken = () => {
     throw new Error(`Missing ${CRED_FILE}. Run: npm run token`);
   }
   const raw = JSON.parse(fs.readFileSync(CRED_FILE, 'utf8'));
-  if (!raw.refreshToken) {
+  const token = raw.refreshToken || raw.refresh_token;
+  if (!token) {
     throw new Error(`No refreshToken in ${CRED_FILE}. Run: npm run token`);
   }
-  return raw.refreshToken;
+  return token;
 };
 
 const buildOAuth2Client = () => {
