@@ -86,7 +86,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-center md:justify-between gap-5 gap-x-8">
             {trustSeals.map((seal) => (
-              <div key={seal.label} className="flex items-center gap-2.5 text-ink-300/85 text-sm">
+              <div key={seal.label} className="flex items-center gap-2.5 text-white/85 text-base">
                 <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-[rgba(201,169,97,0.08)] text-[#E5C770] border border-[rgba(201,169,97,0.25)]">
                   <seal.icon className="text-base" />
                 </span>
@@ -123,7 +123,7 @@ const Footer = () => {
                 </>
               )}
             </Link>
-            <p className="text-sm text-ink-400 leading-relaxed mb-6 max-w-sm">
+            <p className="text-base text-white/75 leading-relaxed mb-6 max-w-sm">
               {settings?.footerDescription ||
                 'Insurance made effortless. Honest quotes from 20+ IRDAI-licensed insurers in under 60 seconds, then we get out of your way.'}
             </p>
@@ -137,7 +137,7 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="group w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.20)] flex items-center justify-center text-ink-300 hover:bg-[#C9A961] hover:text-noir-950 hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-0.5"
+                    className="group w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.20)] flex items-center justify-center text-white/70 hover:bg-[#C9A961] hover:text-noir-950 hover:border-[#C9A961] transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <social.icon className="text-sm" />
                   </a>
@@ -159,7 +159,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-ink-400 hover:text-[#E5C770] transition-colors inline-flex items-center gap-1.5 group"
+                    className="text-base text-white/80 hover:text-white transition-colors inline-flex items-center gap-1.5 group"
                   >
                     {link.name}
                     <FiArrowUpRight className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -182,7 +182,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-sm text-ink-400 hover:text-[#E5C770] transition-colors inline-flex items-center gap-1.5 group"
+                    className="text-base text-white/80 hover:text-white transition-colors inline-flex items-center gap-1.5 group"
                   >
                     {link.name}
                     <FiArrowUpRight className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -204,7 +204,7 @@ const Footer = () => {
               <li>
                 <a
                   href={`tel:${settings.phoneRaw}`}
-                  className="group flex items-start gap-3 text-sm text-ink-400 hover:text-white transition-colors"
+                  className="group flex items-start gap-3 text-base text-white/80 hover:text-white transition-colors"
                 >
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.22)] text-[#E5C770] group-hover:bg-[#C9A961] group-hover:text-noir-950 group-hover:border-[#C9A961] transition-all shrink-0">
                     <FiPhone className="text-sm" />
@@ -215,7 +215,7 @@ const Footer = () => {
               <li>
                 <a
                   href={`mailto:${settings.email}`}
-                  className="group flex items-start gap-3 text-sm text-ink-400 hover:text-white transition-colors"
+                  className="group flex items-start gap-3 text-base text-white/80 hover:text-white transition-colors"
                 >
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.22)] text-[#E5C770] group-hover:bg-[#C9A961] group-hover:text-noir-950 group-hover:border-[#C9A961] transition-all shrink-0">
                     <FiMail className="text-sm" />
@@ -228,7 +228,7 @@ const Footer = () => {
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-3 text-sm text-ink-400 hover:text-white transition-colors"
+                  className="group flex items-start gap-3 text-base text-white/80 hover:text-white transition-colors"
                 >
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.22)] text-[#E5C770] group-hover:bg-[#C9A961] group-hover:text-noir-950 group-hover:border-[#C9A961] transition-all shrink-0">
                     <FaWhatsapp className="text-sm" />
@@ -241,7 +241,7 @@ const Footer = () => {
                   href={settings.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-3 text-sm text-ink-400 hover:text-white transition-colors"
+                  className="group flex items-start gap-3 text-base text-white/80 hover:text-white transition-colors"
                 >
                   <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.04)] border border-[rgba(201,169,97,0.22)] text-[#E5C770] group-hover:bg-[#C9A961] group-hover:text-noir-950 group-hover:border-[#C9A961] transition-all shrink-0 mt-0.5">
                     <FiMapPin className="text-sm" />
@@ -268,15 +268,15 @@ const Footer = () => {
       {/* Bottom bar */}
       <div className="relative border-t border-[rgba(201,169,97,0.15)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-ink-400 text-center md:text-left">
+          <p className="text-xs text-white/60 text-center md:text-left">
             &copy; {currentYear} {settings?.brandName || APP_NAME}. All rights reserved. &nbsp;·&nbsp; Insurance is
             the subject matter of solicitation. Visit official IRDAI site for details.
           </p>
-          <p className="text-xs text-ink-400 flex items-center gap-1.5 flex-wrap justify-center md:justify-end">
+          <p className="text-xs text-white/60 flex items-center gap-1.5 flex-wrap justify-center md:justify-end">
             <span>We</span>
             <FiHeart className="text-[#D4AF37] fill-current" />
             <span>Digital India</span>
-            <span className="text-ink-500">·</span>
+            <span className="text-white/40">·</span>
             <span>Developed by</span>
             <span className="text-white font-semibold">Rehan</span>
             <span>and</span>
