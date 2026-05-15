@@ -4,7 +4,7 @@ import { FiCheck, FiMinus } from 'react-icons/fi';
 
 /**
  * Editorial comparison: us vs typical insurance aggregators / agents.
- * Premium table with gold checks for "us" and muted dashes for "rest of market".
+ * Premium table with accent checks for "us" and muted dashes for "rest of market".
  */
 const ROWS = [
   { trait: 'Transparent premium math', us: true, them: false },
@@ -17,21 +17,21 @@ const ROWS = [
 ];
 
 const ComparisonStrip = ({ brandName = 'Bharat' }) => (
-  <section className="relative bg-noir-900 py-10 md:py-14 overflow-hidden">
-    {/* Soft warm wash */}
+  <section className="relative py-10 md:py-14 overflow-hidden" style={{ backgroundColor: 'var(--site-bg)' }}>
+    {/* Soft accent wash */}
     <div
       aria-hidden
       className="absolute inset-0 pointer-events-none"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgba(201,169,97,0.14) 0%, transparent 70%)',
+          'radial-gradient(ellipse at center, color-mix(in srgb, var(--site-accent, #C9A961) 10%, transparent) 0%, transparent 70%)',
       }}
     />
     <div
       aria-hidden
-      className="absolute inset-0 opacity-[0.06] pointer-events-none"
+      className="absolute inset-0 opacity-[0.04] pointer-events-none"
       style={{
-        backgroundImage: 'radial-gradient(circle, #C9A961 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(circle, var(--site-accent, #C9A961) 1px, transparent 1px)',
         backgroundSize: '32px 32px',
       }}
     />
@@ -45,82 +45,120 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
         className="text-center mb-8"
       >
         <div className="flex items-center justify-center gap-3 mb-4">
-          <span className="w-10 h-px bg-[#C9A961]" />
-          <span className="font-display italic text-[0.7rem] font-semibold text-[#C9A961] tracking-[0.22em] uppercase">
+          <span className="w-10 h-px" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
+          <span className="font-display italic text-[0.7rem] font-semibold tracking-[0.22em] uppercase" style={{ color: 'var(--site-accent, #C9A961)' }}>
             How we compare
           </span>
-          <span className="w-10 h-px bg-[#C9A961]" />
+          <span className="w-10 h-px" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
         </div>
         <h2
           className="font-display font-semibold text-balance tracking-tight"
           style={{ fontSize: 'clamp(1.875rem, 4vw, 2.75rem)', lineHeight: 1.08, color: 'var(--site-text)' }}
         >
           The difference is{' '}
-          <span className="italic text-[#E5C770]">painfully obvious.</span>
+          <span className="italic" style={{ color: 'var(--site-accent, #C9A961)' }}>painfully obvious.</span>
         </h2>
-        <p className="mt-3 text-base text-ink-300 max-w-xl mx-auto">
+        <p className="mt-3 text-base max-w-xl mx-auto" style={{ color: 'var(--site-text-muted)' }}>
           Side-by-side, no fine print. This is what most aggregators hope you don&rsquo;t notice.
         </p>
       </motion.div>
 
-      {/* Comparison table — dark cabinet */}
+      {/* Comparison table */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="relative rounded-3xl overflow-hidden bg-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_36px_72px_-24px_rgba(0,0,0,0.7),0_0_0_1px_rgba(201,169,97,0.10)]"
+        className="relative rounded-3xl overflow-hidden"
+        style={{
+          backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 4%, var(--site-bg, #FFFFFF))',
+          border: '1.5px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+          boxShadow: '0 20px 48px -16px color-mix(in srgb, var(--site-accent, #C9A961) 15%, rgba(0,0,0,0.12))',
+        }}
       >
         {/* Table header */}
-        <div className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] border-b border-[rgba(201,169,97,0.20)] bg-noir-950">
+        <div
+          className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px]"
+          style={{ borderBottom: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 20%, transparent)' }}
+        >
           <div className="px-5 py-5 md:px-8 md:py-6">
-            <span className="font-display italic text-[0.7rem] font-semibold text-[#C9A961] tracking-[0.18em] uppercase">
+            <span className="font-display italic text-[0.7rem] font-semibold tracking-[0.18em] uppercase" style={{ color: 'var(--site-accent, #C9A961)' }}>
               The trait
             </span>
           </div>
-          <div className="px-3 py-5 md:px-6 md:py-6 text-center border-l border-[rgba(201,169,97,0.20)] bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] relative">
-            <div className="font-display italic text-[#E5C770] text-base md:text-lg font-semibold">
+          {/* "Us" column — accent-highlighted */}
+          <div
+            className="px-3 py-5 md:px-6 md:py-6 text-center relative"
+            style={{
+              borderLeft: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 20%, transparent)',
+              backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 12%, var(--site-bg, #FFFFFF))',
+            }}
+          >
+            <div className="font-display italic text-base md:text-lg font-semibold" style={{ color: 'var(--site-accent, #C9A961)' }}>
               {brandName}
             </div>
-            <div className="text-[0.6rem] uppercase tracking-[0.16em] text-[#C9A961] mt-0.5">Us</div>
+            <div className="text-[0.6rem] uppercase tracking-[0.16em] mt-0.5" style={{ color: 'var(--site-accent, #C9A961)' }}>Us</div>
             {/* Spotlight ribbon */}
             <div
               aria-hidden
-              className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C9A961] via-[#D4AF37] to-[#C9A961]"
+              className="absolute top-0 left-0 right-0 h-[3px]"
+              style={{ background: 'linear-gradient(90deg, var(--site-accent, #C9A961), color-mix(in srgb, var(--site-accent, #C9A961) 60%, white), var(--site-accent, #C9A961))' }}
             />
           </div>
-          <div className="px-3 py-5 md:px-6 md:py-6 text-center border-l border-[rgba(201,169,97,0.20)]">
-            <div className="font-display italic text-ink-400 text-base md:text-lg">
+          <div
+            className="px-3 py-5 md:px-6 md:py-6 text-center"
+            style={{ borderLeft: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 20%, transparent)' }}
+          >
+            <div className="font-display italic text-base md:text-lg" style={{ color: 'var(--site-text-muted)' }}>
               Typical
             </div>
-            <div className="text-[0.6rem] uppercase tracking-[0.16em] text-ink-500 mt-0.5">aggregator</div>
+            <div className="text-[0.6rem] uppercase tracking-[0.16em] mt-0.5" style={{ color: 'var(--site-text-subtle)' }}>aggregator</div>
           </div>
         </div>
 
         {/* Rows */}
-        <div className="divide-y divide-[rgba(201,169,97,0.10)]">
+        <div style={{ borderTop: 'none' }}>
           {ROWS.map((row, i) => (
             <div
               key={i}
-              className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] hover:bg-noir-900 transition-colors"
+              className="grid grid-cols-[1fr_96px_96px] md:grid-cols-[1fr_180px_180px] transition-colors"
+              style={{
+                borderTop: i > 0 ? '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 10%, transparent)' : undefined,
+              }}
             >
               <div className="px-5 py-4 md:px-8 md:py-5 text-sm md:text-[0.9375rem]" style={{ color: 'var(--site-text)' }}>
                 {row.trait}
               </div>
-              <div className="px-3 py-4 md:px-6 md:py-5 flex items-center justify-center border-l border-[rgba(201,169,97,0.10)] bg-noir-950/60">
+              <div
+                className="px-3 py-4 md:px-6 md:py-5 flex items-center justify-center"
+                style={{
+                  borderLeft: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 10%, transparent)',
+                  backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 6%, var(--site-bg, #FFFFFF))',
+                }}
+              >
                 {row.us ? (
-                  <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C9A961] to-[#8B6F2C] border border-[#E5C770] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(201,169,97,0.5)]">
-                    <FiCheck className="text-noir-950" strokeWidth={3} />
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'var(--site-accent, #C9A961)',
+                      border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 60%, white)',
+                      boxShadow: '0 4px 12px -2px color-mix(in srgb, var(--site-accent, #C9A961) 40%, transparent)',
+                    }}
+                  >
+                    <FiCheck style={{ color: 'var(--site-bg, #FFFFFF)', strokeWidth: 3 }} />
                   </span>
                 ) : (
-                  <FiMinus className="text-ink-500" />
+                  <FiMinus style={{ color: 'var(--site-text-subtle)' }} />
                 )}
               </div>
-              <div className="px-3 py-4 md:px-6 md:py-5 flex items-center justify-center border-l border-[rgba(201,169,97,0.10)]">
+              <div
+                className="px-3 py-4 md:px-6 md:py-5 flex items-center justify-center"
+                style={{ borderLeft: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 10%, transparent)' }}
+              >
                 {row.them ? (
-                  <FiCheck className="text-ink-500" strokeWidth={2.5} />
+                  <FiCheck style={{ color: 'var(--site-text-muted)', strokeWidth: 2.5 }} />
                 ) : (
-                  <FiMinus className="text-ink-500" />
+                  <FiMinus style={{ color: 'var(--site-text-subtle)' }} />
                 )}
               </div>
             </div>
@@ -128,7 +166,14 @@ const ComparisonStrip = ({ brandName = 'Bharat' }) => (
         </div>
 
         {/* Footer note */}
-        <div className="px-5 py-4 md:px-8 md:py-5 bg-noir-950/60 border-t border-[rgba(201,169,97,0.20)] text-xs text-ink-400 italic font-display">
+        <div
+          className="px-5 py-4 md:px-8 md:py-5 text-xs italic font-display"
+          style={{
+            backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 4%, var(--site-bg, #FFFFFF))',
+            borderTop: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 15%, transparent)',
+            color: 'var(--site-text-muted)',
+          }}
+        >
           &mdash; Comparison based on industry-standard practices. Not a knock on the rest, just a different choice.
         </div>
       </motion.div>
