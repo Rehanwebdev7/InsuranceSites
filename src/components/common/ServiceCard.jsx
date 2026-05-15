@@ -50,8 +50,8 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
         className="relative w-full rounded-xl overflow-hidden"
         style={{
           aspectRatio: '1 / 1',
-          background: 'linear-gradient(160deg, color-mix(in srgb, var(--site-accent, #C9A961) 18%, #0D0C09) 0%, #060606 100%)',
-          border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 40%, transparent)',
+          background: 'linear-gradient(160deg, color-mix(in srgb, var(--site-accent, #C9A961) 38%, #1E293B) 0%, color-mix(in srgb, var(--site-accent, #C9A961) 18%, #0F172A) 100%)',
+          border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 55%, transparent)',
           boxShadow: '0 2px 16px rgba(0,0,0,0.5)',
         }}
       >
