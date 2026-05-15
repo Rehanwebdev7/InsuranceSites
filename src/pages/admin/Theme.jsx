@@ -115,18 +115,19 @@ const AdminTheme = () => {
       root.style.removeProperty('--site-accent-strong');
     }
 
+    const bgDefault = mode === 'light' ? '#FFFFFF' : '#0A0A0A';
+    const textDefault = mode === 'light' ? '#111111' : '#FFFFFF';
+
+    root.style.setProperty('--site-bg', bgOverride || bgDefault);
     if (bgOverride) {
-      root.style.setProperty('--site-bg', bgOverride);
       root.style.setProperty('--site-bg-soft', `color-mix(in srgb, ${bgOverride} 88%, white)`);
     } else {
-      root.style.removeProperty('--site-bg');
       root.style.removeProperty('--site-bg-soft');
     }
-    if (textOverride) {
-      root.style.setProperty('--site-text', textOverride);
-    } else {
-      root.style.removeProperty('--site-text');
-    }
+
+    root.style.setProperty('--site-text', textOverride || textDefault);
+    root.style.setProperty('--site-text-muted', mode === 'light' ? '#475569' : '#A3A3A3');
+    root.style.setProperty('--site-text-subtle', mode === 'light' ? '#6B7280' : '#737373');
     root.setAttribute('data-site-btn', btnVariant || 'gradient');
   }, [mode, accent, bgOverride, textOverride, btnVariant]);
 

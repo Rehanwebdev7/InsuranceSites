@@ -132,19 +132,20 @@ const applySiteTheme = ({ mode, accent, customBg, customText, btnVariant }) => {
     root.style.removeProperty('--site-accent-strong');
   }
 
+  // Always set bg/text — use custom if available, otherwise use mode defaults
+  const bgDefault = mode === 'light' ? '#FFFFFF' : '#0A0A0A';
+  const textDefault = mode === 'light' ? '#111111' : '#FFFFFF';
+
+  root.style.setProperty('--site-bg', customBg || bgDefault);
   if (customBg) {
-    root.style.setProperty('--site-bg', customBg);
     root.style.setProperty('--site-bg-soft', `color-mix(in srgb, ${customBg} 88%, white)`);
   } else {
-    root.style.removeProperty('--site-bg');
     root.style.removeProperty('--site-bg-soft');
   }
 
-  if (customText) {
-    root.style.setProperty('--site-text', customText);
-  } else {
-    root.style.removeProperty('--site-text');
-  }
+  root.style.setProperty('--site-text', customText || textDefault);
+  root.style.setProperty('--site-text-muted', mode === 'light' ? '#475569' : '#A3A3A3');
+  root.style.setProperty('--site-text-subtle', mode === 'light' ? '#6B7280' : '#737373');
 
   if (btnVariant) {
     root.setAttribute('data-site-btn', btnVariant);
