@@ -42,16 +42,16 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className="group w-full cursor-pointer bg-transparent border-0 outline-none focus-visible:ring-2 focus-visible:ring-[#C9A961] focus-visible:ring-offset-2 focus-visible:ring-offset-noir-950"
+      className="group w-full cursor-pointer bg-transparent border-0 outline-none focus-visible:ring-2 focus-visible:ring-[--site-accent] focus-visible:ring-offset-2"
     >
       <motion.div
-        whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,169,97,0.55)' }}
+        whileHover={{ y: -5 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="relative w-full rounded-xl overflow-hidden"
         style={{
           aspectRatio: '1 / 1',
-          background: 'linear-gradient(160deg, #1A1710 0%, #0D0C09 100%)',
-          border: '1px solid rgba(201,169,97,0.22)',
+          background: 'linear-gradient(160deg, color-mix(in srgb, var(--site-accent, #C9A961) 18%, #0D0C09) 0%, #060606 100%)',
+          border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 40%, transparent)',
           boxShadow: '0 2px 16px rgba(0,0,0,0.5)',
         }}
       >
@@ -60,7 +60,7 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
           className="absolute top-0 left-0 right-0 z-20"
           style={{
             height: '2px',
-            background: 'linear-gradient(90deg, transparent, #C9A961, #E5C770, #C9A961, transparent)',
+            background: 'linear-gradient(90deg, transparent, var(--site-accent, #C9A961), color-mix(in srgb, var(--site-accent, #C9A961) 70%, white), var(--site-accent, #C9A961), transparent)',
           }}
         />
 
@@ -116,14 +116,14 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
         {/* Title + Get quote — overlaid at bottom */}
         <div className="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-end pb-3 px-2" style={{ height: '42%' }}>
           <h3
-            className="font-display font-semibold leading-tight text-white group-hover:text-[#E5C770] transition-colors duration-300 text-center"
-            style={{ fontSize: 'clamp(0.78rem, 2.5vw, 1.1rem)' }}
+            className="font-display font-semibold leading-tight text-white transition-colors duration-300 text-center"
+            style={{ fontSize: 'clamp(0.92rem, 2.8vw, 1.25rem)' }}
           >
             {title}
           </h3>
           <span
-            className="inline-flex items-center gap-0.5 font-semibold text-[#C9A961] mt-1"
-            style={{ fontSize: 'clamp(0.62rem, 1.8vw, 0.8rem)' }}
+            className="inline-flex items-center gap-0.5 font-semibold mt-1"
+            style={{ fontSize: 'clamp(0.68rem, 1.9vw, 0.85rem)', color: 'var(--site-accent, #C9A961)' }}
           >
             Get quote
             <FiArrowRight
@@ -137,7 +137,7 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-10"
-          style={{ boxShadow: 'inset 0 0 0 1px rgba(201,169,97,0.50)' }}
+          style={{ boxShadow: 'inset 0 0 0 1px color-mix(in srgb, var(--site-accent, #C9A961) 55%, transparent)' }}
         />
       </motion.div>
     </motion.button>
