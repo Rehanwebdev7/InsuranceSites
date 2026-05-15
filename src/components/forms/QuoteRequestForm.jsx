@@ -185,8 +185,12 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
           role="dialog"
           aria-modal="true"
           aria-labelledby="quote-modal-title"
-          className="customer-form-dark relative z-10 w-full max-w-lg rounded-2xl md:rounded-3xl shadow-[0_40px_80px_-16px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden"
-          style={{ maxHeight: 'min(92vh, 820px)' }}
+          className="relative z-10 w-full max-w-lg rounded-2xl md:rounded-3xl shadow-[0_40px_80px_-16px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden"
+          style={{
+            maxHeight: 'min(92vh, 820px)',
+            backgroundColor: 'var(--site-bg)',
+            border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+          }}
           initial={{ opacity: 0, scale: 0.96, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.98, y: 8 }}
@@ -229,7 +233,10 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
               animate={{ opacity: 1, scale: 1 }}
               className="flex-1 flex flex-col items-center justify-center px-5 py-10 text-center"
             >
-              <div className="w-16 h-16 rounded-2xl bg-[#F5EBD3] text-[#8B6F2C] border border-[#C9A961] flex items-center justify-center mb-4">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                style={{ backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 12%, var(--site-bg, white))', color: 'var(--site-accent-strong, #8B6F2C)', border: '1px solid var(--site-accent, #C9A961)' }}
+              >
                 <FiCheck className="text-2xl" strokeWidth={3} />
               </div>
               <h3 className="text-lg font-display font-semibold text-ink-900 mb-1.5">
@@ -248,7 +255,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {!service && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <FiGrid className="text-[#8B6F2C]" />
+                      <FiGrid style={{ color: 'var(--site-accent, #C9A961)' }} />
                       <h3 className="text-sm font-semibold text-ink-900">Choose your service</h3>
                     </div>
                     <input type="hidden" {...register('selectedServiceId')} />
@@ -304,7 +311,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {/* Personal info */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <FiUser className="text-[#8B6F2C]" />
+                    <FiUser style={{ color: 'var(--site-accent, #C9A961)' }} />
                     <h3 className="text-sm font-semibold text-ink-900">Personal Information</h3>
                   </div>
                   <div className="space-y-3">
@@ -346,7 +353,7 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                   <>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FiTruck className="text-[#8B6F2C]" />
+                        <FiTruck style={{ color: 'var(--site-accent, #C9A961)' }} />
                         <h3 className="text-sm font-semibold text-ink-900">Vehicle Details</h3>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -379,14 +386,14 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                 {/* Policy details */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <FiFileText className="text-[#8B6F2C]" />
+                    <FiFileText style={{ color: 'var(--site-accent, #C9A961)' }} />
                     <h3 className="text-sm font-semibold text-ink-900">Policy Details</h3>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-ink-50 rounded-xl mb-3">
                     <span className="text-sm font-semibold text-ink-900">Is Active Policy?</span>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" {...register('hasActivePolicy')} className="sr-only peer" />
-                      <div className="w-12 h-6 bg-ink-200 rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-[#C9A961]" />
+                      <div className="quote-toggle w-12 h-6 bg-ink-200 rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-sm peer-checked:bg-[#C9A961]" />
                     </label>
                   </div>
                   <AnimatePresence>
@@ -419,14 +426,17 @@ const QuoteRequestForm = ({ isOpen, onClose, onSubmit, service, services = [] })
                   </AnimatePresence>
                 </div>
 
-                <p className="text-xs text-ink-600 bg-[#FDFAF1] border border-[#EBDCB1] rounded-xl px-4 py-3 leading-relaxed flex items-start gap-2">
-                  <FiLock className="text-[#8B6F2C] mt-0.5 shrink-0" />
+                <p
+                  className="text-xs text-ink-600 rounded-xl px-4 py-3 leading-relaxed flex items-start gap-2"
+                  style={{ backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 8%, var(--site-bg, white))', border: '1px solid color-mix(in srgb, var(--site-accent, #C9A961) 25%, transparent)' }}
+                >
+                  <FiLock style={{ color: 'var(--site-accent, #8B6F2C)' }} className="mt-0.5 shrink-0" />
                   Your information is encrypted and never shared with third parties. We will only use it to share your quotes.
                 </p>
               </div>
 
               {/* Footer buttons — ALWAYS visible, never cut off */}
-              <div className="shrink-0 px-5 py-4 border-t border-ink-100 bg-white">
+              <div className="shrink-0 px-5 py-4 border-t border-ink-100" style={{ backgroundColor: 'var(--site-bg)' }}>
                 <div className="grid grid-cols-2 gap-3">
                   <Button type="button" variant="secondary" onClick={onClose}>
                     Cancel
