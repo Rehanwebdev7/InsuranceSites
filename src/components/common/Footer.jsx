@@ -58,7 +58,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="relative overflow-hidden bg-noir-950 text-ink-300"
+      className="relative overflow-hidden text-ink-300"
       style={{ backgroundColor: '#0A0A0A', color: '#B0A99E' }}
     >
       {/* Background accents — warm gold whisper */}
