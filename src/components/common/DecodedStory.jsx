@@ -41,13 +41,13 @@ const CHAPTERS = [
 ];
 
 const DecodedStory = () => (
-  <section className="relative bg-noir-950 py-8 md:py-12 overflow-hidden">
+  <section className="relative py-8 md:py-12 overflow-hidden" style={{ backgroundColor: 'var(--site-bg)' }}>
     {/* Background dot grid */}
     <div
       aria-hidden
-      className="absolute inset-0 opacity-[0.10] pointer-events-none"
+      className="absolute inset-0 opacity-[0.06] pointer-events-none"
       style={{
-        backgroundImage: 'radial-gradient(circle, #C9A961 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(circle, var(--site-accent, #C9A961) 1px, transparent 1px)',
         backgroundSize: '32px 32px',
       }}
     />
@@ -57,7 +57,7 @@ const DecodedStory = () => (
       className="absolute inset-0 pointer-events-none"
       style={{
         background:
-          'radial-gradient(ellipse at center top, rgba(201,169,97,0.10) 0%, transparent 60%)',
+          'radial-gradient(ellipse at center top, color-mix(in srgb, var(--site-accent, #C9A961) 12%, transparent) 0%, transparent 60%)',
       }}
     />
 
@@ -71,20 +71,20 @@ const DecodedStory = () => (
         className="text-center mb-8 md:mb-12"
       >
         <div className="flex items-center justify-center gap-3 mb-4">
-          <span className="w-10 h-px bg-[#C9A961]" />
-          <span className="font-display italic text-[0.7rem] font-semibold text-[#C9A961] tracking-[0.22em] uppercase">
+          <span className="w-10 h-px" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
+          <span className="font-display italic text-[0.7rem] font-semibold tracking-[0.22em] uppercase" style={{ color: 'var(--site-accent, #C9A961)' }}>
             Insurance, decoded
           </span>
-          <span className="w-10 h-px bg-[#C9A961]" />
+          <span className="w-10 h-px" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
         </div>
         <h2
-          className="font-display font-semibold text-white text-balance tracking-tight"
-          style={{ fontSize: 'clamp(2rem, 4.2vw, 3rem)', lineHeight: 1.08 }}
+          className="font-display font-semibold text-balance tracking-tight"
+          style={{ fontSize: 'clamp(2rem, 4.2vw, 3rem)', lineHeight: 1.08, color: 'var(--site-text)' }}
         >
           Three chapters.{' '}
-          <span className="italic text-[#E5C770]">One straight line</span>
+          <span className="italic" style={{ color: 'var(--site-accent, #C9A961)' }}>One straight line</span>
           <br />
-          from <em>confused</em> to <em className="text-[#E5C770]">covered.</em>
+          from <em>confused</em> to <em style={{ color: 'var(--site-accent, #C9A961)' }}>covered.</em>
         </h2>
       </motion.div>
 
@@ -106,31 +106,39 @@ const DecodedStory = () => (
                   expanded card on desktop on alternating sides. */}
               <div className={`lg:col-span-4 ${isRight ? 'lg:order-2' : 'lg:order-1'} hidden lg:block`}>
                 <div className="relative aspect-[5/4] max-w-[220px] sm:max-w-[240px] mx-auto">
-                  <div className="absolute inset-0 rounded-2xl overflow-hidden bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] shadow-[0_20px_44px_-18px_rgba(0,0,0,0.65)]">
+                  <div
+                    className="absolute inset-0 rounded-2xl overflow-hidden"
+                    style={{
+                      background: 'color-mix(in srgb, var(--site-accent, #C9A961) 9%, var(--site-bg, #F8FAFC))',
+                      border: '1.5px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+                      boxShadow: '0 8px 24px -8px color-mix(in srgb, var(--site-accent, #C9A961) 20%, rgba(0,0,0,0.12))',
+                    }}
+                  >
                     <div
                       aria-hidden
                       className="absolute inset-0 pointer-events-none"
                       style={{
                         background:
-                          'radial-gradient(ellipse at center, rgba(201,169,97,0.18) 0%, transparent 65%)',
+                          'radial-gradient(ellipse at center, color-mix(in srgb, var(--site-accent, #C9A961) 18%, transparent) 0%, transparent 65%)',
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Icon className="text-[3.25rem] text-[#D4AF37] drop-shadow-[0_4px_16px_rgba(212,175,55,0.4)]" />
+                      <Icon className="text-[3.25rem] drop-shadow-[0_4px_16px_rgba(212,175,55,0.4)]" style={{ color: 'var(--site-accent, #D4AF37)' }} />
                     </div>
                     <div
                       aria-hidden
-                      className={`absolute top-2 ${isRight ? 'right-3' : 'left-3'} font-display italic font-bold text-[2.25rem] leading-none text-[#C9A961]/30 select-none`}
+                      className={`absolute top-2 ${isRight ? 'right-3' : 'left-3'} font-display italic font-bold text-[2.25rem] leading-none select-none`}
+                      style={{ color: 'color-mix(in srgb, var(--site-accent, #C9A961) 40%, transparent)' }}
                     >
                       {c.num}
                     </div>
                     <div aria-hidden className="absolute top-2 left-2 w-7 h-7 pointer-events-none">
-                      <div className="absolute top-0 left-0 w-[1.5px] h-5 bg-[#C9A961]" />
-                      <div className="absolute top-0 left-0 h-[1.5px] w-5 bg-[#C9A961]" />
+                      <div className="absolute top-0 left-0 w-[1.5px] h-5" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
+                      <div className="absolute top-0 left-0 h-[1.5px] w-5" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
                     </div>
                     <div aria-hidden className="absolute bottom-2 right-2 w-7 h-7 pointer-events-none">
-                      <div className="absolute bottom-0 right-0 w-[1.5px] h-5 bg-[#C9A961]" />
-                      <div className="absolute bottom-0 right-0 h-[1.5px] w-5 bg-[#C9A961]" />
+                      <div className="absolute bottom-0 right-0 w-[1.5px] h-5" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
+                      <div className="absolute bottom-0 right-0 h-[1.5px] w-5" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
                     </div>
                   </div>
                 </div>
@@ -139,43 +147,49 @@ const DecodedStory = () => (
               {/* Content column */}
               <div className={`lg:col-span-8 ${isRight ? 'lg:order-1 lg:pr-4' : 'lg:order-2 lg:pl-4'}`}>
                 <div className="flex items-center gap-3 mb-3 md:mb-4">
-                  <span className="font-display italic text-[2.25rem] sm:text-[3rem] md:text-[3.75rem] leading-none font-bold text-[#D4AF37]">
+                  <span className="font-display italic text-[2.25rem] sm:text-[3rem] md:text-[3.75rem] leading-none font-bold" style={{ color: 'var(--site-accent, #D4AF37)' }}>
                     {c.num}
                   </span>
                   <div className="flex flex-col">
-                    <span className="font-display italic text-[0.7rem] font-semibold text-[#C9A961] tracking-[0.18em] uppercase">
+                    <span className="font-display italic text-[0.7rem] font-semibold tracking-[0.18em] uppercase" style={{ color: 'var(--site-accent, #C9A961)' }}>
                       {c.chapterLabel}
                     </span>
-                    <span className="w-12 h-px bg-[#C9A961] mt-1" />
+                    <span className="w-12 h-px mt-1" style={{ backgroundColor: 'var(--site-accent, #C9A961)' }} />
                   </div>
                   {/* Mobile-only icon thumbnail — keeps editorial feel without dominating the screen */}
                   <div className="lg:hidden ml-auto shrink-0">
-                    <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-noir-900 to-noir-800 border border-[rgba(201,169,97,0.30)] flex items-center justify-center shadow-[0_8px_20px_-10px_rgba(0,0,0,0.55)]">
-                      <Icon className="text-[1.5rem] text-[#D4AF37]" />
+                    <div
+                      className="relative w-14 h-14 rounded-xl flex items-center justify-center shadow-[0_8px_20px_-10px_rgba(0,0,0,0.55)]"
+                      style={{
+                        background: 'color-mix(in srgb, var(--site-accent, #C9A961) 9%, var(--site-bg, #F8FAFC))',
+                        border: '1.5px solid color-mix(in srgb, var(--site-accent, #C9A961) 30%, transparent)',
+                      }}
+                    >
+                      <Icon className="text-[1.5rem]" style={{ color: 'var(--site-accent, #D4AF37)' }} />
                     </div>
                   </div>
                 </div>
 
                 <h3
-                  className="font-display font-semibold text-white text-balance leading-[1.08] tracking-tight mb-3"
-                  style={{ fontSize: 'clamp(1.75rem, 3.4vw, 2.5rem)' }}
+                  className="font-display font-semibold text-balance leading-[1.08] tracking-tight mb-3"
+                  style={{ fontSize: 'clamp(1.75rem, 3.4vw, 2.5rem)', color: 'var(--site-text)' }}
                 >
                   {c.headline}
                 </h3>
 
-                <p className="font-display italic text-lg md:text-xl text-[#E5C770] mb-4 leading-snug">
+                <p className="font-display italic text-lg md:text-xl mb-4 leading-snug" style={{ color: 'var(--site-accent, #C9A961)' }}>
                   &mdash; {c.italic}
                 </p>
 
-                <p className="text-base text-ink-300 leading-relaxed max-w-xl"
+                <p className="text-base leading-relaxed max-w-xl" style={{ color: 'var(--site-text-muted)' }}
                    dangerouslySetInnerHTML={{ __html: c.body }}
                 />
 
                 {i === CHAPTERS.length - 1 && (
-                  <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                  <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--site-text)' }}>
                     <span>That&rsquo;s really it</span>
-                    <FiArrowRight className="text-[#C9A961]" />
-                    <span className="text-[#C9A961]">No catch, no upsell.</span>
+                    <FiArrowRight style={{ color: 'var(--site-accent, #C9A961)' }} />
+                    <span style={{ color: 'var(--site-accent, #C9A961)' }}>No catch, no upsell.</span>
                   </div>
                 )}
               </div>
