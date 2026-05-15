@@ -57,7 +57,10 @@ const Footer = () => {
     .filter((s) => s.icon);
 
   return (
-    <footer className="relative overflow-hidden bg-noir-950 text-ink-300">
+    <footer
+      className="relative overflow-hidden bg-noir-950 text-ink-300"
+      style={{ backgroundColor: '#0A0A0A', color: '#B0A99E' }}
+    >
       {/* Background accents — warm gold whisper */}
       <div className="absolute inset-0 pointer-events-none">
         <div
