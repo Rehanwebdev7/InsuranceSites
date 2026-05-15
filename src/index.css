@@ -161,10 +161,28 @@
 
   /* ===============================================
      SITE TOKENS — admin-controlled customer-site theme
-     Defaults = Heritage Dark. Light mode flips them via
-     html[data-site-theme="light"]. Admin Theme page can
-     override --site-accent / --site-bg / --site-text.
+     Defaults = Light (white bg, black text). Dark mode
+     applies via html[data-site-theme="dark"].
      =============================================== */
+  --site-bg:            #FFFFFF;
+  --site-bg-soft:       #F8F9FA;
+  --site-surface:       #FFFFFF;
+  --site-surface-2:     #F3F4F6;
+  --site-text:          #111111;
+  --site-text-muted:    #475569;
+  --site-text-subtle:   #6B7280;
+  --site-border:        #E5E7EB;
+  --site-border-soft:   #F3F4F6;
+  --site-accent:        #C9A961;
+  --site-accent-soft:   rgba(201, 169, 97, 0.15);
+  --site-accent-strong: #8B6F2C;
+  --site-accent-on:     #0A0A0A;
+  --site-button-bg:     linear-gradient(135deg, #C9A961 0%, #8B6F2C 100%);
+  --site-button-text:   #0A0A0A;
+}
+
+/* Dark-mode overrides for site tokens */
+html[data-site-theme="dark"] {
   --site-bg:            #0A0A0A;
   --site-bg-soft:       #0F0F0F;
   --site-surface:       #1A1A1A;
@@ -174,25 +192,19 @@
   --site-text-subtle:   #737373;
   --site-border:        rgba(201, 169, 97, 0.22);
   --site-border-soft:   rgba(201, 169, 97, 0.14);
-  --site-accent:        #C9A961;
-  --site-accent-soft:   rgba(201, 169, 97, 0.15);
-  --site-accent-strong: #8B6F2C;
-  --site-accent-on:     #0A0A0A;
-  --site-button-bg:     linear-gradient(135deg, #C9A961 0%, #8B6F2C 100%);
-  --site-button-text:   #0A0A0A;
 }
 
-/* Light-mode overrides for site tokens */
+/* Light-mode overrides for site tokens (pure white) */
 html[data-site-theme="light"] {
-  --site-bg:            #FAF6EE;
-  --site-bg-soft:       #FFFCF7;
+  --site-bg:            #FFFFFF;
+  --site-bg-soft:       #F8F9FA;
   --site-surface:       #FFFFFF;
-  --site-surface-2:     #FDFAF1;
-  --site-text:          #0F0F0F;
+  --site-surface-2:     #F3F4F6;
+  --site-text:          #111111;
   --site-text-muted:    #475569;
-  --site-text-subtle:   #94A3B8;
-  --site-border:        #EBDCB1;
-  --site-border-soft:   #F5EBD3;
+  --site-text-subtle:   #6B7280;
+  --site-border:        #E5E7EB;
+  --site-border-soft:   #F3F4F6;
   --site-accent:        #8B6F2C;
   --site-accent-soft:   rgba(201, 169, 97, 0.20);
   --site-accent-strong: #5C4A1D;
@@ -278,8 +290,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-body);
-  color: var(--ivory-100);
-  background-color: var(--noir-950);
+  color: var(--site-text);
+  background-color: var(--site-bg);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1165,6 +1177,8 @@ body { top: 0 !important; }
    Surface / lighter surface flips stay light-mode-only — we do not want bgOverride
    to also bleed through into card backgrounds (it would kill visual hierarchy). */
 [data-site-frame] .bg-noir-950 { background-color: var(--site-bg) !important; }
+[data-site-frame] .bg-noir-900 { background-color: var(--site-bg-soft) !important; }
+[data-site-frame] .bg-noir-800 { background-color: color-mix(in srgb, var(--site-bg) 82%, white) !important; }
 
 html[data-site-theme="light"] [data-site-frame] .bg-noir-900 { background-color: var(--site-surface) !important; }
 html[data-site-theme="light"] [data-site-frame] .bg-noir-800 { background-color: var(--site-surface-2) !important; }
@@ -1226,6 +1240,28 @@ html[data-site-theme="light"] [data-site-frame] .Toastify__toast {
   border-color: var(--site-border) !important;
 }
 
+/* Light mode: grad-hero/grad-dark classes → white bg */
+html[data-site-theme="light"] [data-site-frame] .grad-hero,
+html[data-site-theme="light"] [data-site-frame] .grad-dark,
+html[data-site-theme="light"] [data-site-frame] .bg-gradient-hero,
+html[data-site-theme="light"] [data-site-frame] .bg-gradient-dark {
+  background: var(--site-bg) !important;
+}
+
+/* Light mode: missing opacity variants bg-noir-950/60, bg-noir-900/60 */
+html[data-site-theme="light"] [data-site-frame] .bg-noir-950\/60,
+html[data-site-theme="light"] [data-site-frame] .bg-noir-900\/60 {
+  background-color: color-mix(in srgb, var(--site-surface) 60%, transparent) !important;
+}
+
+/* Light mode: hover variants for dark backgrounds */
+html[data-site-theme="light"] [data-site-frame] .hover\:bg-noir-950:hover,
+html[data-site-theme="light"] [data-site-frame] .hover\:bg-noir-900:hover,
+html[data-site-theme="light"] [data-site-frame] .hover\:bg-noir-800:hover,
+html[data-site-theme="light"] [data-site-frame] .hover\:bg-noir-700:hover {
+  background-color: var(--site-surface-2) !important;
+}
+
 /* ============== ACCENT-AWARE OVERRIDES ==============
    These rules ONLY fire when the admin picks a non-default
    accent (data-site-accent="custom" is set on <html> by
@@ -1244,5 +1280,33 @@ html[data-site-accent="custom"] [data-site-frame] .text-\[\#C9A961\] { color: va
 html[data-site-accent="custom"] [data-site-frame] .text-\[\#D4AF37\] { color: var(--site-accent) !important; }
 html[data-site-accent="custom"] [data-site-frame] .text-\[\#E5C770\] { color: var(--site-accent) !important; }
 
-/* Gold border swap — keep #C9A961 as the canonical accent border */
+/* Gold border swap */
 html[data-site-accent="custom"] [data-site-frame] .border-\[\#C9A961\] { border-color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .border-\[\#B8923A\] { border-color: var(--site-accent-strong) !important; }
+html[data-site-accent="custom"] [data-site-frame] .border-\[\#E5C770\] { border-color: var(--site-accent) !important; }
+
+/* Solid bg-[#C9A961] swap */
+html[data-site-accent="custom"] [data-site-frame] .bg-\[\#C9A961\] { background-color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] .bg-\[\#D4AF37\] { background-color: var(--site-accent) !important; }
+
+/* Ring / shadow accent */
+html[data-site-accent="custom"] [data-site-frame] [class*="ring-[#C9A961]"] { --tw-ring-color: var(--site-accent) !important; }
+html[data-site-accent="custom"] [data-site-frame] [class*="shadow-[0_0"][class*="C9A961"] { box-shadow: none !important; }
+
+/* Inline style overrides for components using style={{ color: '#C9A961' }} can't be done via CSS.
+   The above CSS covers all Tailwind class-based usages. */
+
+/* ============== BUTTON VARIANT STYLES ==============
+   When admin selects btnVariant: 'outline', change
+   all CTA buttons to outline style instead of gradient.
+   ===================================================== */
+
+html[data-site-btn="outline"] [data-site-frame] [class*="from-[#C9A961]"][class*="to-[#"] {
+  background: transparent !important;
+  border: 2px solid var(--site-accent, #C9A961) !important;
+  color: var(--site-accent, #C9A961) !important;
+}
+
+html[data-site-btn="outline"] [data-site-frame] [class*="from-[#C9A961]"][class*="to-[#"]:hover {
+  background-color: color-mix(in srgb, var(--site-accent, #C9A961) 10%, transparent) !important;
+}

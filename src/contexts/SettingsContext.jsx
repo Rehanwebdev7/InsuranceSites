@@ -37,7 +37,7 @@ const DEFAULT_SETTINGS = {
   brandLogo: '',
   brandFavicon: '',
   // Theme — admin manageable (dark|light preset + optional custom overrides)
-  themeMode: 'dark',
+  themeMode: 'light',
   customBg: '',
   customText: '',
   phone10: '9876543210',
@@ -111,7 +111,7 @@ const loadLocalSettings = () => {
 // overrides are stamped as inline style on documentElement so they win over
 // the css :root defaults but stay below !important utility classes.
 const DEFAULT_GOLD = '#c9a961';
-const applySiteTheme = ({ mode, accent, customBg, customText }) => {
+const applySiteTheme = ({ mode, accent, customBg, customText, btnVariant }) => {
   const root = document.documentElement;
   root.setAttribute('data-site-theme', mode === 'light' ? 'light' : 'dark');
 
@@ -144,6 +144,12 @@ const applySiteTheme = ({ mode, accent, customBg, customText }) => {
     root.style.setProperty('--site-text', customText);
   } else {
     root.style.removeProperty('--site-text');
+  }
+
+  if (btnVariant) {
+    root.setAttribute('data-site-btn', btnVariant);
+  } else {
+    root.removeAttribute('data-site-btn');
   }
 };
 
@@ -347,8 +353,9 @@ export const SettingsProvider = ({ children }) => {
       accent: brandColors.primary,
       customBg: rawSettings.customBg,
       customText: rawSettings.customText,
+      btnVariant: rawSettings.btnVariant,
     });
-  }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, brandColors.primary]);
+  }, [rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, rawSettings.btnVariant, brandColors.primary]);
 
   // Update favicon and page title dynamically.
   // We remember the original SVG default written into index.html and restore it
@@ -387,6 +394,14 @@ export const SettingsProvider = ({ children }) => {
         if (fsSettings) {
           setSettingsDocId(fsSettings.id);
           const { id, colors, ...rest } = fsSettings;
+
+          // One-time migration: old saved dark default → light theme
+          if (!localStorage.getItem('mh_theme_v2') && rest.themeMode === 'dark' && !rest.customBg) {
+            rest.themeMode = 'light';
+            localStorage.setItem('mh_theme_v2', '1');
+            firestoreService.saveSettings(rest, id).catch(console.warn);
+          }
+
           if (colors) {
             setBrandColors({ ...DEFAULT_COLORS, ...colors });
           }

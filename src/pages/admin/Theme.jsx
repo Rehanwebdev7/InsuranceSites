@@ -1,11 +1,71 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { motion } from 'framer-motion';
-import { FiRefreshCw, FiMoon, FiSun, FiDroplet, FiSave, FiArrowRight } from 'react-icons/fi';
+import { FiRefreshCw, FiMoon, FiSun, FiDroplet, FiSave, FiArrowRight, FiCheck } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import useAdminTheme from '../../hooks/useAdminTheme';
 
 const DEFAULT_ACCENT = '#C9A961';
+
+// 4 Professional White + Blue insurance themes (ICICI/Tata/HDFC style)
+const PRESET_THEMES = [
+  {
+    id: 'trust-blue',
+    name: 'Trust Blue',
+    tagline: 'White · Deep Blue',
+    why: 'Clean professional — like ICICI Lombard. Most trustworthy for all insurance types.',
+    mode: 'light',
+    accent: '#1E3A8A',
+    bg: '#FFFFFF',
+    text: '#1E293B',
+    btnVariant: 'gradient',
+    swatchBg: 'linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%)',
+    swatchAccent: '#1E3A8A',
+    swatchAccent2: '#3B5FC0',
+  },
+  {
+    id: 'corporate-navy',
+    name: 'Corporate Navy',
+    tagline: 'Off-white · Deep Navy',
+    why: 'Serious and corporate — ideal for business & group insurance.',
+    mode: 'light',
+    accent: '#0F2B4D',
+    bg: '#F8FAFC',
+    text: '#1E293B',
+    btnVariant: 'gradient',
+    swatchBg: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
+    swatchAccent: '#0F2B4D',
+    swatchAccent2: '#1E4080',
+  },
+  {
+    id: 'health-teal',
+    name: 'Health Teal',
+    tagline: 'White · Teal Green',
+    why: 'Fresh and caring — perfect for health & life insurance.',
+    mode: 'light',
+    accent: '#0F6E6E',
+    bg: '#FFFFFF',
+    text: '#1E293B',
+    btnVariant: 'outline',
+    swatchBg: 'linear-gradient(135deg, #FFFFFF 0%, #F0FDFA 100%)',
+    swatchAccent: '#0F6E6E',
+    swatchAccent2: '#1A9A9A',
+  },
+  {
+    id: 'safety-green',
+    name: 'Safety Green',
+    tagline: 'White · Forest Green',
+    why: 'Growth and safety — ideal for rural, vehicle & farm insurance.',
+    mode: 'light',
+    accent: '#166534',
+    bg: '#FFFFFF',
+    text: '#1E293B',
+    btnVariant: 'outline',
+    swatchBg: 'linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 100%)',
+    swatchAccent: '#166534',
+    swatchAccent2: '#22A05A',
+  },
+];
 
 const AdminTheme = () => {
   const adminTheme = useAdminTheme();
@@ -22,10 +82,9 @@ const AdminTheme = () => {
   const [accent, setAccent] = useState(brandColors?.primary || DEFAULT_ACCENT);
   const [bgOverride, setBgOverride] = useState(rawSettings.customBg || '');
   const [textOverride, setTextOverride] = useState(rawSettings.customText || '');
+  const [btnVariant, setBtnVariant] = useState(rawSettings.btnVariant || 'gradient');
   const [isSaving, setIsSaving] = useState(false);
 
-  // One-time hydration after Firestore finishes loading (settings may not be
-  // ready when this page mounts).
   const hydrated = useRef(false);
   useEffect(() => {
     if (hydrated.current || isLoading) return;
@@ -33,8 +92,9 @@ const AdminTheme = () => {
     setAccent(brandColors?.primary || DEFAULT_ACCENT);
     setBgOverride(rawSettings.customBg || '');
     setTextOverride(rawSettings.customText || '');
+    setBtnVariant(rawSettings.btnVariant || 'gradient');
     hydrated.current = true;
-  }, [isLoading, rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, brandColors?.primary]);
+  }, [isLoading, rawSettings.themeMode, rawSettings.customBg, rawSettings.customText, rawSettings.btnVariant, brandColors?.primary]);
 
   // Live preview — write CSS tokens directly to <html>. No React state cascade,
   // so picker drag is smooth and there is no loop. Mirrors SettingsContext.applySiteTheme.
@@ -67,13 +127,15 @@ const AdminTheme = () => {
     } else {
       root.style.removeProperty('--site-text');
     }
-  }, [mode, accent, bgOverride, textOverride]);
+    root.setAttribute('data-site-btn', btnVariant || 'gradient');
+  }, [mode, accent, bgOverride, textOverride, btnVariant]);
 
   const isDirty =
     mode !== (rawSettings.themeMode || 'dark') ||
     accent !== (brandColors?.primary || DEFAULT_ACCENT) ||
     bgOverride !== (rawSettings.customBg || '') ||
-    textOverride !== (rawSettings.customText || '');
+    textOverride !== (rawSettings.customText || '') ||
+    btnVariant !== (rawSettings.btnVariant || 'gradient');
 
   // Form-level revert (no Firestore write) — undoes unsaved edits.
   const handleReset = () => {
@@ -81,6 +143,7 @@ const AdminTheme = () => {
     setAccent(brandColors?.primary || DEFAULT_ACCENT);
     setBgOverride(rawSettings.customBg || '');
     setTextOverride(rawSettings.customText || '');
+    setBtnVariant(rawSettings.btnVariant || 'gradient');
     toast.info('Reverted unsaved changes');
   };
 
@@ -122,12 +185,11 @@ const AdminTheme = () => {
         themeMode: mode,
         customBg: bgOverride,
         customText: textOverride,
+        btnVariant,
         colors: { ...(rawSettings.colors || {}), primary: accent },
       };
       await saveSettings(next);
-      // Sync context state so SettingsContext's effects re-run with the new
-      // values and isDirty flips to false.
-      updateSettings({ themeMode: mode, customBg: bgOverride, customText: textOverride });
+      updateSettings({ themeMode: mode, customBg: bgOverride, customText: textOverride, btnVariant });
       setBrandColors((prev) => ({ ...prev, primary: accent }));
       toast.success('Theme saved — customer site updated');
     } catch (err) {
@@ -212,6 +274,69 @@ const AdminTheme = () => {
           </button>
         </div>
       </div>
+
+      {/* ── Preset Themes ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`rounded-2xl shadow-sm p-6 mb-6 ${tt.card}`}
+      >
+        <div className="mb-4">
+          <h2 className={`text-lg font-display font-semibold tracking-tight mb-1 ${tt.cardHeading}`}>Quick Presets</h2>
+          <p className={`text-sm ${tt.cardSub}`}>One click — sets mode, accent, background and text together. Then fine-tune if needed.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {PRESET_THEMES.map((preset) => {
+            const isActive =
+              mode === preset.mode &&
+              accent.toUpperCase() === preset.accent.toUpperCase() &&
+              bgOverride === preset.bg &&
+              textOverride === preset.text;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => {
+                  setMode(preset.mode);
+                  setAccent(preset.accent);
+                  setBgOverride(preset.bg);
+                  setTextOverride(preset.text);
+                  setBtnVariant(preset.btnVariant || 'gradient');
+                  toast.info(`"${preset.name}" applied — click Save to go live`);
+                }}
+                className={`relative rounded-xl border-2 p-3 text-left transition-all hover:scale-[1.02] ${
+                  isActive ? tt.chipActive : tt.chipIdle
+                }`}
+              >
+                {isActive && (
+                  <span className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#C9A961] flex items-center justify-center">
+                    <FiCheck className="text-black w-3 h-3 stroke-[3]" />
+                  </span>
+                )}
+
+                {/* Color swatch */}
+                <div className="h-16 rounded-lg overflow-hidden mb-3 relative" style={{ background: preset.swatchBg }}>
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-5"
+                    style={{
+                      background: `linear-gradient(90deg, ${preset.swatchAccent} 0%, ${preset.swatchAccent2} 60%, transparent 100%)`,
+                      opacity: 0.85,
+                    }}
+                  />
+                  <div
+                    className="absolute top-2 right-2 w-3 h-3 rounded-full border border-white/20"
+                    style={{ backgroundColor: preset.swatchAccent }}
+                  />
+                </div>
+
+                <p className={`font-display font-semibold text-sm tracking-tight ${tt.cardHeading}`}>{preset.name}</p>
+                <p className={`text-[0.68rem] italic mb-1.5 ${tt.cardSub}`}>{preset.tagline}</p>
+                <p className={`text-[0.6rem] leading-snug ${tt.cardSub} opacity-70`}>{preset.why}</p>
+              </button>
+            );
+          })}
+        </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* ----------- Left column: controls ----------- */}

@@ -396,6 +396,11 @@ const fromFirestoreSettings = (docSnap) => {
       secondary: d.colors?.secondary || '#f97316',
       accent: d.colors?.accent || '#059669',
     },
+    // Theme
+    themeMode: d.themeMode || 'dark',
+    customBg: d.customBg || '',
+    customText: d.customText || '',
+    btnVariant: d.btnVariant || 'gradient',
   };
 };
 
@@ -451,6 +456,11 @@ const toFirestoreSettings = (settings) => {
       secondary: settings.colors?.secondary || '#f97316',
       accent: settings.colors?.accent || '#059669',
     },
+    // Theme
+    themeMode: settings.themeMode || 'dark',
+    customBg: settings.customBg || '',
+    customText: settings.customText || '',
+    btnVariant: settings.btnVariant || 'gradient',
     updatedBy: 'admin',
     updatedAt: serverTimestamp(),
   };
