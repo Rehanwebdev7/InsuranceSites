@@ -59,7 +59,7 @@ const Footer = () => {
   return (
     <footer
       className="relative overflow-hidden text-ink-300"
-      style={{ backgroundColor: '#0A0A0A', color: '#B0A99E' }}
+      style={{ backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 18%, #000000)', color: '#B0A99E' }}
     >
       {/* Background accents — warm gold whisper */}
       <div className="absolute inset-0 pointer-events-none">
