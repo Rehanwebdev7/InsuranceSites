@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import LottiePlayer from 'react-lottie-player';
 import {
   FaMotorcycle, FaCar, FaCarSide, FaCarCrash, FaTruck, FaTruckMoving,
   FaBus, FaBusAlt, FaTractor, FaShieldAlt, FaFileAlt, FaFileContract,
@@ -86,21 +87,38 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
             backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 6%, #F8FAFC)',
           }}
         >
-          {resolvedSrc && !imgFailed ? (
-            <img
-              src={resolvedSrc}
-              alt={title || 'Insurance'}
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              crossOrigin="anonymous"
-              onError={() => setImgFailed(true)}
+          {(service.isLottie && service.animationData) ? (
+            <div
               className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
               style={{
-                width: '80%',
-                height: '80%',
-                objectFit: 'contain',
+                width: `${(80 * (service.lottieZoom || 100)) / 100}%`,
+                height: `${(80 * (service.lottieZoom || 100)) / 100}%`,
               }}
-            />
+            >
+              <LottiePlayer
+                animationData={JSON.parse(service.animationData)}
+                play
+                loop
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+          ) : resolvedSrc && !imgFailed ? (
+            service.isLottie ? null : (
+              <img
+                src={resolvedSrc}
+                alt={title || 'Insurance'}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
+                onError={() => setImgFailed(true)}
+                className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                style={{
+                  width: '80%',
+                  height: '80%',
+                  objectFit: 'contain',
+                }}
+              />
+            )
           ) : (
             <IconComponent
               className="transition-transform duration-500 group-hover:scale-105"

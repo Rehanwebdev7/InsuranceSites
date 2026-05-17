@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiEdit2, FiTrash2, FiPlus, FiX, FiSave, FiImage, FiUpload, FiLoader, FiCheck } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlus, FiX, FiSave, FiImage, FiUpload, FiLoader, FiCheck, FiPlay } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import Cropper from 'react-easy-crop';
+import LottiePlayer from 'react-lottie-player';
 import * as firestoreService from '../../services/firebase/firestore';
 import { db } from '../../services/firebase/firebase';
 import { uploadImage, getImageUrl, deleteImage } from '../../services/googleDrive';
+import { uploadLottieJson, deleteLottieJson } from '../../services/firebase/storageService';
 import { getIllustrationSrc } from '../../data/illustrationGallery';
 import defaultServices from '../../data/services.json';
 import useAdminTheme from '../../hooks/useAdminTheme';
@@ -53,6 +55,10 @@ const emptyService = {
   illustrationKey: '',
   illustrationUrl: '',
   illustrationDriveId: '',
+  isLottie: false,
+  illustrationStoragePath: '',
+  animationData: '',
+  lottieZoom: 100,
   color: '#C9A961',
   bgColor: '#FDFAF1',
   active: true,
@@ -88,6 +94,7 @@ const AdminServices = () => {
   // uploads a replacement (the firestore service also does this, but doing it here gives
   // immediate UX feedback).
   const [pendingDeleteDriveId, setPendingDeleteDriveId] = useState('');
+  const [pendingDeleteStoragePath, setPendingDeleteStoragePath] = useState('');
 
   useEffect(() => {
     loadServices();
@@ -116,6 +123,7 @@ const AdminServices = () => {
     setEditingServiceId(null);
     setFormData({ ...emptyService, order: servicesList.length + 1 });
     setPendingDeleteDriveId('');
+    setPendingDeleteStoragePath('');
     setModalOpen(true);
   };
 
@@ -124,6 +132,7 @@ const AdminServices = () => {
     setEditingServiceId(service.id);
     setFormData({ ...emptyService, ...service });
     setPendingDeleteDriveId('');
+    setPendingDeleteStoragePath('');
     setModalOpen(true);
   };
 
@@ -133,6 +142,7 @@ const AdminServices = () => {
     setEditingServiceId(null);
     setFormData(emptyService);
     setPendingDeleteDriveId('');
+    setPendingDeleteStoragePath('');
   };
 
   const generateSlug = (title) =>
@@ -172,6 +182,18 @@ const AdminServices = () => {
         }
         toast.success('Service added');
       }
+
+      if (pendingDeleteDriveId) {
+        try { await deleteImage(pendingDeleteDriveId); } catch (err) {
+          console.warn('Failed to delete Drive image', err);
+        }
+      }
+      if (pendingDeleteStoragePath) {
+        try { await deleteLottieJson(pendingDeleteStoragePath); } catch (err) {
+          console.warn('Failed to delete Storage file', err);
+        }
+      }
+
       closeModal();
     } catch (error) {
       console.error('Failed to save service:', error);
@@ -199,14 +221,22 @@ const AdminServices = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // ---- Image flow ----
+  // ---- Image/Lottie flow ----
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please pick an image (PNG, JPG, SVG, WebP).');
-      return;
+
+    if (file.type === 'application/json' || file.name.endsWith('.json')) {
+      handleJsonFileSelect(file);
+    } else if (file.type.startsWith('image/')) {
+      handleImageFileSelect(file);
+    } else {
+      toast.error('Please pick an image (PNG, JPG, SVG, WebP) or Lottie JSON.');
     }
+    e.target.value = '';
+  };
+
+  const handleImageFileSelect = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
       setRawImage(reader.result);
@@ -215,7 +245,35 @@ const AdminServices = () => {
       setCropperOpen(true);
     };
     reader.readAsDataURL(file);
-    e.target.value = '';
+  };
+
+  const handleJsonFileSelect = (file) => {
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        setFormData((prev) => ({
+          ...prev,
+          animationData: JSON.stringify(parsed),
+          illustrationUrl: '',
+          illustrationStoragePath: '',
+          illustrationDriveId: '',
+          illustrationKey: '',
+          isLottie: true,
+        }));
+        toast.success('Lottie animation loaded!');
+      } catch {
+        toast.error('Invalid JSON file. Please upload a valid Lottie JSON.');
+      } finally {
+        setUploading(false);
+      }
+    };
+    reader.onerror = () => {
+      toast.error('Could not read file.');
+      setUploading(false);
+    };
+    reader.readAsText(file);
   };
 
   const onCropComplete = useCallback((_, croppedPixels) => {
@@ -267,15 +325,20 @@ const AdminServices = () => {
   };
 
   const removeCurrentImage = () => {
-    // Mark old drive id for cleanup on save
     if (formData.illustrationDriveId) {
       setPendingDeleteDriveId(formData.illustrationDriveId);
+    }
+    if (formData.illustrationStoragePath) {
+      setPendingDeleteStoragePath(formData.illustrationStoragePath);
     }
     setFormData((prev) => ({
       ...prev,
       illustrationUrl: '',
       illustrationDriveId: '',
       illustrationKey: '',
+      isLottie: false,
+      illustrationStoragePath: '',
+      animationData: '',
     }));
   };
 
@@ -494,23 +557,34 @@ const AdminServices = () => {
                 {/* Image area */}
                 <div>
                   <label className={`block text-sm font-medium mb-2 ${t.labelText}`}>Service image</label>
-                  {previewSrc ? (
+                  {(previewSrc || formData.animationData) ? (
                     <div className="flex items-center gap-4 p-3 rounded-xl border border-[rgba(201,169,97,0.30)]">
-                      <div className={`w-24 h-24 rounded-lg overflow-hidden border ${t.thumbBox}`}>
-                        <img
-                          src={previewSrc}
-                          alt="Service"
-                          className="w-full h-full object-cover"
-                          referrerPolicy="no-referrer"
-                        />
+                      <div className={`w-24 h-24 rounded-lg overflow-hidden border flex items-center justify-center ${t.thumbBox}`}>
+                        {formData.isLottie && formData.animationData ? (
+                          <LottiePlayer
+                            animationData={JSON.parse(formData.animationData)}
+                            play
+                            loop
+                            style={{ width: '100%', height: '100%' }}
+                          />
+                        ) : (
+                          <img
+                            src={previewSrc}
+                            alt="Service"
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className={`text-xs ${t.pageSub} mb-1`}>
-                          {formData.illustrationDriveId
-                            ? 'Custom image (Google Drive)'
-                            : formData.illustrationKey
-                              ? 'Legacy gallery illustration'
-                              : 'Image attached'}
+                          {formData.isLottie
+                            ? 'Lottie animation (saved in Firestore)'
+                            : formData.illustrationDriveId
+                              ? 'Custom image (Google Drive)'
+                              : formData.illustrationKey
+                                ? 'Legacy gallery illustration'
+                                : 'Image attached'}
                         </p>
                         <p className={`text-xs truncate ${t.cardDesc}`}>{formData.illustrationUrl || formData.illustrationKey}</p>
                         <div className="flex items-center gap-2 mt-2">
@@ -518,7 +592,7 @@ const AdminServices = () => {
                             <FiUpload className="w-3.5 h-3.5" /> Replace
                             <input
                               type="file"
-                              accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                              accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,application/json,.json"
                               onChange={handleFileSelect}
                               className="hidden"
                             />
@@ -533,14 +607,20 @@ const AdminServices = () => {
                         </div>
                       </div>
                     </div>
+                  ) : uploading ? (
+                    <div className={`flex flex-col items-center justify-center gap-2 py-10 border-2 border-dashed rounded-xl ${t.dropZone}`}>
+                      <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-[#C9A961]" />
+                      <span className={`text-sm font-semibold ${t.dropZoneText}`}>Uploading animation…</span>
+                    </div>
                   ) : (
                     <label className={`flex flex-col items-center justify-center gap-2 py-10 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${t.dropZone}`}>
                       <FiImage className="w-8 h-8 text-[#C9A961]" />
-                      <span className={`text-sm font-semibold ${t.dropZoneText}`}>Click to upload image</span>
-                      <span className={`text-xs ${t.dropZoneSub}`}>PNG, JPG, SVG, WebP · 1:1 crop · stored on Google Drive</span>
+                      <span className={`text-sm font-semibold ${t.dropZoneText}`}>Click to upload image or Lottie</span>
+                      <span className={`text-xs ${t.dropZoneSub}`}>PNG · JPG · SVG · WebP → Google Drive</span>
+                      <span className={`text-xs ${t.dropZoneSub}`}>JSON (Lottie animation) → Firebase Storage</span>
                       <input
                         type="file"
-                        accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                        accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,application/json,.json"
                         onChange={handleFileSelect}
                         className="hidden"
                       />
@@ -602,6 +682,21 @@ const AdminServices = () => {
                     <span className="text-sm">Active (visible on site)</span>
                   </label>
                 </div>
+
+                {formData.isLottie && (
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${t.labelText}`}>Animation Zoom: {formData.lottieZoom}%</label>
+                    <input
+                      type="range"
+                      min="50"
+                      max="150"
+                      value={formData.lottieZoom}
+                      onChange={(e) => updateFormField('lottieZoom', parseInt(e.target.value))}
+                      className="w-full accent-[#C9A961]"
+                    />
+                    <p className={`text-xs mt-1 ${t.pageSub}`}>50% = zoomed out · 100% = normal · 150% = zoomed in</p>
+                  </div>
+                )}
 
                 <div className="flex gap-3 pt-2">
                   <button

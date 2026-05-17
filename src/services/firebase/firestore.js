@@ -213,6 +213,10 @@ const fromFirestoreService = (docSnap) => {
     illustrationKey: d.illustrationKey || '',
     illustrationUrl: d.illustrationUrl || '',
     illustrationDriveId: d.illustrationDriveId || '',
+    isLottie: d.isLottie || false,
+    illustrationStoragePath: d.illustrationStoragePath || '',
+    animationData: d.animationData || '',
+    lottieZoom: d.lottieZoom || 100,
     createdAt: d.createdAt?.toDate?.()?.toISOString() || d.createdAt || '',
     updatedAt: d.updatedAt?.toDate?.()?.toISOString() || d.updatedAt || '',
   };
@@ -251,6 +255,10 @@ export const addService = async (serviceData) => {
     illustrationKey: serviceData.illustrationKey || '',
     illustrationUrl: serviceData.illustrationUrl || '',
     illustrationDriveId: serviceData.illustrationDriveId || '',
+    isLottie: serviceData.isLottie || false,
+    illustrationStoragePath: serviceData.illustrationStoragePath || '',
+    animationData: serviceData.animationData || '',
+    lottieZoom: serviceData.lottieZoom || 100,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -305,6 +313,10 @@ export const updateService = async (serviceId, updates) => {
   if (updates.illustrationKey !== undefined) updateData.illustrationKey = updates.illustrationKey;
   if (updates.illustrationUrl !== undefined) updateData.illustrationUrl = updates.illustrationUrl;
   if (updates.illustrationDriveId !== undefined) updateData.illustrationDriveId = updates.illustrationDriveId;
+  if (updates.isLottie !== undefined) updateData.isLottie = updates.isLottie;
+  if (updates.illustrationStoragePath !== undefined) updateData.illustrationStoragePath = updates.illustrationStoragePath;
+  if (updates.animationData !== undefined) updateData.animationData = updates.animationData;
+  if (updates.lottieZoom !== undefined) updateData.lottieZoom = updates.lottieZoom;
 
   await updateDoc(docRef, updateData);
   return { id: serviceId, ...updates };
