@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import LottiePlayer from 'react-lottie-player';
+import ThemedLottie from './ThemedLottie';
+import { extractColors, suggestMapping } from '../../utils/lottieRecolor';
 import {
   FaMotorcycle, FaCar, FaCarSide, FaCarCrash, FaTruck, FaTruckMoving,
   FaBus, FaBusAlt, FaTractor, FaShieldAlt, FaFileAlt, FaFileContract,
@@ -34,6 +35,30 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
   const resolvedSrc = resolveServiceIllustration(service);
   const IconComponent = iconMap[icon] || FaShieldAlt;
   const [imgFailed, setImgFailed] = React.useState(false);
+
+  // Parse the Lottie JSON once per service — avoids re-parsing the large string
+  // on every re-render (hover, theme change, etc.).
+  const parsedLottie = useMemo(() => {
+    if (!service?.isLottie || !service.animationData) return null;
+    try { return JSON.parse(service.animationData); } catch { return null; }
+  }, [service?.isLottie, service?.animationData]);
+
+  // Effective mapping with a runtime safety net.
+  //
+  // We trust the saved mapping ONLY if it looks like it was produced by the
+  // multi-source heuristic — i.e. ≥2 entries pointing at the `accent` token,
+  // meaning the admin (or auto-detect) really did fan multiple shades onto
+  // the brand colour. Anything else (empty mapping, all-skip, or the old
+  // single-source-per-slot distribution) gets re-derived from the lottie at
+  // render time so the subject ALWAYS picks up the current theme accent —
+  // never silently stays its raw uploaded colour.
+  const effectiveLottieMapping = useMemo(() => {
+    const saved = Array.isArray(service?.lottieMapping) ? service.lottieMapping : [];
+    const accentCount = saved.filter((m) => (m?.token || m?.toToken) === 'accent').length;
+    if (accentCount >= 2) return saved;
+    if (!parsedLottie) return saved;
+    try { return suggestMapping(extractColors(parsedLottie)); } catch { return saved; }
+  }, [service?.lottieMapping, parsedLottie]);
 
   return (
     <motion.button
@@ -89,7 +114,7 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
               backgroundColor: 'color-mix(in srgb, var(--site-accent, #C9A961) 6%, #F8FAFC)',
             }}
           >
-            {(service.isLottie && service.animationData) ? (
+            {(service.isLottie && parsedLottie) ? (
               <div
                 className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
                 style={{
@@ -97,8 +122,9 @@ const ServiceCard = ({ service, onGetQuote, index = 0 }) => {
                   height: `${(80 * (service.lottieZoom || 100)) / 100}%`,
                 }}
               >
-                <LottiePlayer
-                  animationData={JSON.parse(service.animationData)}
+                <ThemedLottie
+                  animationData={parsedLottie}
+                  mapping={effectiveLottieMapping}
                   play
                   loop
                   style={{ width: '100%', height: '100%' }}

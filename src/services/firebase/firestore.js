@@ -217,6 +217,7 @@ const fromFirestoreService = (docSnap) => {
     illustrationStoragePath: d.illustrationStoragePath || '',
     animationData: d.animationData || '',
     lottieZoom: d.lottieZoom || 100,
+    lottieMapping: Array.isArray(d.lottieMapping) ? d.lottieMapping : [],
     createdAt: d.createdAt?.toDate?.()?.toISOString() || d.createdAt || '',
     updatedAt: d.updatedAt?.toDate?.()?.toISOString() || d.updatedAt || '',
   };
@@ -259,6 +260,7 @@ export const addService = async (serviceData) => {
     illustrationStoragePath: serviceData.illustrationStoragePath || '',
     animationData: serviceData.animationData || '',
     lottieZoom: serviceData.lottieZoom || 100,
+    lottieMapping: Array.isArray(serviceData.lottieMapping) ? serviceData.lottieMapping : [],
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -317,6 +319,7 @@ export const updateService = async (serviceId, updates) => {
   if (updates.illustrationStoragePath !== undefined) updateData.illustrationStoragePath = updates.illustrationStoragePath;
   if (updates.animationData !== undefined) updateData.animationData = updates.animationData;
   if (updates.lottieZoom !== undefined) updateData.lottieZoom = updates.lottieZoom;
+  if (updates.lottieMapping !== undefined) updateData.lottieMapping = Array.isArray(updates.lottieMapping) ? updates.lottieMapping : [];
 
   await updateDoc(docRef, updateData);
   return { id: serviceId, ...updates };

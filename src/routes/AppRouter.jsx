@@ -17,6 +17,7 @@ import About from '../pages/customer/About';
 import Contact from '../pages/customer/Contact';
 import PrivacyPolicy from '../pages/customer/PrivacyPolicy';
 import TermsConditions from '../pages/customer/TermsConditions';
+import LottieDemo from '../pages/customer/LottieDemo';
 
 // Common
 import ErrorBoundary from '../components/common/ErrorBoundary';
@@ -104,6 +105,7 @@ const router = createBrowserRouter([
       { path: 'contact', element: <Contact /> },
       { path: 'privacy', element: <PrivacyPolicy /> },
       { path: 'terms', element: <TermsConditions /> },
+      { path: 'lottie-demo', element: <LottieDemo /> },
     ],
   },
   

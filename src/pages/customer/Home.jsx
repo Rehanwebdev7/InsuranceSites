@@ -11,7 +11,6 @@ import ServiceCard from '../../components/common/ServiceCard';
 import QuoteRequestForm from '../../components/forms/QuoteRequestForm';
 import TestimonialsSection from '../../components/common/TestimonialsSection';
 import DecodedStory from '../../components/common/DecodedStory';
-import ComparisonStrip from '../../components/common/ComparisonStrip';
 import { Section, Stat, SkeletonCard } from '../../components/ui';
 
 import { addLead } from '../../services/leadService';
@@ -141,9 +140,6 @@ const Home = () => {
 
       {/* "Insurance, decoded" — magazine-style 3-chapter scroll story */}
       <DecodedStory />
-
-      {/* "Us vs the rest" — premium comparison table */}
-      <ComparisonStrip brandName={brandName} />
 
       {/* Why choose us */}
       <Section

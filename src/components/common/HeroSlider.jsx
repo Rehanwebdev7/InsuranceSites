@@ -61,6 +61,43 @@ const Shower = () => (
   </div>
 );
 
+// Reusable highlight word (script gold + curve underline) so admin and default
+// slides share the exact same visual treatment.
+const ScriptAccent = ({ children }) => (
+  <span className="relative inline-block">
+    <span className="font-script not-italic relative" style={{ fontSize: '1.05em', color: '#E5C770' }}>
+      {children}
+      <span
+        aria-hidden
+        className="absolute -bottom-1 left-0 right-0 h-3 pointer-events-none"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'><path d='M3 9 C 35 2, 80 13, 130 5 S 190 11, 197 4' stroke='%23D4AF37' stroke-width='3' fill='none' stroke-linecap='round'/></svg>\")",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% 100%',
+        }}
+      />
+    </span>
+  </span>
+);
+
+// Parse an admin headline. A single `|` splits the text into a normal lead and
+// a script-styled accent (rendered with the gold curve underline). Without a
+// `|` the headline is rendered plainly in the display font.
+const renderAdminHeadline = (raw) => {
+  if (!raw) return null;
+  const idx = raw.indexOf('|');
+  if (idx === -1) return raw;
+  const lead = raw.slice(0, idx).trim();
+  const accent = raw.slice(idx + 1).trim();
+  return (
+    <>
+      {lead && <>{lead} </>}
+      {accent && <ScriptAccent>{accent}</ScriptAccent>}
+    </>
+  );
+};
+
 const HeroSlider = () => {
   const { sliderImages: allSliderData = [] } = useCustomerData();
   const { settings } = useSettings();
@@ -177,28 +214,14 @@ const HeroSlider = () => {
                 >
                   {slideHeadline ? (
                     <h1 className="font-display font-semibold text-white text-balance mb-3 tracking-tight text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.25rem] leading-[1.08]">
-                      {slideHeadline}
+                      {renderAdminHeadline(slideHeadline)}
                     </h1>
                   ) : (
                     <h1 className="font-display font-semibold text-white text-balance mb-3 tracking-tight text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.25rem] leading-[1.08]">
                       Insurance,
                       <br />
                       <span className="italic font-medium">delivered like</span>{' '}
-                      <span className="relative inline-block">
-                        <span className="font-script not-italic relative" style={{ fontSize: '1.05em', color: '#E5C770' }}>
-                          luxury.
-                          <span
-                            aria-hidden
-                            className="absolute -bottom-1 left-0 right-0 h-3 pointer-events-none"
-                            style={{
-                              backgroundImage:
-                                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'><path d='M3 9 C 35 2, 80 13, 130 5 S 190 11, 197 4' stroke='%23D4AF37' stroke-width='3' fill='none' stroke-linecap='round'/></svg>\")",
-                              backgroundRepeat: 'no-repeat',
-                              backgroundSize: '100% 100%',
-                            }}
-                          />
-                        </span>
-                      </span>
+                      <ScriptAccent>luxury.</ScriptAccent>
                     </h1>
                   )}
 

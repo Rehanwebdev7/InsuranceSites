@@ -11,17 +11,35 @@ import {
   deleteSliderImage,
 } from '../../services/firebase/firestore';
 
-const ASPECT_RATIO = 16 / 5;
+// Matches the customer HeroSlider aspect ratio (lg:aspect-[16/9]) so the
+// admin sees exactly what the visitor sees. The mobile view (16/10) gets a
+// minor side-crop via object-cover — acceptable since 16/9 is the dominant
+// desktop layout.
+const ASPECT_RATIO = 16 / 9;
+
+// Cap output width so big DSLR uploads don't bloat Firestore / Drive.
+// 1600px is more than enough for a hero slider on any retina display.
+const MAX_OUTPUT_WIDTH = 1600;
 
 const getCroppedBlob = (imageSrc, pixelCrop) => {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.crossOrigin = 'anonymous';
     image.onload = () => {
+      // Compute output dimensions — downscale if the crop is wider than cap.
+      const scale = pixelCrop.width > MAX_OUTPUT_WIDTH
+        ? MAX_OUTPUT_WIDTH / pixelCrop.width
+        : 1;
+      const outW = Math.round(pixelCrop.width * scale);
+      const outH = Math.round(pixelCrop.height * scale);
+
       const canvas = document.createElement('canvas');
-      canvas.width = pixelCrop.width;
-      canvas.height = pixelCrop.height;
+      canvas.width = outW;
+      canvas.height = outH;
       const ctx = canvas.getContext('2d');
+      // Better downscale quality
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(
         image,
         pixelCrop.x,
@@ -30,13 +48,13 @@ const getCroppedBlob = (imageSrc, pixelCrop) => {
         pixelCrop.height,
         0,
         0,
-        pixelCrop.width,
-        pixelCrop.height
+        outW,
+        outH
       );
       canvas.toBlob(
         (blob) => (blob ? resolve(blob) : reject(new Error('Canvas toBlob failed'))),
         'image/jpeg',
-        0.85
+        0.82
       );
     };
     image.onerror = reject;
@@ -241,7 +259,7 @@ const AdminSlider = () => {
               transition={{ delay: index * 0.05 }}
               className={`bg-white rounded-xl shadow-sm overflow-hidden relative group ${!isActive ? 'opacity-60' : ''}`}
             >
-              <div className="relative aspect-[16/5] bg-gray-100">
+              <div className="relative aspect-[16/9] bg-gray-100">
                 {slide.imageUrl ? (
                   <img
                     src={slide.imageUrl}
@@ -315,7 +333,7 @@ const AdminSlider = () => {
                     onChange={(e) => handleFieldChange(slide.id, 'headline', e.target.value)}
                     onBlur={(e) => handleFieldBlur(slide.id, 'headline', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder='e.g. "Insurance, delivered like luxury."'
+                    placeholder='e.g. "Insurance, delivered like | luxury."'
                   />
                 </div>
                 <div>
@@ -381,7 +399,7 @@ const AdminSlider = () => {
 
       <div className="mt-6 p-4 bg-blue-50 rounded-lg">
         <p className="text-sm text-blue-700">
-          <strong>Tip:</strong> Each slide controls its own <em>headline</em> and <em>description</em> on the homepage hero — leave them blank to fall back to the site default. Images are auto-cropped to 16:5. Toggle <FiEye className="inline w-4 h-4" />/<FiEyeOff className="inline w-4 h-4" /> to show/hide without deleting; use the order field to control sequence.
+          <strong>Tip:</strong> Each slide controls its own <em>headline</em> and <em>description</em> on the homepage hero — leave them blank to fall back to the site default. Use <code>|</code> inside the headline to pick the accent word (e.g. <em>"Insurance, delivered like | luxury."</em> — the part after <code>|</code> gets the script gold treatment). Images are auto-cropped to 16:9 and compressed before upload so the slider always looks crisp. Toggle <FiEye className="inline w-4 h-4" />/<FiEyeOff className="inline w-4 h-4" /> to show/hide without deleting; use the order field to control sequence.
         </p>
       </div>
 

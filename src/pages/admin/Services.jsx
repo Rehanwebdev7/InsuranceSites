@@ -9,9 +9,13 @@ import * as firestoreService from '../../services/firebase/firestore';
 import { db } from '../../services/firebase/firebase';
 import { uploadImage, getImageUrl, deleteImage } from '../../services/googleDrive';
 import { uploadLottieJson, deleteLottieJson } from '../../services/firebase/storageService';
+import { invalidateCache } from '../../services/firebase/customerCache';
 import { getIllustrationSrc } from '../../data/illustrationGallery';
 import defaultServices from '../../data/services.json';
 import useAdminTheme from '../../hooks/useAdminTheme';
+import LottieColorMapper from '../../components/admin/LottieColorMapper';
+import { extractColors, suggestMapping } from '../../utils/lottieRecolor';
+import ThemedLottie from '../../components/common/ThemedLottie';
 
 const ASPECT_RATIO = 1;
 
@@ -59,6 +63,7 @@ const emptyService = {
   illustrationStoragePath: '',
   animationData: '',
   lottieZoom: 100,
+  lottieMapping: [],
   color: '#C9A961',
   bgColor: '#FDFAF1',
   active: true,
@@ -194,6 +199,19 @@ const AdminServices = () => {
         }
       }
 
+      // Invalidate the customer-side in-memory cache and notify any mounted
+      // CustomerDataProvider to re-fetch — otherwise the public Services page
+      // keeps showing the OLD lottieMapping (and the lottie renders with the
+      // pre-edit theme colours) until the visitor reloads the tab.
+      try { invalidateCache('services'); } catch (err) { /* defensive */ }
+      try {
+        window.dispatchEvent(new CustomEvent('services-updated'));
+        // Cross-tab: writing to localStorage triggers a 'storage' event in
+        // every OTHER tab on the same origin — that's how a customer site
+        // open in a separate tab finds out a service was just updated.
+        localStorage.setItem('bharat:services-updated', String(Date.now()));
+      } catch (err) { /* defensive */ }
+
       closeModal();
     } catch (error) {
       console.error('Failed to save service:', error);
@@ -214,6 +232,12 @@ const AdminServices = () => {
     }
     setServicesList((prev) => prev.filter((s) => s.id !== id));
     setDeleteConfirm(null);
+    // Wipe the customer-side cache + notify any mounted CustomerDataProvider.
+    try { invalidateCache('services'); } catch (err) { /* defensive */ }
+    try {
+      window.dispatchEvent(new CustomEvent('services-updated'));
+      localStorage.setItem('bharat:services-updated', String(Date.now()));
+    } catch (err) { /* defensive */ }
     toast.success('Service deleted');
   };
 
@@ -253,6 +277,13 @@ const AdminServices = () => {
     reader.onload = (e) => {
       try {
         const parsed = JSON.parse(e.target.result);
+        // Auto-suggest theme mapping so the upload is usable without manual tweaks.
+        let autoMapping = [];
+        try {
+          autoMapping = suggestMapping(extractColors(parsed));
+        } catch (err) {
+          console.warn('Lottie colour auto-detect failed; admin can still map manually.', err);
+        }
         setFormData((prev) => ({
           ...prev,
           animationData: JSON.stringify(parsed),
@@ -261,8 +292,9 @@ const AdminServices = () => {
           illustrationDriveId: '',
           illustrationKey: '',
           isLottie: true,
+          lottieMapping: autoMapping,
         }));
-        toast.success('Lottie animation loaded!');
+        toast.success('Lottie loaded — theme colours auto-detected.');
       } catch {
         toast.error('Invalid JSON file. Please upload a valid Lottie JSON.');
       } finally {
@@ -339,6 +371,7 @@ const AdminServices = () => {
       isLottie: false,
       illustrationStoragePath: '',
       animationData: '',
+      lottieMapping: [],
     }));
   };
 
@@ -561,12 +594,22 @@ const AdminServices = () => {
                     <div className="flex items-center gap-4 p-3 rounded-xl border border-[rgba(201,169,97,0.30)]">
                       <div className={`w-24 h-24 rounded-lg overflow-hidden border flex items-center justify-center ${t.thumbBox}`}>
                         {formData.isLottie && formData.animationData ? (
-                          <LottiePlayer
-                            animationData={JSON.parse(formData.animationData)}
-                            play
-                            loop
-                            style={{ width: '100%', height: '100%' }}
-                          />
+                          (() => {
+                            // Themed preview so this thumbnail matches what the
+                            // customer site will render (not the raw uploaded
+                            // colours). Falls back to no recolor if parse fails.
+                            let parsed = null;
+                            try { parsed = JSON.parse(formData.animationData); } catch { /* ignore */ }
+                            return parsed ? (
+                              <ThemedLottie
+                                animationData={parsed}
+                                mapping={formData.lottieMapping || []}
+                                play
+                                loop
+                                style={{ width: '100%', height: '100%' }}
+                              />
+                            ) : null;
+                          })()
                         ) : (
                           <img
                             src={previewSrc}
@@ -682,6 +725,19 @@ const AdminServices = () => {
                     <span className="text-sm">Active (visible on site)</span>
                   </label>
                 </div>
+
+                {formData.isLottie && formData.animationData && (() => {
+                  let parsedForMapper = null;
+                  try { parsedForMapper = JSON.parse(formData.animationData); } catch { /* ignore — bad JSON */ }
+                  if (!parsedForMapper) return null;
+                  return (
+                    <LottieColorMapper
+                      animationData={parsedForMapper}
+                      mapping={formData.lottieMapping || []}
+                      onChange={(next) => updateFormField('lottieMapping', next)}
+                    />
+                  );
+                })()}
 
                 {formData.isLottie && (
                   <div>

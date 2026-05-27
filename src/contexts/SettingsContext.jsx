@@ -4,6 +4,19 @@ import * as firestoreService from '../services/firebase/firestore';
 import { db } from '../services/firebase/firebase';
 
 const LS_KEY = 'bharat_insurance_settings';
+const LS_COLORS_KEY = 'bharat_insurance_brand_colors';
+
+// Hydrate brand colours from localStorage so the very first paint uses the
+// admin-chosen accent instead of the gold default. Eliminates the
+// gold-flash-then-recolour glitch on themed Lottie components (and any
+// other --site-accent driven UI).
+const loadLocalBrandColors = () => {
+  try {
+    const stored = localStorage.getItem(LS_COLORS_KEY);
+    if (stored) return { ...DEFAULT_COLORS, ...JSON.parse(stored) };
+  } catch {}
+  return DEFAULT_COLORS;
+};
 
 // Helper: format 10-digit number with space after 5 digits
 const fmt5 = (digits) => {
@@ -65,7 +78,7 @@ const DEFAULT_SETTINGS = {
   hero: DEFAULT_HERO_SETTINGS,
 };
 
-const SettingsContext = createContext();
+export const SettingsContext = createContext();
 
 export const useSettings = () => {
   const ctx = useContext(SettingsContext);
@@ -332,13 +345,15 @@ const applyBrandColors = (colors) => {
 
 export const SettingsProvider = ({ children }) => {
   const [rawSettings, setRawSettings] = useState(loadLocalSettings);
-  const [brandColors, setBrandColors] = useState(DEFAULT_COLORS);
+  const [brandColors, setBrandColors] = useState(loadLocalBrandColors);
   const [settingsDocId, setSettingsDocId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Apply colors whenever they change
+  // Apply colors whenever they change + cache them so the next first paint
+  // already has the correct accent (no gold-then-recolour flash).
   useEffect(() => {
     applyBrandColors(brandColors);
+    try { localStorage.setItem(LS_COLORS_KEY, JSON.stringify(brandColors)); } catch {}
   }, [brandColors]);
 
   // Apply theme mode + custom bg/text overrides
